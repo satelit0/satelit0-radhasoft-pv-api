@@ -30,6 +30,8 @@ import { ProductsSupplier } from './models/products-suppliers/entities/products-
 import { DebtsToPayModule } from './models/accounts/debts-to-pay/debts-to-pay.module';
 import { DebtsToPay } from './models/accounts/debts-to-pay/entities/debts-to-pay.entity';
 import { Receivable } from './models/accounts/receivable/entities/receivable.entity';
+import { PaymentDetailsModule } from './models/accounts/payment-details/payment-details.module';
+import { PaymentDetail } from './models/accounts/payment-details/entities/payment-detail.entity';
 
 @Module({
   imports: [
@@ -55,6 +57,7 @@ import { Receivable } from './models/accounts/receivable/entities/receivable.ent
         DebtsToPay,
         Receivable,
         DebtsToPay,
+        PaymentDetail,
       ],
       // autoLoadEntities: true
     }), 
@@ -68,7 +71,8 @@ import { Receivable } from './models/accounts/receivable/entities/receivable.ent
     OrderModule, 
     DetailsModule, 
     ProductsSuppliersModule, 
-    DebtsToPayModule,
+    DebtsToPayModule, 
+    PaymentDetailsModule,
     // DatabaseModule
   ],
   controllers: [AppController],

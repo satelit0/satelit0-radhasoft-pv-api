@@ -1,11 +1,11 @@
 export enum Units {
-  in = "pulgadas",
-  cm = "centimetros",
-  mg = "miligramos",
-  ml = "mililitros",
-  lbs = "libras",
-  kg = "kilogramos",
-  na = "no definido"
+  IN = "pulgadas",
+  CM = "centimetros",
+  MG = "miligramos",
+  ML = "mililitros",
+  LBS = "libras",
+  KG = "kilogramos",
+  NA = "no definido"
 }
 
 export enum Roles {
@@ -30,6 +30,22 @@ export enum TypeNCF {
 }
 
 export enum OrderType {
-  credit = "Crédito",
-  cash = "Efectico"
+  CREDIT = "Crédito",
+  CASH = "Efectico"
+}
+
+export enum TermType {
+  DAYS = "Diario",
+  WEEKLY = "Semanal",
+  MONTHLY = "Mensual",
+  BIMONTHLY = "Bimestral",
+  FOUR_MONTH = "Cuatrimestre",
+  BIANNUAL = "Semestre",
+  ANNUAL = "Anual",
+}
+
+export enum WeekendCorrection {
+  BEFORE =  1, //"Antes",
+  AFTER =  2, //"Despues",
+  DURING = 0, //"Durante" 
 }

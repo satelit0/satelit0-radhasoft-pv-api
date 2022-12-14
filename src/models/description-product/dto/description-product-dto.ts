@@ -23,7 +23,7 @@ export class DescriptionProductDto {
   @IsEnum({
     type: 'enum',
     enum: Units,
-    default: Units.in
+    default: Units.IN
   })
   unit: Units;
 
