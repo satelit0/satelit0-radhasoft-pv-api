@@ -20,6 +20,8 @@ export class PaymentDetail {
   @Column({ comment: "interes por mora",nullable: true})
   interestArrears: number;
 
+  @Column({ comment: "moto pagado igual al moto total o inferior a la suma de todas las partes"})
+  amountPaid: number;
 
   @Column({ comment: "fecha en la que se realizo el pago", nullable: true })
   paymentDate: Date;
