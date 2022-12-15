@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PaymentDetailsService } from './payment-details.service';
 import { CreatePaymentDetailDto } from './dto/create-payment-detail.dto';
 import { UpdatePaymentDetailDto } from './dto/update-payment-detail.dto';
+import { FindOneParams } from '../../../helpers/utils';
 
 @Controller('payment-details')
 export class PaymentDetailsController {
@@ -18,17 +19,17 @@ export class PaymentDetailsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentDetailsService.findOne(+id);
+  findOne(@Param() {id}: FindOneParams) {
+    return this.paymentDetailsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDetailDto: UpdatePaymentDetailDto) {
-    return this.paymentDetailsService.update(+id, updatePaymentDetailDto);
+  update(@Param() {id}: FindOneParams, @Body() updatePaymentDetailDto: UpdatePaymentDetailDto) {
+    return this.paymentDetailsService.update(id, updatePaymentDetailDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.paymentDetailsService.remove(+id);
+  remove(@Param() {id}: FindOneParams) {
+    return this.paymentDetailsService.remove(id);
   }
 }

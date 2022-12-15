@@ -1,26 +1,64 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePaymentDetailDto } from './dto/create-payment-detail.dto';
 import { UpdatePaymentDetailDto } from './dto/update-payment-detail.dto';
+import { PaymentDetail } from './entities/payment-detail.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PaymentDetailsService {
+
+  constructor(
+    @InjectRepository(PaymentDetail)
+    private paymentDetailRepository: Repository<PaymentDetail>
+  ) {
+  }
+
   create(createPaymentDetailDto: CreatePaymentDetailDto) {
-    return 'This action adds a new paymentDetail';
+
+    const paymentDetail = this.paymentDetailRepository.save(createPaymentDetailDto);
+
+    return paymentDetail;
   }
 
   findAll() {
-    return `This action returns all paymentDetails`;
+
+    const paymentsDetails = this.paymentDetailRepository.find({
+      loadRelationIds: true,
+    });
+
+    return paymentsDetails;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} paymentDetail`;
+    const paymentDetail = this.paymentDetailRepository.findOne({
+      where: {id},
+      loadRelationIds: true
+    });
+    return paymentDetail;
+  }
+
+  findOneByIdAndDate(id: number, createdAt: Date) {
+    const paymentDetail = this.paymentDetailRepository.findOne({
+      where: { id, createdAt},
+      loadRelationIds: true,
+    });
+    return paymentDetail;
   }
 
   update(id: number, updatePaymentDetailDto: UpdatePaymentDetailDto) {
-    return `This action updates a #${id} paymentDetail`;
+
+    const paymentDetail = this.paymentDetailRepository.update(id, updatePaymentDetailDto);
+
+    return paymentDetail;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} paymentDetail`;
+  remove(id: number, soft: boolean = true) {
+
+    if (soft) return this.paymentDetailRepository.softDelete(id);
+
+    const paymentDetail = this.paymentDetailRepository.create({id});
+
+    return this.paymentDetailRepository.delete(paymentDetail);
   }
 }
