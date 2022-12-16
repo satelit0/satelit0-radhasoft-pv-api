@@ -4,8 +4,11 @@ import { CreateCategoryProductDto } from './dto/create-category-product.dto';
 import { UpdateCategoryProductDto } from './dto/update-category-product.dto';
 import { FindOneParams } from '../../helpers/utils';
 import { Http2ServerResponse } from 'http2';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('category-product')
+@ApiTags('Category-Product')
+
 export class CategoryProductController {
   constructor(private readonly categoryProductService: CategoryProductService) {}
 

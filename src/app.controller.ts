@@ -11,9 +11,9 @@ export class AppController {
      private readonly personService: PersonService
     ) {}
 
-  @Get()
-    getHello(): string {
-    // return this.appService.getHello();
-    return  "test ok...";
-  }
+  // @Get()
+  //   getHello(): string {
+  //   // return this.appService.getHello();
+  //   return  "test ok...";
+  // }
 }

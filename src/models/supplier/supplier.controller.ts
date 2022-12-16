@@ -4,12 +4,14 @@ import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { FindOneParams } from '../../helpers/utils';
 import { Supplier } from './entities/supplier.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 const MSG = "Suplidor no existe",
       MSG_NAME_ENTITY = "Nombre de suplidor",
       MSG_RNC = "RNC de suplidor";
 
 @Controller('supplier')
+@ApiTags('Supplier')
 export class SupplierController {
   constructor(private readonly supplierService: SupplierService) { }
 

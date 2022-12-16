@@ -2,8 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ReceivableService } from './receivable.service';
 import { CreateReceivableDto } from './dto/create-receivable.dto';
 import { UpdateReceivableDto } from './dto/update-receivable.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('receivable')
+@ApiTags('Receivable')
+
 export class ReceivableController {
   constructor(private readonly receivableService: ReceivableService) {}
 

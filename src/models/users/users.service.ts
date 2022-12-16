@@ -56,12 +56,14 @@ export class UsersService {
     return users;
   }
 
-   findOne(id: number) {
+   findOne(id: number, withDeleted: boolean = false) {
 
     const user =  this.userRepository.findOne({
       loadRelationIds: true, 
       where: {id}, 
-      select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId']});
+      select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
+      withDeleted
+    });
 
     return user;
   }
@@ -81,12 +83,13 @@ export class UsersService {
     return user;
   }
 
-  async remove(id: number) {
+  async remove(id: number, soft: boolean = true) {
 
-    const user =  await this.userRepository.findOneBy({id});
+    // const user =  await this.userRepository.findOneBy({id});
+    // if (!user) return new NotFoundException(`El usuario con id: ${id} no existe`).getResponse();
+    if (soft) return this.userRepository.softDelete(id);
 
-    if (!user) return new NotFoundException(`El usuario con id: ${id} no existe`).getResponse();
-
+    const user =  this.userRepository.create({id})
     const userRemoved = this.userRepository.remove(user);
 
     return userRemoved;

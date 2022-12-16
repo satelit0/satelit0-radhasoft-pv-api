@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsNumberString } from 'class-validator';
+import { IsBoolean, IsNumber, IsNumberString } from 'class-validator';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class FindOneParams {

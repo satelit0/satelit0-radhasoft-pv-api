@@ -3,8 +3,11 @@ import { PaymentDetailsService } from './payment-details.service';
 import { CreatePaymentDetailDto } from './dto/create-payment-detail.dto';
 import { UpdatePaymentDetailDto } from './dto/update-payment-detail.dto';
 import { FindOneParams } from '../../../helpers/utils';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('payment-details')
+@ApiTags('Payment-Details')
+
 export class PaymentDetailsController {
   constructor(private readonly paymentDetailsService: PaymentDetailsService) {}
 

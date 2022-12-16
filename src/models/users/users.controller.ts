@@ -1,32 +1,34 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Patch, 
-  Param, 
-  Delete, 
-  NotFoundException, 
-  BadGatewayException, 
-  BadRequestException, 
-  Put, 
-  Query} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotFoundException,
+  BadGatewayException,
+  BadRequestException,
+  Put,
+  Query
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PersonService } from '../person/person.service';
-import { ContactService } from '../contact/contact.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Contact } from '../contact/entities/contact.entity';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FindOneParams } from '../../helpers/utils';
-import { hash } from "bcrypt";
-import { SALROUNDS } from '../../helpers/consts';
 import { PasswordDto } from './dto/password-dto';
+import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserDto } from './dto/user-dto';
+import { HttpException } from '@nestjs/common';
 
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -42,6 +44,12 @@ export class UsersController {
   ) { }
 
   @Post()
+  @ApiBody({ description: 'crea un nuevo usuario', type: CreateUserDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuario creado exitosamente',
+    type: User,
+  })
   async create(@Body() createUserDto: CreateUserDto) {
 
     const { personId, email, userName, password } = createUserDto;
@@ -61,12 +69,28 @@ export class UsersController {
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Usuarios recuperados exitosamente',
+    type: User,
+  })
   async findAll() {
     const users = await this.usersService.findAll();
     return users;
   }
 
   @Get(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'Id del usuario a buscar',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'consulta de usuario exitosa',
+    type: User,
+  })
   async findOne(@Param() { id }: FindOneParams) {
 
     const user = await this.usersService.findOne(id);
@@ -76,8 +100,32 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'Id del usuario a editar',
+  })
   path(@Param() { id }: FindOneParams, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
+  }
+
+  @Patch('restore/:id')
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'Id del usuario a restaurar'
+  })
+  async restore(@Param() { id }: FindOneParams) {
+    // try {
+      const user = await this.usersService.findOne(id, true);
+      if (!user) return new HttpException(`El usuario con id: ${id} no existe`, 400).getResponse();
+      
+      return this.usersService.update(id, { deletedAt: null });
+    // } catch (error) {
+      // throw new HttpException("Se produjo un error inesperado. contacte el administrador", 500);
+    // }
   }
 
   @Put(':id')
@@ -85,14 +133,30 @@ export class UsersController {
 
     const user = await this.usersService.findOne(id);
     if (!user) return new NotFoundException(`El usuario con id: ${id} no existe`).getResponse();
-    
-    const passwordEdited = await this.usersService.update(id, {password: passwordDto.password});
+
+    const passwordEdited = await this.usersService.update(id, { password: passwordDto.password });
     passwordEdited.password = undefined;
     return passwordEdited;
   }
 
   @Delete(':id')
-  async remove(@Param() { id }: FindOneParams ) {
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'Id del usuario a eliminar',
+  })
+
+  @ApiParam({
+    name: 'soft',
+    required: false,
+    type: Boolean,
+    description: 'si true eliminado suave, false eliminado permanente',
+  })
+  async remove(@Param() { id }: FindOneParams, @Query() soft?: boolean) {
+
+    if (soft) return await this.usersService.remove(id, soft)
+
     const userRemoved = await this.usersService.remove(id);
     return userRemoved;
   }

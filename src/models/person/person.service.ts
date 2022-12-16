@@ -33,8 +33,18 @@ export class PersonService {
     });
   }
 
-  findOne(id: number): Promise<Person> {
-    return this.personRepository.findOne({ where: { id } });
+  findOne(id: number, withDeleted: boolean = false): Promise<Person> {
+    return this.personRepository.findOne({ 
+      where: { id },
+      relations: {
+        users: true,
+        contac: true,
+        supplier: {
+          suppliersProducts: true,
+        },
+      },
+      withDeleted, 
+    });
   }
 
   async patch(id: number, patchPersonDto: PatchPersonDto) {
@@ -58,5 +68,6 @@ export class PersonService {
     const personRemoved = this.personRepository.remove(person, {data:"algo mas"});
 
     return personRemoved;
+    // return 'personRemoved';
   }
 }

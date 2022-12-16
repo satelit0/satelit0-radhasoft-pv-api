@@ -3,8 +3,10 @@ import { DescriptionProductService } from './description-product.service';
 import { CreateDescriptionProductDto } from './dto/create-description-product.dto';
 import { UpdateDescriptionProductDto } from './dto/update-description-product.dto';
 import { FindOneParams } from '../../helpers/utils';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('description-product')
+@ApiTags('Description-Product')
 export class DescriptionProductController {
   constructor(private readonly descriptionProductService: DescriptionProductService) { }
 

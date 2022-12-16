@@ -1,5 +1,5 @@
 import { Roles } from "src/helpers/enums";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn} from "typeorm";
 import { Person } from '../../person/entities/person.entity';
 @Entity()
 export class User {
@@ -34,6 +34,9 @@ export class User {
 
   @UpdateDateColumn()
   updateAdt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @ManyToOne( () => Person, (person: Person) => person.users)
   person: Person

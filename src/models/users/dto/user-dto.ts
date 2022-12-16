@@ -30,4 +30,7 @@ export class UserDto {
 
   @IsDateString()
   updateAdt: Date;
+
+  @IsDateString()
+  deletedAt: Date;
 }

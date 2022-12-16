@@ -6,12 +6,14 @@ import { FindOneParams } from '../../helpers/utils';
 import { Repository } from 'typeorm';
 import { ProductsSupplier } from '../products-suppliers/entities/products-supplier.entity';
 import { ProductsSuppliersService } from '../products-suppliers/products-suppliers.service';
+import { ApiTags } from '@nestjs/swagger';
 
 const MSG = "Produto no existe",
       MSG_NAME_EXISTS = "Produto ya existe";
 
 
 @Controller('products')
+@ApiTags('Products')
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
