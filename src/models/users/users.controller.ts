@@ -129,6 +129,17 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'Id del usuario a editar'
+  })
+  @ApiResponse({
+    status: 200,
+    type: UpdateUserDto
+  })
+  @ApiBody({ type: UpdateUserDto})
   async updatePassword(@Param() { id }: FindOneParams, @Body() passwordDto: PasswordDto) {
 
     const user = await this.usersService.findOne(id);
