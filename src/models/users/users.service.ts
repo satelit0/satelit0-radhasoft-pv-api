@@ -31,8 +31,8 @@ export class UsersService {
 
     const passwordHash = await hash(password, SALROUNDS);
 
-    const user = this.userRepository.create({ userName, password: passwordHash, personId, roleId: 1 });
-    const contac = this.contacRepository.create({ email, personId });
+    const user = this.userRepository.create({ userName, password: passwordHash, roleId: 1 });
+    const contac = this.contacRepository.create({ email });
     const newUser = await this.userRepository.save(user);
     const newContac = await this.contacRepository.save(contac);
 
@@ -44,12 +44,24 @@ export class UsersService {
     const users =  await this.userRepository.find({
       // loadEagerRelations: true,
       // loadRelationIds: true,
+      select: 
+      {
+        id: true,
+        userName: true,
+        personId: true,
+        roleId: true,
+        subsidiaryId: true,
+        devicesId: true,
+        password: false,
+        createdAt: true,
+        updateAdt: true,
+        deletedAt: true,
+      },
       relations: {
         person: {
-          contac: true,
+          contact: true,
         }
       },
-      select: ['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId']
 
     });
 
@@ -61,7 +73,7 @@ export class UsersService {
     const user =  this.userRepository.findOne({
       loadRelationIds: true, 
       where: {id}, 
-      select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
+      // select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
       withDeleted
     });
 

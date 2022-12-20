@@ -1,7 +1,15 @@
-import { Column, CreateDateColumn, Entity, Generated, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { 
+  Column, CreateDateColumn,
+  DeleteDateColumn, Entity,
+  Generated, ManyToOne, 
+  OneToOne, PrimaryGeneratedColumn, 
+  UpdateDateColumn 
+} from "typeorm";
 import { IsEmail } from "class-validator"
-import { Supplier } from 'src/models/supplier/entities/supplier.entity';
 import { Person } from '../../person/entities/person.entity';
+import { CompanyBase } from '../../company/company-base/entities/company-base.entity';
+import { Subsidiary } from '../../company/subsidiary/entities/subsidiary.entity';
+import { Address, GeoLocation, Phone, SocialNetworks } from "src/models/entitys/entity";
 
 @Entity()
 export class Contact {
@@ -12,30 +20,27 @@ export class Contact {
   @Generated("uuid")
   contactId: string;
 
-  @Column()
-  personId: number;
+  @Column('jsonb', { nullable: true})
+  phones: Phone;
 
-  @Column("simple-array", { nullable: true})
-  phones: string[];
+  @Column('jsonb', {nullable: true})
+  socialNetworks: SocialNetworks;
 
-  @Column("simple-array", { nullable: true, })
-  cellPhone: string[];
-
-  @Column({ length: 80 })
+  @Column({ length: 80, unique: true })
   @IsEmail()
   email: string;
 
-  @Column("simple-json", { nullable: true})
-  coordinates: {log: number, lat: number};
+  @Column('jsonb', { nullable: true})
+  geoLocation: GeoLocation;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true, default: 0})
   municipalityId: number;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true, default: 0})
   provinceId: number;
 
-  @Column("simple-json", { nullable: true})
-  address: {street: string, building: string, apto: string, numberApto: string};
+  @Column('jsonb', { nullable: true})
+  address: Address;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -43,6 +48,16 @@ export class Contact {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne( () => Person, (person) => person.contac)
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @OneToOne( () => Person, (person) => person.contact)
   person: Person;
+
+  @OneToOne( () => CompanyBase, (companyBase) => companyBase.contact)
+  companyBase: CompanyBase;
+ 
+  @OneToOne( () => Subsidiary, (subsidiary) => subsidiary.contact)
+  subsidiary: Subsidiary;
+
 }

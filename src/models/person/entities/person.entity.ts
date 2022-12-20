@@ -1,4 +1,4 @@
-import  { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, UpdateDateColumn, CreateDateColumn, DeleteDateColumn } from "typeorm";
+import  { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, UpdateDateColumn, CreateDateColumn, DeleteDateColumn, JoinColumn } from "typeorm";
 import { User } from '../../users/entities/user.entity';
 import { Contact } from "../../contact/entities/contact.entity";
 import { Supplier } from '../../supplier/entities/supplier.entity';
@@ -9,6 +9,9 @@ export class Person {
 
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  contactId: number;
 
   @Column({length: 50, nullable: true})
   firstName: string;
@@ -31,8 +34,9 @@ export class Person {
   @OneToMany(() => User, (user) => user.person)
   users: User[];
 
-  @OneToMany( () => Contact, (contact) => contact.person)
-  contac: Contact;
+  @OneToOne( () => Contact, (contact) => contact.person)
+  @JoinColumn()
+  contact: Contact;
 
   @OneToMany(() => Supplier, (supplier) => supplier.person)
   supplier: Supplier;

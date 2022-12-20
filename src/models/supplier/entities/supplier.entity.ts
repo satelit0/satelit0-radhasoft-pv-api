@@ -35,6 +35,6 @@ export class Supplier {
   @ManyToOne( () => Person, (person) => person.supplier)
   person: Person;
 
-  @OneToMany(() => ProductsSupplier, (productsSupplier) => productsSupplier.supplier)
+  @OneToMany(() => ProductsSupplier, (productsSupplier) => productsSupplier.supplier, )
   suppliersProducts: ProductsSupplier[];
 }

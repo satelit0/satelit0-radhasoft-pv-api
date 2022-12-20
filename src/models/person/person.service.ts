@@ -38,7 +38,7 @@ export class PersonService {
       where: { id },
       relations: {
         users: true,
-        contac: true,
+        contact: true,
         supplier: {
           suppliersProducts: true,
         },

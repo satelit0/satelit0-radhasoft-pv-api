@@ -13,6 +13,12 @@ export class UserDto {
   @IsInt()
   roleId:number;
 
+  @IsInt()
+  subsidiaryId: number;
+
+  @IsInt()
+  devicesId: number;
+
   @IsString()
   userName: string;
 

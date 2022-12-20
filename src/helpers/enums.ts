@@ -9,8 +9,10 @@ export enum Units {
 }
 
 export enum Roles {
-  ADMIN = "admin",
-  USER = "user",
+  ADMIN_GLOBAL = "admin_global",
+  ADMIN_LOCAL = "admin_local",
+  USER_GLOBAL = "user_global",
+  USER_LOCAL = "user_local",
   SALES = "sales",
   CLIENT = "client"
 }

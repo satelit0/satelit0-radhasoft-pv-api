@@ -10,7 +10,7 @@ export class ProductsSupplier {
   id: number;
 
   @Column()
-  productId: number; 
+  productId: number;
 
   @Column()
   supplierId: number;
@@ -21,10 +21,10 @@ export class ProductsSupplier {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne( () => Product, (product: Product) => product.productsSuppliers)
+  @ManyToOne(() => Product, (product: Product) => product.productsSuppliers, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   product: Product[];
 
-  @ManyToOne( () => Supplier, (supplier) => supplier.suppliersProducts)
+  @ManyToOne(() => Supplier, (supplier) => supplier.suppliersProducts, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   supplier: Supplier[];
 
 

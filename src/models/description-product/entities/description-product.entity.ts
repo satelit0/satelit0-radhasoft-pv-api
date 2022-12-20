@@ -36,7 +36,7 @@ export class DescriptionProduct {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany( () => Product, (product) => product.description)
+  @OneToMany(() => Product, (product) => product.description, { onDelete: 'SET NULL', onUpdate: 'CASCADE'})
   product: Product[];
 }
 

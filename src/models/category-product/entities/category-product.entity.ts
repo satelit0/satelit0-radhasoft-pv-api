@@ -19,7 +19,7 @@ export class CategoryProduct {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany( () => Product, (product) => product.category)
+  @OneToMany( () => Product, (product) => product.category, { onDelete: 'SET NULL', onUpdate: 'CASCADE'})
   product: Product;
 
 }

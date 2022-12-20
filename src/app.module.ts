@@ -32,6 +32,14 @@ import { DebtsToPay } from './models/accounts/debts-to-pay/entities/debts-to-pay
 import { Receivable } from './models/accounts/receivable/entities/receivable.entity';
 import { PaymentDetailsModule } from './models/accounts/payment-details/payment-details.module';
 import { PaymentDetail } from './models/accounts/payment-details/entities/payment-detail.entity';
+import { SubsidiaryExistenceModule } from './models/inventory/subsidiary-existence/subsidiary-existence.module';
+import { SubsidiaryExistence } from './models/inventory/subsidiary-existence/entities/subsidiary-existence.entity';
+import { SubsidiaryModule } from './models/company/subsidiary/subsidiary.module';
+import { CompanyBaseModule } from './models/company/company-base/company-base.module';
+import { CompanyBase } from './models/company/company-base/entities/company-base.entity';
+import { Subsidiary } from './models/company/subsidiary/entities/subsidiary.entity';
+import { DeviceModule } from './models/company/device/device.module';
+import { Device } from './models/company/device/entities/device.entity';
 
 @Module({
   imports: [
@@ -43,6 +51,7 @@ import { PaymentDetail } from './models/accounts/payment-details/entities/paymen
       password: "postgres",
       database: "pv",
       synchronize: true, 
+      logging: ['query', 'error'] ,
       entities: [ 
         User, 
         Person, 
@@ -50,14 +59,18 @@ import { PaymentDetail } from './models/accounts/payment-details/entities/paymen
         Supplier, 
         Product,
         CategoryProduct, 
-        DescriptionProduct,
-        Order, 
+        DescriptionProduct, 
+        Order,
         Detail,
         ProductsSupplier,
         DebtsToPay,
         Receivable,
         DebtsToPay,
         PaymentDetail,
+        SubsidiaryExistence,
+        CompanyBase,
+        Subsidiary,
+        Device,
       ],
       // autoLoadEntities: true
     }), 
@@ -72,7 +85,10 @@ import { PaymentDetail } from './models/accounts/payment-details/entities/paymen
     DetailsModule, 
     ProductsSuppliersModule, 
     DebtsToPayModule, 
-    PaymentDetailsModule,
+    PaymentDetailsModule, 
+    SubsidiaryExistenceModule, 
+    SubsidiaryModule, CompanyBaseModule,
+    DeviceModule,
     // DatabaseModule
   ],
   controllers: [AppController],
