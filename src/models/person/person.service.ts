@@ -1,14 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
-import { DatabaseProviders } from '../../database.providers';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Person } from './entities/person.entity';
 import { Repository } from 'typeorm';
 import { PatchPersonDto } from './dto/patch-person.dto';
-import { User } from '../users/entities/user.entity';
-import { Order } from '../order/entities/order.entity';
-
+ 
 @Injectable()
 export class PersonService {
 
@@ -66,8 +63,6 @@ export class PersonService {
 
     const person = this.personRepository.create({id});
     const personRemoved = this.personRepository.remove(person, {data:"algo mas"});
-
     return personRemoved;
-    // return 'personRemoved';
   }
 }
