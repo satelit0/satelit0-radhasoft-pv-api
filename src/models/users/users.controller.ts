@@ -20,7 +20,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Contact } from '../contact/entities/contact.entity';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { FindOneParams } from '../../helpers/utils';
+import { FindOneParams, httpErrotHandler } from '../../helpers/utils';
 import { PasswordDto } from './dto/password-dto';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user-dto';
@@ -53,27 +53,30 @@ export class UsersController {
     type: User,
   })
   async create(@Body() createUserDto: CreateUserDto) {
+    try {
+      const { personId, subsidiaryId, email, userName, password } = createUserDto;
 
-    const { personId, subsidiaryId, email, userName, password } = createUserDto;
+      if (subsidiaryId == 0 || !subsidiaryId) {
+        const { id } = await this.subsidiaryService.findOneBy({ headquarters: true });
+        createUserDto.subsidiaryId = id;
+      }
 
-    if (subsidiaryId == 0 || !subsidiaryId) {
-      this.subsidiaryService.findOneBy({});
+      const person = await this.personService.findOne(personId);
+      if (!person) throw new HttpException(`Persona con el id ${personId} no existe`, 404);
+
+      const exitsUserName = await this.userRepository.findOne({ where: { userName } });
+      if (exitsUserName) throw new HttpException(`El nombre de usuario ${userName} ya esta registrado`, 400);
+
+      const emailContac = await this.contactRepository.findOne({ where: { email } });
+      if (emailContac) throw new HttpException(`El email: ${emailContac.email} ya esta registrado`, 400);
+
+      const newUser = await this.usersService.create(createUserDto);
+      return newUser;
+
+    } catch (error) {
+      // console.log('===>', error);
+      httpErrotHandler(error);
     }
-
-    const person = await this.personService.findOne(personId);
-    if (!person) return new NotFoundException(`Persona con el id ${personId} no existe`).getResponse();
-
-
-    const exitsUserName = await this.userRepository.findOne({ where: { userName } });
-    if (exitsUserName) return new BadRequestException(`El nombre de usuario ${userName} ya esta registrado`).getResponse();
-
-
-    const emailContac = await this.contactRepository.findOne({ where: { email } });
-    if (emailContac) return new BadGatewayException(`El email: ${emailContac.email} ya esta registrado`).getResponse();
-
-    // return createUserDto;
-    const newUser = await this.usersService.create(createUserDto);
-    return newUser;
   }
 
   @Get()
@@ -127,12 +130,12 @@ export class UsersController {
   })
   async restore(@Param() { id }: FindOneParams) {
     // try {
-      const user = await this.usersService.findOne(id, true);
-      if (!user) return new HttpException(`El usuario con id: ${id} no existe`, 400).getResponse();
-      
-      return this.usersService.update(id, { deletedAt: null });
+    const user = await this.usersService.findOne(id, true);
+    if (!user) return new HttpException(`El usuario con id: ${id} no existe`, 400).getResponse();
+
+    return this.usersService.update(id, { deletedAt: null });
     // } catch (error) {
-      // throw new HttpException("Se produjo un error inesperado. contacte el administrador", 500);
+    // throw new HttpException("Se produjo un error inesperado. contacte el administrador", 500);
     // }
   }
 
@@ -147,7 +150,7 @@ export class UsersController {
     status: 200,
     type: UpdateUserDto
   })
-  @ApiBody({ type: UpdateUserDto})
+  @ApiBody({ type: UpdateUserDto })
   async updatePassword(@Param() { id }: FindOneParams, @Body() passwordDto: PasswordDto) {
 
     const user = await this.usersService.findOne(id);

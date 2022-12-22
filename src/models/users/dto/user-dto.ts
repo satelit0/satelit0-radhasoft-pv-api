@@ -1,36 +1,43 @@
-import { IsDateString, IsInt, IsString, Min, Allow, IsEnum } from 'class-validator';
+import { IsDateString, IsInt, IsString, Min, Allow, IsEnum, IsOptional } from 'class-validator';
 import { Roles } from '../../../helpers/enums';
+import { ApiProperty } from '@nestjs/swagger';
 export class UserDto {
+
+  @ApiProperty({ name: 'id', type: Number, required: false })
   @IsInt()
-  @Min(1)
+  @IsOptional()
   id: number;
 
+  @ApiProperty({ name: 'personId', type: Number, })
   @IsInt()
-  @Min(1)
   personId: number;
-  
-  @Min(1)
-  @IsInt()
-  roleId:number;
 
+  @ApiProperty({ name: 'roleId', type: Number, required: false })
   @IsInt()
+  @IsOptional()
+  roleId: number;
+
+  @ApiProperty({ name: 'subsidiaryId', type: Number, required: false })
+  @IsInt()
+  @IsOptional()
   subsidiaryId: number;
 
+  @ApiProperty({ name: 'devicesId', type: Number, required: false })
   @IsInt()
+  @IsOptional()
   devicesId: number;
 
+  @ApiProperty({ name: 'userName', type: String, })
   @IsString()
   userName: string;
 
-  @Allow()
+  @ApiProperty({ name: 'password', type: String, })
+  @IsString()
   password: string;
-
-  // @IsEnum(Roles)
-  // role: Roles;
 
   @IsDateString()
   lastLogin: Date;
-  
+
   @IsDateString()
   createdAt: Date;
 

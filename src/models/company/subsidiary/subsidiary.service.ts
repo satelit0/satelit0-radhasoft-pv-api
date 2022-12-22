@@ -51,7 +51,7 @@ export class SubsidiaryService {
           contact: true,
         },
         contact: true,
-      }
+      },
     });
   }
 
