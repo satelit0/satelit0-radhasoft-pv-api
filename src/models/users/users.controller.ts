@@ -25,6 +25,7 @@ import { PasswordDto } from './dto/password-dto';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user-dto';
 import { HttpException } from '@nestjs/common';
+import { SubsidiaryService } from '../company/subsidiary/subsidiary.service';
 
 
 @Controller('users')
@@ -33,6 +34,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly personService: PersonService,
+    private readonly subsidiaryService: SubsidiaryService,
     // private readonly contacService: ContactService,
 
     @InjectRepository(Contact)
@@ -52,13 +54,19 @@ export class UsersController {
   })
   async create(@Body() createUserDto: CreateUserDto) {
 
-    const { personId, email, userName, password } = createUserDto;
+    const { personId, subsidiaryId, email, userName, password } = createUserDto;
+
+    if (subsidiaryId == 0 || !subsidiaryId) {
+      this.subsidiaryService.findOneBy({});
+    }
+
+    const person = await this.personService.findOne(personId);
+    if (!person) return new NotFoundException(`Persona con el id ${personId} no existe`).getResponse();
+
 
     const exitsUserName = await this.userRepository.findOne({ where: { userName } });
     if (exitsUserName) return new BadRequestException(`El nombre de usuario ${userName} ya esta registrado`).getResponse();
 
-    const person = await this.personService.findOne(personId);
-    if (!person) return new NotFoundException(`Persona con el id ${personId} no existe`).getResponse();
 
     const emailContac = await this.contactRepository.findOne({ where: { email } });
     if (emailContac) return new BadGatewayException(`El email: ${emailContac.email} ya esta registrado`).getResponse();

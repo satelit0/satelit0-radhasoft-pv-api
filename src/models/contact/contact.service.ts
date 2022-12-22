@@ -27,6 +27,9 @@ export class ContactService {
         companyBase: true,
         person: true,
         subsidiary: true,
+      },
+      order: {
+        id: 'ASC'
       }
     });
 

@@ -30,29 +30,30 @@ export class User {
   @Column({ comment: 'dispositivos conocidos a los que tinene acceso el usuario para acceso al sistema', nullable: true })
   devicesId: number;
 
-  @Column({ unique: true})
+  @Column({ unique: true })
   userName: string;
 
   @Column({ nullable: true })
   password: string;
 
   @Column('jsonb', {
-     default: { 
-      hours: { 
+    default: {
+      hours: {
         startTime: '7:30:00',
-        endTime: '17:00:00' 
-      }, 
-      days: { 
-        sun: false, 
-        mon: true, 
-        tue: true, 
-        wen: true, 
-        thu: true, 
-        fri: true, 
-        sat: false 
-      } 
-    }, 
-    comment: 'horario laboal y dias validos para acceso al sistema' })
+        endTime: '17:00:00'
+      },
+      days: {
+        sun: false,
+        mon: true,
+        tue: true,
+        wen: true,
+        thu: true,
+        fri: true,
+        sat: false
+      }
+    },
+    comment: 'horario laboal y dias validos para acceso al sistema'
+  })
   workingHours: WorkingHours;
 
   @Column({ nullable: true })
