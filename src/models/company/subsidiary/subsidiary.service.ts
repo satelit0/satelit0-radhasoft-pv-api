@@ -4,6 +4,7 @@ import { CreateSubsidiaryDto } from './dto/create-subsidiary.dto';
 import { UpdateSubsidiaryDto } from './dto/update-subsidiary.dto';
 import { Subsidiary } from './entities/subsidiary.entity';
 import { Repository } from 'typeorm';
+import { ISubsidiary } from 'src/models/interfaces/models.interface';
 
 @Injectable()
 export class SubsidiaryService {
@@ -33,6 +34,18 @@ export class SubsidiaryService {
   findOne(id: number) {
     return this.repositorySubsidiary.findOne({
       where: { id },
+      relations: {
+        companyBase: { 
+          contact: true,
+        },
+        contact: true,
+      }
+    });
+  }
+  
+  findOneBy(params: ISubsidiary) {
+    return this.repositorySubsidiary.findOne({
+      where: { ...params },
       relations: {
         companyBase: { 
           contact: true,

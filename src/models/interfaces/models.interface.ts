@@ -31,6 +31,19 @@ export interface IContact extends IContextDate {
   // address?: Address;
 }
 
+export interface ISubsidiary extends IContextDate {
+  id?: number;
+  contactId?: number;
+  companyBaseId?: number;
+  headquarters?: boolean;
+  uuid?: string;
+  name?: string;
+}
+
+
+
+
+
 interface IContextDate {
   createdAt?: Date;
   updatedAt?: Date;
