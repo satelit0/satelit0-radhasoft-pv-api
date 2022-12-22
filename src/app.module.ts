@@ -24,6 +24,7 @@ import { DeviceModule } from './models/company/device/device.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
+import { ClientModule } from './models/client/client.module';
   
 @Module({
   imports: [
@@ -53,7 +54,8 @@ import { DatabaseModule } from './database/database.module';
     SubsidiaryModule, 
     CompanyBaseModule,
     DeviceModule,
-    DatabaseModule
+    DatabaseModule,
+    ClientModule
   ],
   controllers: [AppController],
   providers: [

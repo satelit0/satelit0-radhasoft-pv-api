@@ -5,18 +5,26 @@ import { Roles } from '../../../helpers/enums';
 import { toTrim } from '../../../helpers/utils';
 import { PersonDto } from './person-dto';
 import { OmitType, PartialType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiParam, ApiProperty } from '@nestjs/swagger';
 
 
 // @UsePipes(new ValidationPipe({stopAtFirstError: true, transform: true}))
-export class CreatePersonDto extends OmitType(PersonDto, ['id', 'createdAt', 'updatedAt']){ 
+export class CreatePersonDto extends OmitType(PersonDto, ['id', 'createdAt', 'updatedAt', 'deletedAt']){ 
 
-  @ApiProperty({type: 'string'})
+
+  @ApiProperty({type: String})
+  identity: string;
+
+  @ApiProperty({type: String})
   firstName: string;
 
-  @ApiProperty({type: 'string'})
+  @ApiProperty({type: String})
   lastName: string;
 
-  @ApiProperty({type: 'string'})
+  @ApiProperty({type: Date, description: 'cudela o pasaporte'})
   birthday: Date;
+
+  @ApiProperty({ name: 'contactId', type: Number, required:  false})
+  @IsOptional()
+  contactId: number;
 }

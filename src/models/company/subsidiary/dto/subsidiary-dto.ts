@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Allow, IsDateString, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { Allow, IsBoolean, IsDateString, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class SubsidiaryDto {
   
   @ApiProperty()
@@ -13,6 +13,11 @@ export class SubsidiaryDto {
   @ApiProperty()
   @IsInt()
   companyBaseId: number;
+
+  @ApiProperty({name: 'headquarters', type: Boolean, required: false})
+  @IsOptional()
+  @IsBoolean()
+  headquarters: boolean;
 
   @ApiProperty()
   @Allow()

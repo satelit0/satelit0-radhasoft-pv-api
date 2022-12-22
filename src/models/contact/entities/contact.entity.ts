@@ -26,8 +26,7 @@ export class Contact {
   @Column('jsonb', {nullable: true})
   socialNetworks: SocialNetworks;
 
-  @Column({ length: 80, unique: true })
-  @IsEmail()
+  @Column({ length: 80, unique: true, nullable: true, default: null })
   email: string;
 
   @Column('jsonb', { nullable: true})

@@ -24,7 +24,7 @@ export class Device {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updatedat: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn()
   deletedAt: Date;

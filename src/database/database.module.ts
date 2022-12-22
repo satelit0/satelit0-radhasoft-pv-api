@@ -1,24 +1,24 @@
 import { Module } from '@nestjs/common';
-import { DatabaseProviders } from './database.providers';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CompanyBase } from '../models/company/company-base/entities/company-base.entity';
-import { Contact } from '../models/contact/entities/contact.entity';
-import { DebtsToPay } from '../models/accounts/debts-to-pay/entities/debts-to-pay.entity';
-import { PaymentDetail } from '../models/accounts/payment-details/entities/payment-detail.entity';
-import { Receivable } from '../models/accounts/receivable/entities/receivable.entity';
-import { CategoryProduct } from '../models/category-product/entities/category-product.entity';
-import { Device } from '../models/company/device/entities/device.entity';
-import { Subsidiary } from '../models/company/subsidiary/entities/subsidiary.entity';
-import { DescriptionProduct } from '../models/description-product/entities/description-product.entity';
-import { Detail } from '../models/details/entities/detail.entity';
-import { SubsidiaryExistence } from '../models/inventory/subsidiary-existence/entities/subsidiary-existence.entity';
-import { Order } from '../models/order/entities/order.entity';
+import { Client } from '../models/client/entities/client.entity';
 import { Person } from '../models/person/entities/person.entity';
-import { ProductsSupplier } from '../models/products-suppliers/entities/products-supplier.entity';
-import { Product } from '../models/products/entities/product.entity';
-import { Supplier } from '../models/supplier/entities/supplier.entity';
-import { User } from '../models/users/entities/user.entity';
+import { DebtsToPay } from 'src/models/accounts/debts-to-pay/entities/debts-to-pay.entity';
+import { PaymentDetail } from 'src/models/accounts/payment-details/entities/payment-detail.entity';
+import { Receivable } from 'src/models/accounts/receivable/entities/receivable.entity';
+import { CategoryProduct } from 'src/models/category-product/entities/category-product.entity';
+import { CompanyBase } from 'src/models/company/company-base/entities/company-base.entity';
+import { Device } from 'src/models/company/device/entities/device.entity';
+import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.entity';
+import { Contact } from 'src/models/contact/entities/contact.entity';
+import { DescriptionProduct } from 'src/models/description-product/entities/description-product.entity';
+import { Detail } from 'src/models/details/entities/detail.entity';
+import { SubsidiaryExistence } from 'src/models/inventory/subsidiary-existence/entities/subsidiary-existence.entity';
+import { Order } from 'src/models/order/entities/order.entity';
+import { ProductsSupplier } from 'src/models/products-suppliers/entities/products-supplier.entity';
+import { Product } from 'src/models/products/entities/product.entity';
+import { Supplier } from 'src/models/supplier/entities/supplier.entity';
+import { User } from 'src/models/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -33,8 +33,27 @@ import { User } from '../models/users/entities/user.entity';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
         entities: [
-          `${__dirname}/../models/**/*.entity.ts`,
-        ],
+          // `${__dirname}/../models/**/*.entity.ts`,
+          User, 
+          Person, 
+          Contact, 
+          Supplier, 
+          Product,
+          CategoryProduct, 
+          DescriptionProduct, 
+          Order,
+          Detail,
+          ProductsSupplier,
+          DebtsToPay,
+          Receivable,
+          DebtsToPay,
+          PaymentDetail,
+          SubsidiaryExistence,
+          CompanyBase,
+          Subsidiary,
+          Device,
+          Client,
+        ], 
         synchronize: true,
       })
     }),

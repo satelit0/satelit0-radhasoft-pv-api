@@ -2,7 +2,8 @@ import { OmitType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { ContactDto } from './contact-dto';
 import { Address, GeoLocation, Phone, SocialNetworks } from '../../entitys/entity';
-import { IsOptional } from 'class-validator';
+import { IsEmail, IsOptional, ValidateIf } from 'class-validator';
+import { CreateClientDto } from '../../client/dto/create-client.dto';
 
 export class CreateContactDto extends OmitType(ContactDto, ['id', 'createdAt', 'updatedAt', 'deletedAt', 'contactId']) {
   
@@ -10,14 +11,15 @@ export class CreateContactDto extends OmitType(ContactDto, ['id', 'createdAt', '
   // id: number;
   // @ApiProperty({ name: 'contactId', type: 'integer' })
   // contactId: string;
-  
   @ApiProperty({ name: 'provinceId', type: 'integer', required: false })
   provinceId: number;
 
   @ApiProperty({ name: 'municipalityId', type: 'integer', required: false })
   municipalityId: number;
 
-  @ApiProperty({ name: 'email', type: 'string', required: false })
+  @ApiProperty({ name: 'email', type: String, required: false, default: undefined })
+  @ValidateIf( ({email}) =>  email != undefined)
+  @IsEmail()
   email: string;
   
   @ApiProperty({ name: 'phones', type: Phone, required: false })

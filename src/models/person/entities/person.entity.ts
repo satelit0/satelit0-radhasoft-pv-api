@@ -3,12 +3,16 @@ import { User } from '../../users/entities/user.entity';
 import { Contact } from "../../contact/entities/contact.entity";
 import { Supplier } from '../../supplier/entities/supplier.entity';
 import { Roles } from '../../../helpers/enums';
+import { Client } from '../../client/entities/client.entity';
 
 @Entity()
 export class Person {
 
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({length: 30})
+  identity: string;
 
   @Column()
   contactId: number;
@@ -41,5 +45,7 @@ export class Person {
   @OneToMany(() => Supplier, (supplier) => supplier.person)
   supplier: Supplier;
 
+  @OneToMany( () => Client, (client) => client.person)
+  client: Client;
 
 }

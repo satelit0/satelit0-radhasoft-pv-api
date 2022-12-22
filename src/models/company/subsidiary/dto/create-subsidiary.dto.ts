@@ -6,6 +6,9 @@ import { Allow } from 'class-validator';
 
 export class CreateSubsidiaryDto extends OmitType(SubsidiaryDto, ['id', 'createdAt', 'updatedAt', 'uuid',]){
 
+  @ApiProperty({name: 'headquarters', type: Boolean, required: false})
+  headquarters: boolean;
+
   @ApiProperty()
   contactId: number;
 

@@ -9,16 +9,21 @@ import { Device } from '../../device/entities/device.entity';
 export class Subsidiary extends ContextCompany {
 
   @Column()
-  companyBaseId: number; 
+  companyBaseId: number;
+
+  @Column({ default: false, comment: 'si true, no es sucursal es oficina principal. Solo una debe ser true.' })
+  headquarters: boolean;
 
   @ManyToOne(() => CompanyBase, (companyBase) => companyBase.subsidiary)
   companyBase: CompanyBase;
 
-  @OneToOne( () => Contact, (contact) => contact.subsidiary)
+  @OneToOne(() => Contact, (contact) => contact.subsidiary)
   @JoinColumn()
   contact: Contact;
 
-  @OneToMany( () => Device, (device) => device.subsidiary)
+  @OneToMany(() => Device, (device) => device.subsidiary)
   device: Device[];
+
+
 }
 

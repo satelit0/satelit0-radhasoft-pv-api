@@ -1,6 +1,18 @@
 import { Roles } from "src/helpers/enums";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  OneToMany
+} from "typeorm";
 import { Person } from '../../person/entities/person.entity';
+import { Client } from '../../client/entities/client.entity';
+import { WorkingHours } from "src/models/entitys/entity";
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -18,17 +30,30 @@ export class User {
   @Column({ comment: 'dispositivos conocidos a los que tinene acceso el usuario para acceso al sistema', nullable: true })
   devicesId: number;
 
-  @Column()
+  @Column({ unique: true})
   userName: string;
 
   @Column({ nullable: true })
   password: string;
 
-  @Column('simple-json', { default: { hours: { startTime: '7:30:00', endTime: '17:00:00' }, days: { sun: false, mon: true, tue: true, wen: true, thu: true, fri: true, sat: false } }, comment: 'horario laboal y dias validos para acceso al sistema' })
-  workingHours: {
-    hours: { startTime: string, endTime: string }, 
-    days: { sun: boolean, mon: boolean, tue: boolean, wen: boolean, thu: boolean, fri: boolean, sat: boolean }
-  }
+  @Column('jsonb', {
+     default: { 
+      hours: { 
+        startTime: '7:30:00',
+        endTime: '17:00:00' 
+      }, 
+      days: { 
+        sun: false, 
+        mon: true, 
+        tue: true, 
+        wen: true, 
+        thu: true, 
+        fri: true, 
+        sat: false 
+      } 
+    }, 
+    comment: 'horario laboal y dias validos para acceso al sistema' })
+  workingHours: WorkingHours;
 
   @Column({ nullable: true })
   lastLogin: Date;
@@ -44,4 +69,7 @@ export class User {
 
   @ManyToOne(() => Person, (person: Person) => person.users)
   person: Person
+
+  @OneToMany(() => Client, client => client.user, { onDelete: 'SET NULL' })
+  client: Client;
 }

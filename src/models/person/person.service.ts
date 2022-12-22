@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Person } from './entities/person.entity';
 import { Repository } from 'typeorm';
 import { PatchPersonDto } from './dto/patch-person.dto';
+import { IPerson } from '../interfaces/models.interface';
  
 @Injectable()
 export class PersonService {
@@ -24,15 +25,31 @@ export class PersonService {
   async findAll(): Promise<Person[]> {
     return await this.personRepository.find({ 
       order: {id: 'ASC'}, 
-      loadRelationIds: true,
-      // loadEagerRelations: true,
-      // transaction: true,
+      // loadRelationIds: true,
+      relations: {
+        contact: true,
+        users: true,
+      }
     });
   }
 
   findOne(id: number, withDeleted: boolean = false): Promise<Person> {
     return this.personRepository.findOne({ 
       where: { id },
+      relations: {
+        users: true,
+        contact: true,
+        supplier: {
+          suppliersProducts: true,
+        },
+      },
+      withDeleted, 
+    });
+  }
+
+  findOneBy(person: IPerson, withDeleted: boolean = false): Promise<Person> {
+    return this.personRepository.findOne({ 
+      where: { ...person },
       relations: {
         users: true,
         contact: true,
@@ -64,5 +81,10 @@ export class PersonService {
     const person = this.personRepository.create({id});
     const personRemoved = this.personRepository.remove(person, {data:"algo mas"});
     return personRemoved;
+  }
+
+  
+  restore(id: number) {
+    return this.personRepository.restore(id);
   }
 }

@@ -9,34 +9,49 @@ export class PersonDto {
   // @IsNotEmpty({ message: "Propiedad nameEntity no puede estar vacio" })
   // @Transform(({ value }) => toTrim(value))
   // nameEntity: string;
+
+  @ApiProperty({ name: 'id', type: Number})
   @IsInt()
-  @Min(1)
   @ApiProperty({
     type: 'number',
-    // format: ''
   })
   id: number;
 
+  @ApiProperty({ name: 'identity', type: String})
+  @IsString()
+  @IsNotEmpty()
+  @Transform(({ value }) => toTrim(value))
+  identity: string;
+
+  @ApiProperty({ name: 'contactId', type: Number})
+  @IsInt()
+  contactId: number;
+
+  @ApiProperty({ name: 'firstName', type: String})
   @IsString()
   @IsNotEmpty({ message: "Si se provee firstName debe proveer un a valor" })
   @Transform(({ value }) => toTrim(value))
   firstName: string;
 
-  
+  @ApiProperty({ name: 'lastName', type: String})
   @IsString()
   @IsNotEmpty({ message: "Si se provee lastName debe proveer un a valor" })
   @Transform(({ value }) => toTrim(value))
   lastName: string;
 
+  @ApiProperty({ name: 'birthday', type: Date})
   @IsISO8601()
   birthday: Date;
 
+  @ApiProperty({ name: 'createdAt', type: Date})
   @IsDateString()
   createdAt: Date;
 
+  @ApiProperty({ name: 'updatedAt', type: Date})
   @IsDateString()
   updatedAt: Date;
 
+  @ApiProperty({ name: 'deletedAt', type: Date})
   @IsDateString()
   deletedAt: Date;
 

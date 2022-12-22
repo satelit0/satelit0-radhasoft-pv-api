@@ -26,19 +26,15 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto) {
-
     const { password, userName, email, personId } = createUserDto;
-
     const passwordHash = await hash(password, SALROUNDS);
-
     const user = this.userRepository.create({ userName, password: passwordHash, roleId: 1 });
     const contac = this.contacRepository.create({ email });
     const newUser = await this.userRepository.save(user);
     const newContac = await this.contacRepository.save(contac);
-
     return { newUser, newContac };
   }
-
+ 
   async findAll() {
 
     const users =  await this.userRepository.find({
@@ -95,15 +91,8 @@ export class UsersService {
     return user;
   }
 
-  async remove(id: number, soft: boolean = true) {
-
-    // const user =  await this.userRepository.findOneBy({id});
-    // if (!user) return new NotFoundException(`El usuario con id: ${id} no existe`).getResponse();
-    if (soft) return this.userRepository.softDelete(id);
-
-    const user =  this.userRepository.create({id})
-    const userRemoved = this.userRepository.remove(user);
-
-    return userRemoved;
+   remove(id: number, soft: boolean = true) {
+    if (soft) return  this.userRepository.softDelete(id);
+    return this.userRepository.delete(id);
   }
 }
