@@ -28,9 +28,13 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const { password, userName, email, personId } = createUserDto;
     const passwordHash = await hash(password, SALROUNDS);
+    
     const user = this.userRepository.create({ userName, password: passwordHash, roleId: 1 });
+
     const contac = this.contacRepository.create({ email });
+    
     const newUser = await this.userRepository.save(user);
+    
     const newContac = await this.contacRepository.save(contac);
     return { newUser, newContac };
   }
