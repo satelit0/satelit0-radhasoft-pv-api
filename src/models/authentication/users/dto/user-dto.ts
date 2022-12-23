@@ -1,5 +1,5 @@
 import { IsDateString, IsInt, IsString, Min, Allow, IsEnum, IsOptional } from 'class-validator';
-import { Roles } from '../../../../../helpers/enums';
+import { Roles } from '../../../../helpers/enums';
 import { ApiProperty } from '@nestjs/swagger';
 export class UserDto {
 

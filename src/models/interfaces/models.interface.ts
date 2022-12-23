@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ContactDto } from '../contact/dto/contact-dto';
-import { Phone, SocialNetworks, GeoLocation, Address } from "../entitys/entity";
+import { Phone, SocialNetworks, GeoLocation, Address, WorkingHours } from "../entitys/entity";
 
 export interface IDevice extends IContextDate {
   id?: number;
@@ -38,6 +38,18 @@ export interface ISubsidiary extends IContextDate {
   headquarters?: boolean;
   uuid?: string;
   name?: string;
+}
+
+export interface IUser extends IContextDate {
+  id?: number;
+  personId?: number;
+  roleId?: number;
+  subsidiaryId?: number;
+  devicesId?: number;
+  userName?: string;
+  password?: string;
+  workingHours?: WorkingHours;
+  lastLogin?: Date;
 }
 
 

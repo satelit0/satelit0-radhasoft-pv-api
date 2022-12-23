@@ -18,7 +18,7 @@ import { Order } from 'src/models/order/entities/order.entity';
 import { ProductsSupplier } from 'src/models/products-suppliers/entities/products-supplier.entity';
 import { Product } from 'src/models/products/entities/product.entity';
 import { Supplier } from 'src/models/supplier/entities/supplier.entity';
-import { User } from 'src/models/authentication/authentication/users/entities/user.entity';
+import { User } from 'src/models/authentication/users/entities/user.entity';
 
 @Module({
   imports: [

@@ -4,11 +4,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { Contact } from '../../../contact/entities/contact.entity';
-import { Person } from '../../../person/entities/person.entity';
-import { PersonService } from '../../../person/person.service';
+import { Contact } from '../../contact/entities/contact.entity';
+import { Person } from '../../person/entities/person.entity';
+import { PersonService } from '../../person/person.service';
 import { hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
+import { IUser } from 'src/models/interfaces/models.interface';
 
 @Injectable()
 export class UsersService {
@@ -68,7 +69,7 @@ export class UsersService {
     return users;
   }
 
-   findOne(id: number, withDeleted: boolean = false) {
+  findOne(id: number, withDeleted: boolean = false) {
 
     const user =  this.userRepository.findOne({
       loadRelationIds: true, 
@@ -77,6 +78,15 @@ export class UsersService {
       withDeleted
     });
 
+    return user;
+  }
+
+  findOneBy(params: IUser) {
+    const user =  this.userRepository.findOne({
+      loadRelationIds: true, 
+      where: {...params}, 
+      // select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
+    });
     return user;
   }
 
