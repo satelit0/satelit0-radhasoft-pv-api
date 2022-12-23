@@ -63,7 +63,7 @@ export class User {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updateAdt: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn()
   deletedAt: Date;

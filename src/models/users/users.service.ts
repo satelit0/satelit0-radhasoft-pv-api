@@ -54,7 +54,7 @@ export class UsersService {
         devicesId: true,
         password: false,
         createdAt: true,
-        updateAdt: true,
+        updatedAt: true,
         deletedAt: true,
       },
       relations: {
@@ -80,6 +80,20 @@ export class UsersService {
     return user;
   }
 
+  findOneByEmail(email: string): Promise<User> {
+
+    const user = <Promise<User>>this.userRepository.query(
+      `select * from person p 
+	      left join contact c 
+	      on p."contactId" = c.id and (p."deletedAt" is null) and (p."deletedAt" is  null)
+	      left join "user" "users" 
+	      on p.id = "users"."personId"
+	      where c.email = $1 and ("users"."deletedAt" is  null);`, [email]
+      );
+
+    return user;
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
 
     const { password } = updateUserDto;
@@ -95,8 +109,12 @@ export class UsersService {
     return user;
   }
 
-   remove(id: number, soft: boolean = true) {
+  remove(id: number, soft: boolean = true) {
     if (soft) return  this.userRepository.softDelete(id);
     return this.userRepository.delete(id);
+  }
+
+  restore(id: number) {
+    this.userRepository.restore(id);
   }
 }

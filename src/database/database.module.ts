@@ -55,6 +55,7 @@ import { User } from 'src/models/users/entities/user.entity';
           Client,
         ], 
         synchronize: true,
+        logging: ['query', 'error']
       })
     }),
   ],

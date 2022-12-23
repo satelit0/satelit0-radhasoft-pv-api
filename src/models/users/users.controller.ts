@@ -50,7 +50,7 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'Usuario creado exitosamente',
-    type: User,
+    type: UserDto,
   })
   async create(@Body() createUserDto: CreateUserDto) {
     try {
