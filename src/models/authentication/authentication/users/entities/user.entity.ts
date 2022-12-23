@@ -9,8 +9,8 @@ import {
   DeleteDateColumn,
   OneToMany
 } from "typeorm";
-import { Person } from '../../person/entities/person.entity';
-import { Client } from '../../client/entities/client.entity';
+import { Person } from '../../../../person/entities/person.entity';
+import { Client } from '../../../../client/entities/client.entity';
 import { WorkingHours } from "src/models/entitys/entity";
 
 @Entity()

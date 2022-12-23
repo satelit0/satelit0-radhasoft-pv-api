@@ -15,17 +15,17 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PersonService } from '../person/person.service';
+import { PersonService } from '../../../person/person.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Contact } from '../contact/entities/contact.entity';
+import { Contact } from '../../../contact/entities/contact.entity';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { FindOneParams, httpErrotHandler } from '../../helpers/utils';
+import { FindOneParams, httpErrotHandler } from '../../../../helpers/utils';
 import { PasswordDto } from './dto/password-dto';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user-dto';
 import { HttpException } from '@nestjs/common';
-import { SubsidiaryService } from '../company/subsidiary/subsidiary.service';
+import { SubsidiaryService } from '../../../company/subsidiary/subsidiary.service';
 
 
 @Controller('users')

@@ -4,9 +4,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { Contact } from '../contact/entities/contact.entity';
-import { Person } from '../person/entities/person.entity';
-import { PersonService } from '../person/person.service';
+import { Contact } from '../../../contact/entities/contact.entity';
+import { Person } from '../../../person/entities/person.entity';
+import { PersonService } from '../../../person/person.service';
 import { hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
 

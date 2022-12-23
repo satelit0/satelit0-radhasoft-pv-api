@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Entity, ManyToOne } from 'typeorm';
 import { Person } from '../../person/entities/person.entity';
-import { User } from '../../users/entities/user.entity';
+import { User } from '../../authentication/authentication/users/entities/user.entity';
 
 
 @Entity()

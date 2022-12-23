@@ -6,7 +6,7 @@ import { Order } from 'src/models/order/entities/order.entity';
 import { Person } from 'src/models/person/entities/person.entity';
 import { Product } from 'src/models/products/entities/product.entity';
 import { Supplier } from 'src/models/supplier/entities/supplier.entity';
-import { User } from 'src/models/users/entities/user.entity';
+import { User } from 'src/models/authentication/authentication/users/entities/user.entity';
 import { DataSource } from 'typeorm';
 
 export const DatabaseProviders = [

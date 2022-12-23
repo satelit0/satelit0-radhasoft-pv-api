@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { UsersService } from './models/users/users.service';
+import { UsersService } from './models/authentication/authentication/users/users.service';
 import { PersonService } from './models/person/person.service';
 import { Person } from './models/person/entities/person.entity';
 import { ApiTags } from '@nestjs/swagger';

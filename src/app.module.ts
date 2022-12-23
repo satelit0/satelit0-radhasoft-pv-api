@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './models/users/users.module';
-import { UsersService } from './models/users/users.service';
+import { UsersModule } from './models/authentication/authentication/users/users.module';
+import { UsersService } from './models/authentication/authentication/users/users.service';
 import { ProductsModule } from './models/products/products.module';
 import { ProductsService } from './models/products/products.service';
 import { DescriptionProductModule } from './models/description-product/description-product.module';
@@ -25,6 +25,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { ClientModule } from './models/client/client.module';
+import { AuthenticationModule } from './models/authentication/authentication/authentication.module';
   
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { ClientModule } from './models/client/client.module';
     CompanyBaseModule,
     DeviceModule,
     DatabaseModule,
-    ClientModule
+    ClientModule,
+    AuthenticationModule,
   ],
   controllers: [AppController],
   providers: [
