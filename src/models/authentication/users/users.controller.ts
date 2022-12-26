@@ -10,7 +10,8 @@ import {
   BadGatewayException,
   BadRequestException,
   Put,
-  Query
+  Query,
+  UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,10 +23,17 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FindOneParams, httpErrotHandler } from '../../../helpers/utils';
 import { PasswordDto } from './dto/password-dto';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user-dto';
 import { HttpException } from '@nestjs/common';
 import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
+import { hash } from 'bcrypt';
+import { SALROUNDS } from 'src/helpers/consts';
+import { DeviceService } from '../../company/device/device.service';
+import { CreateDeviceDto } from '../../company/device/dto/create-device.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtStrategy } from '../auth/jwt.strategy';
+import { JwtAuthenticationGuard } from '../guards/jwt-authentication.guard';
 
 
 @Controller('users')
@@ -36,6 +44,7 @@ export class UsersController {
     private readonly personService: PersonService,
     private readonly subsidiaryService: SubsidiaryService,
     // private readonly contacService: ContactService,
+    private readonly deviceService: DeviceService,
 
     @InjectRepository(Contact)
     private contactRepository: Repository<Contact>,
@@ -54,37 +63,30 @@ export class UsersController {
   })
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      const { personId, subsidiaryId, email, userName, password } = createUserDto;
+      const { personId, subsidiaryId, userName, password, deviceIds } = createUserDto;
+      createUserDto.password = await hash(password, SALROUNDS);
+
+      const exitsUserName = await this.userRepository.findOne({ where: { userName } });
+      if (exitsUserName) throw new HttpException(`El nombre de usuario ${userName} ya esta registrado`, 400);
+
+      const person = await this.personService.findOne(personId);
+      if (!person) throw new HttpException(`Persona con el id ${personId} no existe`, 404);
 
       if (subsidiaryId == 0 || !subsidiaryId) {
         const { id } = await this.subsidiaryService.findOneBy({ headquarters: true });
         createUserDto.subsidiaryId = id;
       }
-
-      const person = await this.personService.findOne(personId);
-      if (!person) throw new HttpException(`Persona con el id ${personId} no existe`, 404);
-
-      const exitsUserName = await this.userRepository.findOne({ where: { userName } });
-      if (exitsUserName) throw new HttpException(`El nombre de usuario ${userName} ya esta registrado`, 400);
-
-      const emailContac = await this.contactRepository.findOne({ where: { email } });
-      if (emailContac) throw new HttpException(`El email: ${emailContac.email} ya esta registrado`, 400);
-
       const newUser = await this.usersService.create(createUserDto);
       return newUser;
 
     } catch (error) {
-      // console.log('===>', error);
-      httpErrotHandler(error);
+      console.log('===>', error);
     }
   }
 
+  @ApiResponse({ status: 200, description: 'Usuarios recuperados exitosamente', type: User, })
+  @UseGuards(JwtAuthenticationGuard)
   @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Usuarios recuperados exitosamente',
-    type: User,
-  })
   async findAll() {
     const users = await this.usersService.findAll();
     return users;
@@ -139,18 +141,10 @@ export class UsersController {
     // }
   }
 
-  @Put(':id')
-  @ApiParam({
-    name: 'id',
-    type: Number,
-    required: true,
-    description: 'Id del usuario a editar'
-  })
-  @ApiResponse({
-    status: 200,
-    type: UpdateUserDto
-  })
+  @ApiParam({ name: 'id', type: Number, required: true, description: 'Id del usuario a editar' })
+  @ApiResponse({ status: 200, type: UpdateUserDto })
   @ApiBody({ type: UpdateUserDto })
+  @Put(':id')
   async updatePassword(@Param() { id }: FindOneParams, @Body() passwordDto: PasswordDto) {
 
     const user = await this.usersService.findOne(id);
@@ -161,25 +155,26 @@ export class UsersController {
     return passwordEdited;
   }
 
-  @Delete(':id')
   @ApiParam({
     name: 'id',
     required: true,
     type: Number,
     description: 'Id del usuario a eliminar',
   })
-
-  @ApiParam({
+  @ApiQuery({
     name: 'soft',
     required: false,
     type: Boolean,
     description: 'si true eliminado suave, false eliminado permanente',
   })
+  @Delete(':id')
   async remove(@Param() { id }: FindOneParams, @Query() soft?: boolean) {
 
-    if (soft) return await this.usersService.remove(id, soft)
+    if (soft) return await this.usersService.remove(id, soft);
 
     const userRemoved = await this.usersService.remove(id);
+
     return userRemoved;
   }
+
 }

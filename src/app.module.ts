@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './models/authentication/users/users.module';
 import { UsersService } from './models/authentication/users/users.service';
 import { ProductsModule } from './models/products/products.module';
 import { ProductsService } from './models/products/products.service';
@@ -25,10 +24,13 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { ClientModule } from './models/client/client.module';
-import { AuthenticationModule } from './models/authentication/authentication/authentication.module';
-import { AuthenticationService } from './models/authentication/authentication/authentication.service';
+import { AuthService } from './models/authentication/auth/auth.service';
+import { DeviceService } from './models/company/device/device.service';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './models/authentication/auth/auth.module';
+import { UsersModule } from './models/authentication/users/users.module';
   
-@Module({
+@Module({ 
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
@@ -38,6 +40,9 @@ import { AuthenticationService } from './models/authentication/authentication/au
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DATABASE: Joi.string().required(),
         PORT: Joi.number().required(),
+
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().required(),
       })
     }),
     UsersModule, 
@@ -58,17 +63,21 @@ import { AuthenticationService } from './models/authentication/authentication/au
     DeviceModule,
     DatabaseModule,
     ClientModule,
-    AuthenticationModule,
+    AuthModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    UsersService,
+    // UsersService,
     ProductsService,
     PersonService,
-    // AuthenticationService,
+    AuthService,
+    // DeviceService,
+    AuthService
   ],
   exports: [
+    // JwtModule
   ]
 }) 
 export class AppModule {

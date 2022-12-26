@@ -10,15 +10,18 @@ import { PersonService } from '../../person/person.service';
 import { hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
 import { IUser } from 'src/models/interfaces/models.interface';
+import { CreateDeviceDto } from '../../company/device/dto/create-device.dto';
+import { Device } from '../../company/device/entities/device.entity';
+import { DeviceService } from '../../company/device/device.service';
+import { DeviceDto } from '../../company/device/dto/device-dto';
 
 @Injectable()
 export class UsersService {
-  /**
-   *
-   */
+
   constructor(
     private personService: PersonService,
-    
+    private deviceService: DeviceService,
+
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
@@ -27,32 +30,42 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto) {
-    const { password, userName, email, personId } = createUserDto;
-    const passwordHash = await hash(password, SALROUNDS);
-    
-    const user = this.userRepository.create({ userName, password: passwordHash, roleId: 1 });
+    const { deviceIds } = createUserDto;
+    const devices: Device[] = [];
 
-    const contac = this.contacRepository.create({ email });
-    
+    if (deviceIds.length == 0) {
+      const device = new CreateDeviceDto();
+      device.subsidiaryId = createUserDto.subsidiaryId;
+      device.name = "generic-device";
+      device.operativeSystem = 'generic-os';
+      device.macAddress = [];
+      const newDevice = await this.deviceService.create(device);
+      devices.push({ ...newDevice });
+    } else {
+      for (const deviceId of deviceIds) {
+        const device = await this.deviceService.findOne({ id: deviceId });
+        devices.push({ ...device });
+      }
+    }
+    console.log('+++++++++++++++++++++>', [...devices]);
+
+    const user = this.userRepository.create({ ...createUserDto, roleId: 1, devices: [...devices] });
+
+    console.log('+++++++++++++++++++++>', user);
     const newUser = await this.userRepository.save(user);
-    
-    const newContac = await this.contacRepository.save(contac);
-    return { newUser, newContac };
+    return { newUser };
   }
- 
-  async findAll() {
 
-    const users =  await this.userRepository.find({
-      // loadEagerRelations: true,
-      // loadRelationIds: true,
-      select: 
+  async findAll() {
+    const users = await this.userRepository.find({
+      select:
       {
         id: true,
         userName: true,
         personId: true,
         roleId: true,
         subsidiaryId: true,
-        devicesId: true,
+        // devicesId: true,
         password: false,
         createdAt: true,
         updatedAt: true,
@@ -61,9 +74,9 @@ export class UsersService {
       relations: {
         person: {
           contact: true,
-        }
+        },
+        devices: true,
       },
-
     });
 
     return users;
@@ -71,9 +84,9 @@ export class UsersService {
 
   findOne(id: number, withDeleted: boolean = false) {
 
-    const user =  this.userRepository.findOne({
-      loadRelationIds: true, 
-      where: {id}, 
+    const user = this.userRepository.findOne({
+      loadRelationIds: true,
+      where: { id },
       // select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
       withDeleted
     });
@@ -82,10 +95,16 @@ export class UsersService {
   }
 
   findOneBy(params: IUser) {
-    const user =  this.userRepository.findOne({
-      loadRelationIds: true, 
-      where: {...params}, 
+    const user = this.userRepository.findOne({
+      // loadRelationIds: true, 
+      where: { ...params },
       // select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
+      relations: {
+        person: true,
+        devices: true,
+        client: true,
+
+      }
     });
     return user;
   }
@@ -99,7 +118,7 @@ export class UsersService {
 	      left join "user" "users" 
 	      on p.id = "users"."personId"
 	      where c.email = $1 and ("users"."deletedAt" is  null);`, [email]
-      );
+    );
 
     return user;
   }
@@ -107,20 +126,20 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto) {
 
     const { password } = updateUserDto;
-    
-    if( password) {
+
+    if (password) {
       const passwordHash = await hash(password, SALROUNDS);
       updateUserDto.password = passwordHash;
     }
 
-    const user =  this.userRepository.create(updateUserDto);
+    const user = this.userRepository.create(updateUserDto);
     const userEdited = this.userRepository.update(id, user);
     // return userEdited;
     return user;
   }
 
   remove(id: number, soft: boolean = true) {
-    if (soft) return  this.userRepository.softDelete(id);
+    if (soft) return this.userRepository.softDelete(id);
     return this.userRepository.delete(id);
   }
 

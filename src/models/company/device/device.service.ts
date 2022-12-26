@@ -38,11 +38,12 @@ export class DeviceService {
     const device = this.repositoryDevice.findOne({
       where: { ...param },
       relations: {
-
+        subsidiary: true,
       } 
     });
     return device;
   }
+  
   findOneByMacAddress(macAddress: string) {
     const device = this.repositoryDevice.query(
       `select * from Device where $1 = any ("macAddress")`, [macAddress]

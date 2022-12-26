@@ -13,3 +13,4 @@ export const httpErrotHandler = (error: HttpException, msg: string  = 'se produj
   throw new HttpException(error.getStatus() == 500 ? `${msg} ${error.message}` : error.message, error.getStatus()); 
 }
 
+ 

@@ -1,4 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Request } from "express";
+import { User } from "../authentication/users/entities/user.entity";
 import { ContactDto } from '../contact/dto/contact-dto';
 import { Phone, SocialNetworks, GeoLocation, Address, WorkingHours } from "../entitys/entity";
 
@@ -52,13 +54,17 @@ export interface IUser extends IContextDate {
   lastLogin?: Date;
 }
 
-
-
-
-
 interface IContextDate {
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
 }
 
+export interface IRequestWithUser extends Request {
+  user: User;
+}
+
+export 
+interface ITokenPayload {
+  userId: number;
+}

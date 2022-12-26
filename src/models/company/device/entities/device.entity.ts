@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Entity, ManyToOne } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Entity, ManyToOne, OneToMany, ManyToMany } from 'typeorm';
 import { Subsidiary } from '../../subsidiary/entities/subsidiary.entity';
+import { User } from '../../../authentication/users/entities/user.entity';
 
 @Entity()
 export class Device {
@@ -31,4 +32,7 @@ export class Device {
 
   @ManyToOne( () => Subsidiary, (subsidiary) => subsidiary.device)
   subsidiary: Subsidiary;  
+
+  // @ManyToMany ( () => User, (user) => user.device)
+  // user: User[]; 
 }

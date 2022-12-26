@@ -3,16 +3,17 @@ import { NestFactory } from '@nestjs/core';
 import { Transform } from 'class-transformer';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {cors: true});
-  // app.enableCors();
+  app.enableCors();
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true, forbidNonWhitelisted: true,
     transform: true,
     // stopAtFirstError: true,
-    
+     
   }));
 
   const swaggerConfig = new DocumentBuilder()
@@ -21,6 +22,7 @@ async function bootstrap() {
     .setContact('Francisco Valdez','', 'fvaldezf@radhasoft.net')
     .setVersion('1.0')
     .build();
+  app.use(cookieParser());
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 

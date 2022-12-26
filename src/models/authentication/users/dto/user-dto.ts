@@ -22,10 +22,10 @@ export class UserDto {
   @IsOptional()
   subsidiaryId: number;
 
-  @ApiProperty({ name: 'devicesId', type: Number, required: false })
-  @IsInt()
-  @IsOptional()
-  devicesId: number;
+  // @ApiProperty({ name: 'devicesId', type: Number, required: false })
+  // @IsInt()
+  // @IsOptional()
+  // devicesId: number;
 
   @ApiProperty({ name: 'userName', type: String, })
   @IsString()
@@ -34,6 +34,21 @@ export class UserDto {
   @ApiProperty({ name: 'password', type: String, })
   @IsString()
   password: string;
+
+  @Allow()
+  public currentHashedRefreshToken?: string;
+
+  @Allow()
+  public twoFactorAuthenticationSecret?: string;
+  
+  @Allow()
+  public isTwoFactorAuthenticationEnabled: boolean;
+  
+  @Allow()
+  public isEmailConfirmed: boolean;
+
+  @Allow()
+  public isPhoneNumberConfirmed: boolean;
 
   @IsDateString()
   lastLogin: Date;

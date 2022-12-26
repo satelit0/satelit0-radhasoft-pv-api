@@ -7,11 +7,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  OneToMany
+  OneToMany,
+  JoinTable
 } from "typeorm";
 import { Person } from '../../../person/entities/person.entity';
 import { Client } from '../../../client/entities/client.entity';
 import { WorkingHours } from "src/models/entitys/entity";
+import { Device } from '../../../company/device/entities/device.entity';
+import { ManyToMany } from 'typeorm';
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class User {
@@ -27,8 +31,8 @@ export class User {
   @Column({ comment: 'sucursal a la que pertenese el usuario', nullable: true })
   subsidiaryId: number;
 
-  @Column({ comment: 'dispositivos conocidos a los que tinene acceso el usuario para acceso al sistema', nullable: true })
-  devicesId: number;
+  // @Column({ comment: 'dispositivos conocidos a los que tinene acceso el usuario para acceso al sistema', nullable: true })
+  // devicesId: number;
 
   @Column({ unique: true })
   userName: string;
@@ -68,9 +72,31 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
+  @Column({
+    nullable: true,
+  })
+  @Exclude()
+  currentHashedRefreshToken?: string;
+
+  @Column({ nullable: true })
+  twoFactorAuthenticationSecret?: string;
+
+  @Column({ default: false })
+  isTwoFactorAuthenticationEnabled: boolean;
+
+  @Column({ default: false })
+  isEmailConfirmed: boolean;
+
+  @Column({ default: false })
+  isPhoneNumberConfirmed: boolean;
+
   @ManyToOne(() => Person, (person: Person) => person.users)
   person: Person
 
   @OneToMany(() => Client, client => client.user, { onDelete: 'SET NULL' })
   client: Client;
+
+  @ManyToMany(() => Device)
+  @JoinTable()
+  devices: Device[];
 }
