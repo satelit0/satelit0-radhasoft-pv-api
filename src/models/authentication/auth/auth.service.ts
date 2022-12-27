@@ -57,23 +57,32 @@ export class AuthService {
     return `This action removes a #${id} authentication`;
   }
 
-  async getCookieWithJwtToken(userId: number) {
-    const payload: ITokenPayload = { userId };
-    const token = this.jwtService.sign(payload, 
-    //   {
-    //   secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
-    //   expiresIn: `${this.configService.get(
-    //     'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-    //   )}`,
-    // }
+  async getCookieWithJwtToken(params: { userId: number, subsidiaryId: number }) {
+    const { userId, subsidiaryId } = params;
+    const payload: ITokenPayload = { userId, subsidiaryId };
+    const token = this.jwtService.sign(payload,
+      {
+        secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+        expiresIn: `${this.configService.get(
+          'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+        )}`,
+      }
     );
-    return {
-      cookie: `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`,
-      token
-    };
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')}`;
   }
 
-  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+  public getCookieWithJwtRefreshToken(userId: number, subsidiaryId: number) {
+    const payload: ITokenPayload = { userId, subsidiaryId };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')}`
+    });
+    const cookieRefreshToken = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')}`;
+    return cookieRefreshToken;
+  }
+
+  async setCurrentRefreshToken(params: { refreshToken: string, userId: number }) {
+    const { refreshToken, userId } = params;
     const currentHashedRefreshToken = await hash(refreshToken, 10);
     await this.usersService.update(userId, {
       currentHashedRefreshToken,

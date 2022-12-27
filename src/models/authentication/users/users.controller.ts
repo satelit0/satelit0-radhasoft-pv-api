@@ -33,7 +33,7 @@ import { DeviceService } from '../../company/device/device.service';
 import { CreateDeviceDto } from '../../company/device/dto/create-device.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtStrategy } from '../auth/jwt.strategy';
-import { JwtAuthenticationGuard } from '../guards/jwt-authentication.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 
 @Controller('users')
@@ -85,7 +85,7 @@ export class UsersController {
   }
 
   @ApiResponse({ status: 200, description: 'Usuarios recuperados exitosamente', type: User, })
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     const users = await this.usersService.findAll();

@@ -146,4 +146,11 @@ export class UsersService {
   restore(id: number) {
     this.userRepository.restore(id);
   }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    const currentHashedRefreshToken = await hash(refreshToken, 10);
+    await this.userRepository.update(userId, {
+      currentHashedRefreshToken
+    });
+  }
 }

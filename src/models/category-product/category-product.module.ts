@@ -10,6 +10,6 @@ import { CategoryProduct } from './entities/category-product.entity';
   ],
   controllers: [CategoryProductController],
   providers: [CategoryProductService],
-  exports: [TypeOrmModule]
+  exports: [CategoryProductService]
 })
 export class CategoryProductModule {}

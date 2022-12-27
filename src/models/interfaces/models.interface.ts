@@ -67,4 +67,5 @@ export interface IRequestWithUser extends Request {
 export 
 interface ITokenPayload {
   userId: number;
+  subsidiaryId: number;
 }

@@ -70,11 +70,11 @@ import { UsersModule } from './models/authentication/users/users.module';
   providers: [
     AppService,
     // UsersService,
-    ProductsService,
-    PersonService,
-    AuthService,
+    // ProductsService,
+    // PersonService,
+    // AuthService,
     // DeviceService,
-    AuthService
+    // AuthService
   ],
   exports: [
     // JwtModule

@@ -7,6 +7,7 @@ import { Contact } from './entities/contact.entity';
 @Module({
   imports: [ TypeOrmModule.forFeature([Contact]),],
   controllers: [ContactController],
-  providers: [ContactService]
+  providers: [ContactService],
+  exports: [ContactService]
 })
 export class ContactModule {}

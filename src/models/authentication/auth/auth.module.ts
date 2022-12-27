@@ -12,10 +12,10 @@ import { DeviceService } from '../../company/device/device.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
-import { LocalStrategy } from './local.strategy';
 
 @Module({
   imports: [
@@ -48,9 +48,11 @@ import { LocalStrategy } from './local.strategy';
     DeviceService,
     LocalStrategy,
     JwtStrategy,
-    JwtService,
+    // JwtService,
   ], 
-  exports: []
+  exports: [
+    AuthService,
+  ]
 })
 export class AuthModule {
 
