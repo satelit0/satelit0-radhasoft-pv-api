@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, UseInterceptors, SerializeOptions } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
@@ -6,7 +6,10 @@ import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ContactDto } from './dto/contact-dto';
 import { FindOneParams, httpErrotHandler } from '../../helpers/utils';
 import { Contact } from './entities/contact.entity';
+import { ExcludeNullInterceptor } from '../../helpers/exclude-null.interceptor';
 
+@SerializeOptions({strategy: 'exposeAll'})
+// @UseInterceptors(ExcludeNullInterceptor)
 @Controller('contact')
 @ApiTags('Contact')
 export class ContactController {

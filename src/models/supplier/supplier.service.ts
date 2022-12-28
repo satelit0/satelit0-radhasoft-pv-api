@@ -27,7 +27,7 @@ export class SupplierService {
     const supplier = this.supplierRepository.find({
       relations: {
         person: true,
-        suppliersProducts: true,
+        // suppliersProducts: true,
       },
       order: { id: 'ASC', nameEntity: 'ASC' }
     });
@@ -41,9 +41,9 @@ export class SupplierService {
       withDeleted,
       relations: {
         person: true,
-        suppliersProducts: {
-          product: true
-        }
+        // suppliersProducts: {
+        //   product: true
+        // }
       }
     });
   }

@@ -10,6 +10,7 @@ import { Person } from '../../person/entities/person.entity';
 import { CompanyBase } from '../../company/company-base/entities/company-base.entity';
 import { Subsidiary } from '../../company/subsidiary/entities/subsidiary.entity';
 import { Address, GeoLocation, Phone, SocialNetworks } from "src/models/entitys/entity";
+import { Exclude, Expose } from "class-transformer";
 
 @Entity()
 export class Contact {
@@ -47,6 +48,7 @@ export class Contact {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Exclude()
   @DeleteDateColumn()
   deletedAt: Date;
 

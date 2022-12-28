@@ -39,9 +39,9 @@ export class PersonService {
       relations: {
         users: true,
         contact: true,
-        supplier: {
-          suppliersProducts: true,
-        },
+        // supplier: {
+        //   // suppliersProducts: true,
+        // },
       },
       withDeleted, 
     });
@@ -53,9 +53,9 @@ export class PersonService {
       relations: {
         users: true,
         contact: true,
-        supplier: {
-          suppliersProducts: true,
-        },
+        // supplier: {
+        //   suppliersProducts: true,
+        // },
       },
       withDeleted, 
     });

@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, OneToMany } from 'typeorm';
 import { Person } from '../../person/entities/person.entity';
 import { Product } from '../../products/entities/product.entity';
-import { ProductsSupplier } from '../../products-suppliers/entities/products-supplier.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Supplier {
@@ -26,15 +26,13 @@ export class Supplier {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Exclude()
   @DeleteDateColumn()
   deletedAt: Date;
-
-  // @ManyToMany( () => Product, (product) => product.productsSuppliers)
-  // product: Product[];
 
   @ManyToOne( () => Person, (person) => person.supplier)
   person: Person;
 
-  @OneToMany(() => ProductsSupplier, (productsSupplier) => productsSupplier.supplier, )
-  suppliersProducts: ProductsSupplier[];
+  // @OneToMany(() => ProductsSupplier, (productsSupplier) => productsSupplier.supplier, )
+  // suppliersProducts: ProductsSupplier[];
 }

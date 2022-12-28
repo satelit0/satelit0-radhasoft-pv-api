@@ -8,13 +8,10 @@ import { Product } from './entities/product.entity';
 @Injectable()
 export class ProductsService {
 
-
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>
-  ) {
-    
-  }
+  ) {}
 
   create(createProductDto: CreateProductDto) {
 
@@ -30,8 +27,8 @@ export class ProductsService {
       relations: {
         category: true,
         description: true,
-        productsSuppliers: true,
-      },order: {
+      },
+      order: {
         id: 'ASC', name: 'ASC'
       }
     });
@@ -51,9 +48,6 @@ export class ProductsService {
       relations:{
         category: true,
         description: true,
-        productsSuppliers: {
-          supplier: true,
-        },
       } 
     });
     return product;

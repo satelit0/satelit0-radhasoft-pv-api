@@ -24,8 +24,8 @@ export class ContactService {
   findAll() {
     const contacts = this.contactRepisitory.find({
       relations: {
-        companyBase: true,
         person: true,
+        companyBase: true,
         subsidiary: true,
       },
       order: {

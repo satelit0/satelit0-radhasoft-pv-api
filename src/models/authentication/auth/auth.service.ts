@@ -45,8 +45,8 @@ export class AuthService {
     return `This action returns all authentication`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} authentication`;
+  async setRefreshJwt(params: { refreshToken: string, userId: number }) {
+    await this.usersService.setCurrentRefreshToken({ ...params });
   }
 
   update(id: number, updateAuthenticationDto: UpdateAuthDto) {
@@ -57,7 +57,7 @@ export class AuthService {
     return `This action removes a #${id} authentication`;
   }
 
-  async getCookieWithJwtToken(params: { userId: number, subsidiaryId: number }) {
+  getCookieWithJwtAccessToken(params: { userId: number, subsidiaryId: number }) {
     const { userId, subsidiaryId } = params;
     const payload: ITokenPayload = { userId, subsidiaryId };
     const token = this.jwtService.sign(payload,
@@ -71,7 +71,7 @@ export class AuthService {
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')}`;
   }
 
-  public getCookieWithJwtRefreshToken(userId: number, subsidiaryId: number) {
+  getCookieWithJwtRefreshToken(userId: number, subsidiaryId: number) {
     const payload: ITokenPayload = { userId, subsidiaryId };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
@@ -81,31 +81,15 @@ export class AuthService {
     return cookieRefreshToken;
   }
 
-  async setCurrentRefreshToken(params: { refreshToken: string, userId: number }) {
-    const { refreshToken, userId } = params;
-    const currentHashedRefreshToken = await hash(refreshToken, 10);
-    await this.usersService.update(userId, {
-      currentHashedRefreshToken,
-    });
+  getCookiesForLogOut() {
+    return [
+      'Authentication=; HttpOnly; Path=/; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; Max-Age=0'
+    ];
   }
 
-  async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
-    const user = await this.usersService.findOne(userId);
-
-    const isRefreshTokenMatching = await compare(
-      refreshToken,
-      user.currentHashedRefreshToken,
-    );
-
-    if (isRefreshTokenMatching) {
-      return user;
-    }
+  removeRefreshToken(userId: number){
+    return this.usersService.removeRefreshToken(userId);
   }
-
-  getCookieForLogOut() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
-  }
-
-
 
 }

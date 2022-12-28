@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { Contact } from '../../contact/entities/contact.entity';
 import { Person } from '../../person/entities/person.entity';
 import { PersonService } from '../../person/person.service';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
 import { IUser } from 'src/models/interfaces/models.interface';
 import { CreateDeviceDto } from '../../company/device/dto/create-device.dto';
@@ -47,11 +47,9 @@ export class UsersService {
         devices.push({ ...device });
       }
     }
-    console.log('+++++++++++++++++++++>', [...devices]);
 
     const user = this.userRepository.create({ ...createUserDto, roleId: 1, devices: [...devices] });
 
-    console.log('+++++++++++++++++++++>', user);
     const newUser = await this.userRepository.save(user);
     return { newUser };
   }
@@ -147,10 +145,27 @@ export class UsersService {
     this.userRepository.restore(id);
   }
 
-  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+  async setCurrentRefreshToken(params: { refreshToken: string, userId: number }) {
+    const { refreshToken, userId } = params;
     const currentHashedRefreshToken = await hash(refreshToken, 10);
     await this.userRepository.update(userId, {
-      currentHashedRefreshToken
+      currentHashedRefreshToken,
+    });
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    const isRefreshTokenMatching = await compare(refreshToken, user.currentHashedRefreshToken);
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
+  }
+
+  async removeRefreshToken(userId: number) {
+    return this.userRepository.update(userId, {
+      currentHashedRefreshToken: null
     });
   }
 }

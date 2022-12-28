@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ParseIntPipe, BadRequestException, NotFoundException, Put, Query, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ParseIntPipe, BadRequestException, NotFoundException, Put, Query, HttpException, UseGuards } from '@nestjs/common';
 import { PersonService } from './person.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
@@ -7,23 +7,47 @@ import { PatchPersonDto } from './dto/patch-person.dto';
 import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Person } from './entities/person.entity';
 import { httpErrotHandler } from '../../helpers/utils';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../authentication/guards/jwt-auth.guard';
+import { CreateContactDto } from '../contact/dto/create-contact.dto';
+import { ContactService } from '../contact/contact.service';
 
 @Controller('persons')
 @ApiTags('Persons')
 export class PersonController {
-  constructor(private readonly personService: PersonService) { }
+  constructor(
+    private readonly personService: PersonService,
+    private readonly contactService: ContactService,
 
+    ) { }
+
+  // @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBody({ description: 'Crea una nueva persona', type: CreatePersonDto })
   async create(@Body() createPersonDto: CreatePersonDto) {
     try {
       const { contactId, identity, } = createPersonDto;
+
       const identityExists = await this.personService.findOneBy({ identity });
       if (identityExists) throw new HttpException(`existe una persona con esta identidad: ${identity}`, 400);
-      if (!contactId) createPersonDto.contactId = 1;
+
+      if (!contactId) {
+        const contact: CreateContactDto = {
+          address: null,
+          email: null,
+          geoLocation: null,
+          phones: null,
+          socialNetworks: null,
+          municipalityId: 0,
+          provinceId: 0
+        };
+        const newContactId =  (await this.contactService.create(contact)).id;
+        createPersonDto.contactId = newContactId;
+      }
+
       return await this.personService.create(createPersonDto);
     } catch (error) {
-      httpErrotHandler(error);
+      throw new HttpException(`error: ${error}`, error.statu);
     }
   }
 

@@ -4,8 +4,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FindOneParams } from '../../helpers/utils';
 import { Repository } from 'typeorm';
-import { ProductsSupplier } from '../products-suppliers/entities/products-supplier.entity';
-import { ProductsSuppliersService } from '../products-suppliers/products-suppliers.service';
 import { ApiTags } from '@nestjs/swagger';
 
 const MSG = "Produto no existe",
@@ -17,7 +15,6 @@ const MSG = "Produto no existe",
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
-    private readonly productsSupplierService: ProductsSuppliersService,
     ) { }
 
   @Post()
@@ -31,7 +28,7 @@ export class ProductsController {
     const newProduc = await this.productsService.create(createProductDto);
     
     if (newProduc && supplierId) {
-      await this.productsSupplierService.create({productId: newProduc.id, supplierId});
+      // await this.productsSupplierService.create({productId: newProduc.id, supplierId});
     }
     const newProductProdutSupplier = {...newProduc, supplierId};
     // return createProductDto;

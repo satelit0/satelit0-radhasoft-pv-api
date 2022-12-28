@@ -13,7 +13,6 @@ import { OrderModule } from './models/order/order.module';
 import { DetailsModule } from './models/details/details.module';
 import { DataSource } from 'typeorm';
 import { PersonService } from './models/person/person.service';
-import { ProductsSuppliersModule } from './models/products-suppliers/products-suppliers.module';
 import { DebtsToPayModule } from './models/accounts/debts-to-pay/debts-to-pay.module';
 import { PaymentDetailsModule } from './models/accounts/payment-details/payment-details.module';
 import { SubsidiaryExistenceModule } from './models/inventory/subsidiary-existence/subsidiary-existence.module';
@@ -44,7 +43,7 @@ import { UsersModule } from './models/authentication/users/users.module';
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION_TIME: Joi.string().required(),
       })
-    }),
+    }), 
     UsersModule, 
     ProductsModule, 
     DescriptionProductModule, 
@@ -54,7 +53,6 @@ import { UsersModule } from './models/authentication/users/users.module';
     CategoryProductModule,
     OrderModule, 
     DetailsModule, 
-    ProductsSuppliersModule, 
     DebtsToPayModule, 
     PaymentDetailsModule, 
     SubsidiaryExistenceModule, 

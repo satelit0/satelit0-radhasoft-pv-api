@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable } from "typeorm";
 import { Supplier } from "src/models/supplier/entities/supplier.entity";
 import { DescriptionProduct } from '../../description-product/entities/description-product.entity';
 import { CategoryProduct } from '../../category-product/entities/category-product.entity';
 import { Detail } from '../../details/entities/detail.entity';
-import { ProductsSupplier } from '../../products-suppliers/entities/products-supplier.entity';
 import { SubsidiaryExistence } from '../../inventory/subsidiary-existence/entities/subsidiary-existence.entity';
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class Product {
@@ -29,21 +29,23 @@ export class Product {
   @Column({ length: 100 })
   lote: string;
 
-  @Column("simple-array", { nullable: true })
+  @Column("text", { nullable: true })
   photo: string[];
 
   @Column("numeric", { precision: 8, scale: 2 })
   cost: number;
 
-  @Column("simple-array")
+  @Column("text")
   price: number[];
 
-  @Column('simple-json', { default: { 
-    "price_1":{"percent": 0, "qtyMin": 0},
-    "price_2":{"percent": 0, "qtyMin": 0},
-    "price_3":{"percent": 0, "qtyMin": 0}
-  }})
-  discount: {"price_1":{"percent": number, "qtyMin": number},};
+  @Column('jsonb', {
+    default: {
+      "price_1": { "percent": 0, "qtyMin": 0 },
+      "price_2": { "percent": 0, "qtyMin": 0 },
+      "price_3": { "percent": 0, "qtyMin": 0 }
+    }
+  })
+  discount: { "price_1": { "percent": number, "qtyMin": number }, };
 
 
   @CreateDateColumn()
@@ -53,20 +55,22 @@ export class Product {
   updatedAt: Date;
 
   @DeleteDateColumn()
+  @Exclude()
   deletedAt: Date;
 
-  @ManyToOne(() => DescriptionProduct, (descriptionProduct) => descriptionProduct.description, { onDelete: 'SET NULL', onUpdate: 'CASCADE'})
+  @ManyToOne(() => DescriptionProduct, (descriptionProduct) => descriptionProduct.description, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   description: DescriptionProduct;
 
   @ManyToOne(() => CategoryProduct, (category) => category.product)
   category: CategoryProduct;
-  
-  @OneToMany(() => Detail, (detail) => detail.product, { onDelete: 'DEFAULT', onUpdate: 'CASCADE'})
-  detail: Detail[];
-  
-  @OneToMany( () => ProductsSupplier, (productSupplier) => productSupplier.product, { onDelete: 'SET NULL', onUpdate: 'CASCADE'})
-  productsSuppliers: ProductsSupplier[];
 
-  @OneToMany( () => SubsidiaryExistence, (subsidiaryExistence) => subsidiaryExistence.product, { onDelete: 'SET NULL', onUpdate: 'CASCADE'})
+  @OneToMany(() => Detail, (detail) => detail.product, { onDelete: 'DEFAULT', onUpdate: 'CASCADE' })
+  detail: Detail[];
+
+  @ManyToMany(() => Supplier, { onDelete: 'SET NULL' })
+  @JoinTable()
+  suppliers: Supplier[];
+
+  @OneToMany(() => SubsidiaryExistence, (subsidiaryExistence) => subsidiaryExistence.product, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   subsidiaryExistence: SubsidiaryExistence[];
 }

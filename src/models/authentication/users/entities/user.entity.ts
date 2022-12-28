@@ -15,7 +15,7 @@ import { Client } from '../../../client/entities/client.entity';
 import { WorkingHours } from "src/models/entitys/entity";
 import { Device } from '../../../company/device/entities/device.entity';
 import { ManyToMany } from 'typeorm';
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 
 @Entity()
 export class User {
@@ -37,6 +37,7 @@ export class User {
   @Column({ unique: true })
   userName: string;
 
+  @Exclude()
   @Column({ nullable: true })
   password: string;
 
@@ -69,6 +70,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Exclude()
   @DeleteDateColumn()
   deletedAt: Date;
 
@@ -78,15 +80,19 @@ export class User {
   @Exclude()
   currentHashedRefreshToken?: string;
 
+  @Exclude()
   @Column({ nullable: true })
   twoFactorAuthenticationSecret?: string;
 
+  @Exclude()
   @Column({ default: false })
   isTwoFactorAuthenticationEnabled: boolean;
 
+  @Exclude()
   @Column({ default: false })
   isEmailConfirmed: boolean;
 
+  @Exclude()
   @Column({ default: false })
   isPhoneNumberConfirmed: boolean;
 

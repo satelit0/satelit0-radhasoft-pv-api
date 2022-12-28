@@ -15,7 +15,6 @@ import { DescriptionProduct } from 'src/models/description-product/entities/desc
 import { Detail } from 'src/models/details/entities/detail.entity';
 import { SubsidiaryExistence } from 'src/models/inventory/subsidiary-existence/entities/subsidiary-existence.entity';
 import { Order } from 'src/models/order/entities/order.entity';
-import { ProductsSupplier } from 'src/models/products-suppliers/entities/products-supplier.entity';
 import { Product } from 'src/models/products/entities/product.entity';
 import { Supplier } from 'src/models/supplier/entities/supplier.entity';
 import { User } from 'src/models/authentication/users/entities/user.entity';
@@ -43,7 +42,6 @@ import { User } from 'src/models/authentication/users/entities/user.entity';
           DescriptionProduct, 
           Order,
           Detail,
-          ProductsSupplier,
           DebtsToPay,
           Receivable,
           DebtsToPay,
