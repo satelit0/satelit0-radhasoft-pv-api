@@ -1,9 +1,10 @@
+import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Product } from '../../../products/entities/product.entity';
 
 
 @Entity()
-export class SubsidiaryExistence {
+export class Existence {
   @PrimaryGeneratedColumn({})
   id: number;
 
@@ -28,10 +29,10 @@ export class SubsidiaryExistence {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Exclude()
   @DeleteDateColumn()
   deletedAt: Date;
 
-
-  @ManyToOne( () => Product, (product) => product.subsidiaryExistence, {onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @ManyToOne( () => Product, (product) => product.existence, {onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   product: Product  
 }

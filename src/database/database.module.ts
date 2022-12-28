@@ -13,7 +13,7 @@ import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.en
 import { Contact } from 'src/models/contact/entities/contact.entity';
 import { DescriptionProduct } from 'src/models/description-product/entities/description-product.entity';
 import { Detail } from 'src/models/details/entities/detail.entity';
-import { SubsidiaryExistence } from 'src/models/inventory/subsidiary-existence/entities/subsidiary-existence.entity';
+import { Existence } from 'src/models/inventory/existence/entities/existence.entity';
 import { Order } from 'src/models/order/entities/order.entity';
 import { Product } from 'src/models/products/entities/product.entity';
 import { Supplier } from 'src/models/supplier/entities/supplier.entity';
@@ -46,7 +46,7 @@ import { User } from 'src/models/authentication/users/entities/user.entity';
           Receivable,
           DebtsToPay,
           PaymentDetail,
-          SubsidiaryExistence,
+          Existence,
           CompanyBase,
           Subsidiary,
           Device,

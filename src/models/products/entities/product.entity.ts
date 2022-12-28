@@ -3,7 +3,7 @@ import { Supplier } from "src/models/supplier/entities/supplier.entity";
 import { DescriptionProduct } from '../../description-product/entities/description-product.entity';
 import { CategoryProduct } from '../../category-product/entities/category-product.entity';
 import { Detail } from '../../details/entities/detail.entity';
-import { SubsidiaryExistence } from '../../inventory/subsidiary-existence/entities/subsidiary-existence.entity';
+import { Existence } from '../../inventory/existence/entities/existence.entity';
 import { Exclude } from "class-transformer";
 
 @Entity()
@@ -30,12 +30,12 @@ export class Product {
   lote: string;
 
   @Column("text", { nullable: true })
-  photo: string[];
+  photo?: string[];
 
-  @Column("numeric", { precision: 8, scale: 2 })
+  @Column('numeric', { precision: 8, scale: 2 })
   cost: number;
 
-  @Column("text")
+  @Column("text", { array: true })
   price: number[];
 
   @Column('jsonb', {
@@ -58,6 +58,8 @@ export class Product {
   @Exclude()
   deletedAt: Date;
 
+
+
   @ManyToOne(() => DescriptionProduct, (descriptionProduct) => descriptionProduct.description, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   description: DescriptionProduct;
 
@@ -71,6 +73,6 @@ export class Product {
   @JoinTable()
   suppliers: Supplier[];
 
-  @OneToMany(() => SubsidiaryExistence, (subsidiaryExistence) => subsidiaryExistence.product, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
-  subsidiaryExistence: SubsidiaryExistence[];
+  @OneToMany(() => Existence, (existence) => existence.product, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  existence: Existence[];
 }

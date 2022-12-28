@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSubsidiaryExistenceDto } from './dto/create-subsidiary-existence.dto';
-import { UpdateSubsidiaryExistenceDto } from './dto/update-subsidiary-existence.dto';
+import { CreateSubsidiaryExistenceDto } from './dto/create-existence.dto';
+import { UpdateSubsidiaryExistenceDto } from './dto/update-existence.dto';
 
 @Injectable()
-export class SubsidiaryExistenceService {
+export class ExistenceService {
   create(createSubsidiaryExistenceDto: CreateSubsidiaryExistenceDto) {
     return 'This action adds a new subsidiaryExistence';
   }

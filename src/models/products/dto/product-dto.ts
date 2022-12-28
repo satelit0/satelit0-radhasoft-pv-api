@@ -1,20 +1,19 @@
-import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject, IsOptional } from 'class-validator';
 
 export class ProductDto {
   @IsInt()
   id: number;
 
   @IsInt()
-  @Min(1)
   categoryId: number;
 
   @IsInt()
-  @Min(1)
   descriptionId: number;
   
   @IsInt()
-  @Min(1)
-  supplierId: number;
+  subsidiaryExistenceId: number;
+  // supplierId: number;
 
   @IsString()
   @IsNotEmpty()
@@ -26,18 +25,13 @@ export class ProductDto {
   @IsString()
   lote: string;
 
+
   @MaxLength(300, { each: true })
-  @IsArray()
-  photo: string[];
-
-  @IsDateString()
-  @IsNotEmpty()
-  dateEntry: Date;
-
-  @IsDateString()
-  @IsNotEmpty()
-  dateExpire: Date;
-
+  @IsString()
+  @IsArray({each: true})
+  @IsOptional()
+  photo?: string[];
+  
   @IsCurrency()
   cost: number;
 
@@ -46,7 +40,16 @@ export class ProductDto {
 
   @IsObject({ each: true })
   discount: { 
-    "price_1": { "percent": number, "qtyMin": number } };
+    "price_1": { "percent": number, "qtyMin": number } 
+  };
+  
+  @IsDateString()
+  @IsNotEmpty()
+  dateEntry: Date;
+
+  @IsDateString()
+  @IsNotEmpty()
+  dateExpire: Date;
 
   @IsInt()
   qty: number;
@@ -57,6 +60,4 @@ export class ProductDto {
   @IsDateString()
   updatedAt: Date;
 
-  @IsDateString()
-  deletedAt: Date;
 }

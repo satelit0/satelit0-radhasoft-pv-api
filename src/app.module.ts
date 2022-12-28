@@ -15,7 +15,6 @@ import { DataSource } from 'typeorm';
 import { PersonService } from './models/person/person.service';
 import { DebtsToPayModule } from './models/accounts/debts-to-pay/debts-to-pay.module';
 import { PaymentDetailsModule } from './models/accounts/payment-details/payment-details.module';
-import { SubsidiaryExistenceModule } from './models/inventory/subsidiary-existence/subsidiary-existence.module';
 import { SubsidiaryModule } from './models/company/subsidiary/subsidiary.module';
 import { CompanyBaseModule } from './models/company/company-base/company-base.module';
 import { DeviceModule } from './models/company/device/device.module';
@@ -28,6 +27,7 @@ import { DeviceService } from './models/company/device/device.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './models/authentication/auth/auth.module';
 import { UsersModule } from './models/authentication/users/users.module';
+import { ExistenceModule } from './models/inventory/existence/existence.module';
   
 @Module({ 
   imports: [
@@ -55,7 +55,7 @@ import { UsersModule } from './models/authentication/users/users.module';
     DetailsModule, 
     DebtsToPayModule, 
     PaymentDetailsModule, 
-    SubsidiaryExistenceModule, 
+    ExistenceModule, 
     SubsidiaryModule, 
     CompanyBaseModule,
     DeviceModule,

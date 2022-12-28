@@ -71,9 +71,9 @@ export class ProductsController {
 
   @Patch('restore/:id')
   async restoreById(@Param() { id }: FindOneParams) {
-    const product = await this.productsService.findOne(id, true);
-    if (!product) throw new HttpException(MSG, 400);
-    return await this.productsService.update(id, { deletedAt: null });
+    // const product = await this.productsService.findOne(id, true);
+    // if (!product) throw new HttpException(MSG, 400);
+    // return await this.productsService.update(id, { deletedAt: null });
   }
 
 }

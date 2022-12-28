@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SubsidiaryExistenceService } from './subsidiary-existence.service';
-import { CreateSubsidiaryExistenceDto } from './dto/create-subsidiary-existence.dto';
-import { UpdateSubsidiaryExistenceDto } from './dto/update-subsidiary-existence.dto';
+import { ExistenceService } from './existence.service';
+import { CreateSubsidiaryExistenceDto } from './dto/create-existence.dto';
+import { UpdateSubsidiaryExistenceDto } from './dto/update-existence.dto';
 
 @Controller('subsidiary-existence')
-export class SubsidiaryExistenceController {
-  constructor(private readonly subsidiaryExistenceService: SubsidiaryExistenceService) {}
+export class ExistenceController {
+  constructor(private readonly subsidiaryExistenceService: ExistenceService) {}
 
   @Post()
   create(@Body() createSubsidiaryExistenceDto: CreateSubsidiaryExistenceDto) {
