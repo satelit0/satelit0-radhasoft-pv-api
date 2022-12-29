@@ -5,7 +5,7 @@ import { Address, GeoLocation, Phone, SocialNetworks } from '../../entitys/entit
 import { IsEmail, IsOptional, ValidateIf } from 'class-validator';
 import { CreateClientDto } from '../../client/dto/create-client.dto';
 
-export class CreateContactDto extends OmitType(ContactDto, ['id', 'createdAt', 'updatedAt', 'deletedAt', 'contactId']) {
+export class CreateContactDto extends OmitType(ContactDto, ['id', 'createdAt', 'updatedAt', 'deletedAt', 'contactUuid']) {
   
   // @ApiProperty({ name: 'id', type: 'integer' })
   // id: number;

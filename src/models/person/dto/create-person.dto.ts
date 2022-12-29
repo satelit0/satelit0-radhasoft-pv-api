@@ -6,6 +6,8 @@ import { toTrim } from '../../../helpers/utils';
 import { PersonDto } from './person-dto';
 import { OmitType, PartialType } from '@nestjs/mapped-types';
 import { ApiParam, ApiProperty } from '@nestjs/swagger';
+import { CreateContactDto } from '../../contact/dto/create-contact.dto';
+import { ContactDto } from '../../contact/dto/contact-dto';
 
 
 // @UsePipes(new ValidationPipe({stopAtFirstError: true, transform: true}))
@@ -24,7 +26,7 @@ export class CreatePersonDto extends OmitType(PersonDto, ['id', 'createdAt', 'up
   @ApiProperty({type: Date, description: 'cudela o pasaporte'})
   birthday: Date;
 
-  @ApiProperty({ name: 'contactId', type: Number, required:  false})
+  @ApiProperty({ name: 'contact', type: CreateContactDto, required:  false})
   @IsOptional()
-  contactId: number;
+  contact: CreateContactDto;
 }

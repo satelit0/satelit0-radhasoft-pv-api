@@ -6,6 +6,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { DescriptionService } from '../description/description.service';
 import { ExistenceService } from '../existence/existence.service';
+import { Supplier } from '../supplier/entities/supplier.entity';
+import { SupplierService } from '../supplier/supplier.service';
 
 @Injectable()
 export class ProductsService {
@@ -15,14 +17,25 @@ export class ProductsService {
     private productRepository: Repository<Product>,
     private descriptionService: DescriptionService,
     private existenceService: ExistenceService,
+    private supplierService: SupplierService,
 
   ) { }
 
   async create(createProductDto: CreateProductDto) {
 
-    const { description, existence, ...restDto } = createProductDto;
+    const { description, existence, supplierIds,...restDto } = createProductDto;
+    const suppliers: Supplier[] = [];
 
-    const product = this.productRepository.create({ ...restDto });
+    if (supplierIds && supplierIds.length > 0  ) {
+      for (const supplierId of supplierIds) {
+        const supplier = await this.supplierService.findOne(supplierId);
+        suppliers.push(supplier);
+      }
+    }
+    if (suppliers.length === 0) createProductDto.supplierIds = null;
+
+    const product = this.productRepository.create({ suppliers, ...restDto });
+
     const newProduct = await this.productRepository.save(product);
     const { id } = newProduct;
 
@@ -45,6 +58,7 @@ export class ProductsService {
       relations: {
         category: true,
         description: true,
+        suppliers: true,
       },
       order: {
         id: 'ASC', name: 'ASC'

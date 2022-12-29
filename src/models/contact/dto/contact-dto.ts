@@ -8,7 +8,7 @@ export class ContactDto {
   id: number;
 
   @ApiProperty({name: 'contactId', type: 'integer'})
-  contactId: string;
+  contactUuid: string;
 
   @ApiProperty({name: 'phones', type: Phone})
   @IsObject()

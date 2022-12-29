@@ -30,8 +30,7 @@ export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', '
   @ApiProperty({ name: 'cost', type: Number, })
   cost: number;
 
-  @ApiProperty({ name: 'photo', type: Array, })
-  @IsOptional()
+  @ApiProperty({ name: 'photo', type: Array,})
   photo?: string[];
 
   @ApiProperty({ name: 'lote', type: String, })

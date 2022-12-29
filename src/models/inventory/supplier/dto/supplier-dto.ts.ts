@@ -1,18 +1,19 @@
-import { IsDateString, IsInt, IsOptional, IsString, Min } from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString, Min } from "class-validator";
 
 export class SupplierDto {
   @IsInt()
-  @Min(1)
   id: number;
 
   @IsInt()
-  @Min(1)
+  @IsNotEmpty()
   personId: number;
 
   @IsString()
+  @IsNotEmpty()
   rnc: string;
   
   @IsString()
+  @IsNotEmpty()
   nameEntity: string;
 
   @IsDateString()

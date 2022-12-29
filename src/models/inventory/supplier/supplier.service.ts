@@ -67,13 +67,14 @@ export class SupplierService {
 
   remove(id: number, soft: boolean = true) {
 
-    if (soft) {
-      return this.supplierRepository.softDelete(id);
-    }
+    if (soft)  return this.supplierRepository.softDelete(id);
 
-    const supplier = this.supplierRepository.create({ id });
-    const supplierDelete = this.supplierRepository.remove(supplier);
+    const supplierDelete = this.supplierRepository.delete(id);
 
     return supplierDelete;
+  }
+
+  restore(id: number) {
+    return this.supplierRepository.restore(id);
   }
 }

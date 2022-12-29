@@ -36,7 +36,6 @@ export class ProductDto {
   lote?: string;
 
   @MaxLength(300, { each: true })
-  @IsString()
   @IsArray()
   @IsOptional()
   photo?: string[];

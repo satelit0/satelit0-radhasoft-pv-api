@@ -24,6 +24,7 @@ export class SupplierController {
 
     const rncSupplier = await this.supplierService.findOneByRnc(rnc);
     if (rncSupplier) throw new HttpException(`${MSG_RNC} ${rnc}, ya existe`, 400);
+    
     return await this.supplierService.create(createSupplierDto);
   }
 
@@ -72,12 +73,12 @@ export class SupplierController {
   }
 
   @Patch('restore/:id')
-  async restoreById(@Param() { id }: FindOneParams) {
+  async restore(@Param() { id }: FindOneParams) {
 
     const supplier = await this.supplierService.findOne(id, true);
     if (!supplier) throw new HttpException(`${MSG}`, 400);
     
-    return await this.supplierService.update(id, {deletedAt: null});
+    return await this.supplierService.restore(id);
   }
 
 }

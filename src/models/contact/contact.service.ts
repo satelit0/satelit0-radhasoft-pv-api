@@ -13,16 +13,17 @@ import { Address } from '../entitys/entity';
 export class ContactService {
 
   constructor(
-    @InjectRepository(Contact) private contactRepisitory: Repository<Contact>
+    @InjectRepository(Contact) private contactRepository: Repository<Contact>
   ) { }
 
   create(createContactDto: CreateContactDto) {
-    const newContact = this.contactRepisitory.save(createContactDto);
+    const contact = this.contactRepository.create({...createContactDto});
+    const newContact = this.contactRepository.save(contact);
     return newContact;
   }
 
   findAll() {
-    const contacts = this.contactRepisitory.find({
+    const contacts = this.contactRepository.find({
       relations: {
         person: true,
         companyBase: true,
@@ -37,21 +38,21 @@ export class ContactService {
   }
 
   findOneByOfficeNumber(officeNumber: string): Promise<Contact> {
-    const contact = <Promise<Contact>>this.contactRepisitory.query(
+    const contact = <Promise<Contact>>this.contactRepository.query(
       `select * from contact where phones -> 'office' ?| array[$1] limit 1;` , [officeNumber]
     );
     return contact;
   }
 
   findOneBySocialNetworks(socialNetworks: string): Promise<Contact> {
-    const contact = <Promise<Contact>>this.contactRepisitory.query(
+    const contact = <Promise<Contact>>this.contactRepository.query(
       `select * from contact c where $1 = ANY (select (jsonb_each_text("socialNetworks")).value);`, [socialNetworks]
     );
     return contact;
   }
 
   findOneByAddress(addressPart: string): Promise<Contact> {
-    const contact = <Promise<Contact>>this.contactRepisitory.query(
+    const contact = <Promise<Contact>>this.contactRepository.query(
       `select * from contact c 
        where c.address ->> 'street' like '%$1%' 
        or  c.address ->> 'numberApto' like '%$1%' 
@@ -62,7 +63,7 @@ export class ContactService {
   }
 
   findOne(id: number) {
-    const contact = this.contactRepisitory.findOne({ 
+    const contact = this.contactRepository.findOne({ 
       where: { id }, 
       relations:{
         companyBase: true,
@@ -74,7 +75,7 @@ export class ContactService {
   }
 
   findOneBy(params: IContact) {
-    const contact = this.contactRepisitory.findOne({ 
+    const contact = this.contactRepository.findOne({ 
       where: { ...params }, 
       relations:{
         companyBase: true,
@@ -87,13 +88,13 @@ export class ContactService {
 
   update(id: number, updateContactDto: UpdateContactDto) {
 
-    const contact = this.contactRepisitory.update(id, updateContactDto);
+    const contact = this.contactRepository.update(id, updateContactDto);
 
     return contact;
   }
 
   remove(id: number, soft: boolean = true) {
-    if (soft) return this.contactRepisitory.softDelete(id);
-    return this.contactRepisitory.delete(id);
+    if (soft) return this.contactRepository.softDelete(id);
+    return this.contactRepository.delete(id);
   }
 }

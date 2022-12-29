@@ -14,10 +14,17 @@ import { DeviceService } from 'src/models/company/device/device.service';
 import { Device } from 'src/models/company/device/entities/device.entity';
 import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.entity';
 import { SubsidiaryService } from 'src/models/company/subsidiary/subsidiary.service';
+import { ContactModule } from '../../contact/contact.module';
+import { PersonModule } from '../../person/person.module';
+import { SubsidiaryModule } from '../../company/subsidiary/subsidiary.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [ 
     TypeOrmModule.forFeature([User, Contact, Person, Subsidiary, Auth, Device, ]),
+    ContactModule,
+    PersonModule,
+    SubsidiaryModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, PersonService, SubsidiaryService, AuthService, DeviceService, JwtService, ConfigService],

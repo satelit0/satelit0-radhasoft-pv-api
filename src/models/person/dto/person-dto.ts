@@ -3,6 +3,8 @@ import { Transform } from "class-transformer";
 import { IsString, IsNotEmpty, IsISO8601, Allow, IsInt, Min, IsDateString } from "class-validator";
 import { Roles } from "src/helpers/enums";
 import { toTrim } from "src/helpers/utils";
+import { CreateContactDto } from '../../contact/dto/create-contact.dto';
+import { ContactDto } from '../../contact/dto/contact-dto';
 
 export class PersonDto {
   // @IsString({ message: "El valor para nameEntity debe ser una cadena de caracteres" })
@@ -23,9 +25,8 @@ export class PersonDto {
   @Transform(({ value }) => toTrim(value))
   identity: string;
 
-  @ApiProperty({ name: 'contactId', type: Number})
-  @IsInt()
-  contactId: number;
+  @ApiProperty({ name: 'contact', type: CreateContactDto})
+  contact: CreateContactDto;
 
   @ApiProperty({ name: 'firstName', type: String})
   @IsString()

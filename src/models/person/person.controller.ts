@@ -26,24 +26,10 @@ export class PersonController {
   @ApiBody({ description: 'Crea una nueva persona', type: CreatePersonDto })
   async create(@Body() createPersonDto: CreatePersonDto) {
     try {
-      const { contactId, identity, } = createPersonDto;
+      const { contact, identity, } = createPersonDto;
 
       const identityExists = await this.personService.findOneBy({ identity });
       if (identityExists) throw new HttpException(`existe una persona con esta identidad: ${identity}`, 400);
-
-      if (!contactId) {
-        const contact: CreateContactDto = {
-          address: null,
-          email: null,
-          geoLocation: null,
-          phones: null,
-          socialNetworks: null,
-          municipalityId: 0,
-          provinceId: 0
-        };
-        const newContactId =  (await this.contactService.create(contact)).id;
-        createPersonDto.contactId = newContactId;
-      }
 
       return await this.personService.create(createPersonDto);
     } catch (error) {
