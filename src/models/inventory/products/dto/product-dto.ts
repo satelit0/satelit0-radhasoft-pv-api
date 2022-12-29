@@ -6,25 +6,34 @@ export class ProductDto {
   id: number;
 
   @IsInt()
-  categoryId: number;
+  @IsOptional()
+  categoryId?: number;
 
   @IsInt()
+  @IsNotEmpty()
   descriptionId: number;
   
   @IsInt()
-  subsidiaryExistenceId: number;
-  // supplierId: number;
+  @IsNotEmpty()
+  existenceId: number;
+
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({each: true})
+  supplierIds?: number[]
 
   @IsString()
   @IsNotEmpty()
   name: string;
 
   @IsString()
+  @IsNotEmpty()
   brand: string;
 
   @IsString()
-  lote: string;
-
+  @IsOptional()
+  lote?: string;
 
   @MaxLength(300, { each: true })
   @IsString()
@@ -35,13 +44,13 @@ export class ProductDto {
   @IsCurrency()
   cost: number;
 
-  @IsArray()
-  price: number[];
+  // @IsArray()
+  @IsCurrency()
+  price: number;
 
   @IsObject({ each: true })
-  discount: { 
-    "price_1": { "percent": number, "qtyMin": number } 
-  };
+  @IsOptional()
+  discount?: {};
   
   @IsDateString()
   @IsNotEmpty()
@@ -52,12 +61,15 @@ export class ProductDto {
   dateExpire: Date;
 
   @IsInt()
+  @IsNotEmpty()
   qty: number;
 
   @IsDateString()
+  @IsOptional()
   createdAt: Date;
 
   @IsDateString()
+  @IsOptional()
   updatedAt: Date;
 
 }

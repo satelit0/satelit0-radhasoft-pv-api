@@ -1,13 +1,13 @@
-import { CategoryProduct } from 'src/models/category-product/entities/category-product.entity';
 import { Contact } from 'src/models/contact/entities/contact.entity';
 import { DescriptionProduct } from 'src/models/description-product/entities/description-product.entity';
-import { Detail } from 'src/models/details/entities/detail.entity';
-import { Order } from 'src/models/order/entities/order.entity';
+import { Order } from 'src/models/inventory/order/entities/order.entity';
 import { Person } from 'src/models/person/entities/person.entity';
-import { Product } from 'src/models/products/entities/product.entity';
-import { Supplier } from 'src/models/supplier/entities/supplier.entity';
+import { Product } from 'src/models/inventory/products/entities/product.entity';
+import { Supplier } from 'src/models/inventory/supplier/entities/supplier.entity';
 import { User } from 'src/models/authentication/users/entities/user.entity';
 import { DataSource } from 'typeorm';
+import { CategoryProduct } from 'src/models/inventory/category-product/entities/category-product.entity';
+import { Detail } from '../models/inventory/details/entities/detail.entity';
 
 export const DatabaseProviders = [
   {

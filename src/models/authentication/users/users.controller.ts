@@ -7,8 +7,6 @@ import {
   Param,
   Delete,
   NotFoundException,
-  BadGatewayException,
-  BadRequestException,
   Put,
   Query,
   UseGuards
@@ -21,19 +19,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Contact } from '../../contact/entities/contact.entity';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { FindOneParams, httpErrotHandler } from '../../../helpers/utils';
+import { FindOneParams } from '../../../helpers/utils';
 import { PasswordDto } from './dto/password-dto';
 import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user-dto';
 import { HttpException } from '@nestjs/common';
-import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
 import { hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
-import { DeviceService } from '../../company/device/device.service';
-import { CreateDeviceDto } from '../../company/device/dto/create-device.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { JwtStrategy } from '../auth/jwt.strategy';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { DeviceService } from 'src/models/company/device/device.service';
+import { SubsidiaryService } from 'src/models/company/subsidiary/subsidiary.service';
 
 
 @Controller('users')

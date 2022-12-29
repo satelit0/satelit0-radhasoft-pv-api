@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { FindOneParams } from '../../helpers/utils';
+import { FindOneParams } from '../../../helpers/utils';
 import { Repository } from 'typeorm';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -20,19 +20,19 @@ export class ProductsController {
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
 
-    const { name, supplierId } = createProductDto;
+    const { name, supplierIds } = createProductDto;
     
     const productCurr = await this.productsService.findByName(name);
     if (productCurr) throw new HttpException(`${MSG_NAME_EXISTS}: ${name}`, HttpStatus.BAD_REQUEST);
 
     const newProduc = await this.productsService.create(createProductDto);
     
-    if (newProduc && supplierId) {
+    // if (newProduc && supplierId) {
       // await this.productsSupplierService.create({productId: newProduc.id, supplierId});
-    }
-    const newProductProdutSupplier = {...newProduc, supplierId};
+    // }
+    // const newProductProdutSupplier = {...newProduc, supplierId};
     // return createProductDto;
-    return newProductProdutSupplier;
+    // return newProductProdutSupplier;
   }
 
   @Get()
@@ -71,9 +71,7 @@ export class ProductsController {
 
   @Patch('restore/:id')
   async restoreById(@Param() { id }: FindOneParams) {
-    // const product = await this.productsService.findOne(id, true);
-    // if (!product) throw new HttpException(MSG, 400);
-    // return await this.productsService.update(id, { deletedAt: null });
+     return await this.productsService.restore(id);
   }
 
 }

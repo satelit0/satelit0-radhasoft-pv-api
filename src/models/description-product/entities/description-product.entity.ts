@@ -8,7 +8,7 @@ import {
   CreateDateColumn
 } from "typeorm";
 import { Units } from "src/helpers/enums";
-import { Product } from '../../products/entities/product.entity';
+import { Product } from '../../inventory/products/entities/product.entity';
 
 @Entity()
 export class DescriptionProduct {

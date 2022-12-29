@@ -13,9 +13,9 @@ import {
 import { Person } from '../../../person/entities/person.entity';
 import { Client } from '../../../client/entities/client.entity';
 import { WorkingHours } from "src/models/entitys/entity";
-import { Device } from '../../../company/device/entities/device.entity';
 import { ManyToMany } from 'typeorm';
 import { Exclude, Expose } from "class-transformer";
+import { Device } from "src/models/company/device/entities/device.entity";
 
 @Entity()
 export class User {

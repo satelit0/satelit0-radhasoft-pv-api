@@ -20,7 +20,7 @@ export class CreateUserDto extends OmitType(UserDto, ['id', 'updateAdt', 'create
   @IsInt({each: true})
   deviceIds: number[];
 
-  @ApiProperty({ name: 'subsidiaryId', type: 'number', default: 0 })
+  @ApiProperty({ name: 'subsidiaryId', type: Number, default: 0 })
   @IsOptional()
   // @Min(1)
   subsidiaryId: number;

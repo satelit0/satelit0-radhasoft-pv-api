@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { SupplierService } from './supplier.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
-import { FindOneParams } from '../../helpers/utils';
+import { FindOneParams } from '../../../helpers/utils';
 import { Supplier } from './entities/supplier.entity';
 import { ApiTags } from '@nestjs/swagger';
 

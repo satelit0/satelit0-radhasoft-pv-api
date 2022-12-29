@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { CategoryProductService } from './category-product.service';
 import { CreateCategoryProductDto } from './dto/create-category-product.dto';
 import { UpdateCategoryProductDto } from './dto/update-category-product.dto';
-import { FindOneParams } from '../../helpers/utils';
 import { Http2ServerResponse } from 'http2';
 import { ApiTags } from '@nestjs/swagger';
+import { FindOneParams } from 'src/helpers/utils';
 
 @Controller('category-product')
 @ApiTags('Category-Product')

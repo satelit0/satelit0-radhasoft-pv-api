@@ -1,7 +1,7 @@
 import  { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, UpdateDateColumn, CreateDateColumn, DeleteDateColumn, JoinColumn } from "typeorm";
 import { User } from '../../authentication/users/entities/user.entity';
 import { Contact } from "../../contact/entities/contact.entity";
-import { Supplier } from '../../supplier/entities/supplier.entity';
+import { Supplier } from '../../inventory/supplier/entities/supplier.entity';
 import { Roles } from '../../../helpers/enums';
 import { Client } from '../../client/entities/client.entity';
 

@@ -20,7 +20,7 @@ export class ExistenceService {
     return `This action updates a #${id} subsidiaryExistence`;
   }
 
-  remove(id: number) {
+  remove(id: number) { 
     return `This action removes a #${id} subsidiaryExistence`;
   }
 }

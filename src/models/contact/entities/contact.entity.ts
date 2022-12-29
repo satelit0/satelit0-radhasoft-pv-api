@@ -7,10 +7,10 @@ import {
 } from "typeorm";
 import { IsEmail } from "class-validator"
 import { Person } from '../../person/entities/person.entity';
-import { CompanyBase } from '../../company/company-base/entities/company-base.entity';
-import { Subsidiary } from '../../company/subsidiary/entities/subsidiary.entity';
 import { Address, GeoLocation, Phone, SocialNetworks } from "src/models/entitys/entity";
 import { Exclude, Expose } from "class-transformer";
+import { CompanyBase } from "src/models/company/company-base/entities/company-base.entity";
+import { Subsidiary } from "src/models/company/subsidiary/entities/subsidiary.entity";
 
 @Entity()
 export class Contact {

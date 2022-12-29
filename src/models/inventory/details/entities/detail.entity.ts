@@ -19,7 +19,7 @@ export class Detail {
   @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn() 
+  @UpdateDateColumn()  
   updateAt: Date;
 
   @OneToOne( () => Order)

@@ -5,9 +5,8 @@ import {
   UpdateDateColumn, Generated, 
   DeleteDateColumn 
 } from "typeorm";
-import { Person } from '../../person/entities/person.entity';
-import { TypeNCF, OrderType } from '../../../helpers/enums';
-import { Detail } from '../../details/entities/detail.entity';
+import { Person } from '../../../person/entities/person.entity';
+import { TypeNCF, OrderType } from '../../../../helpers/enums';
 
 @Entity()
 export class Order {

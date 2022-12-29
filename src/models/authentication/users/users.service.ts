@@ -10,10 +10,9 @@ import { PersonService } from '../../person/person.service';
 import { compare, hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
 import { IUser } from 'src/models/interfaces/models.interface';
-import { CreateDeviceDto } from '../../company/device/dto/create-device.dto';
-import { Device } from '../../company/device/entities/device.entity';
-import { DeviceService } from '../../company/device/device.service';
-import { DeviceDto } from '../../company/device/dto/device-dto';
+import { DeviceService } from 'src/models/company/device/device.service';
+import { CreateDeviceDto } from 'src/models/company/device/dto/create-device.dto';
+import { Device } from 'src/models/company/device/entities/device.entity';
 
 @Injectable()
 export class UsersService {

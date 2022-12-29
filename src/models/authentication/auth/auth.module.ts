@@ -7,8 +7,6 @@ import { Person } from '../../person/entities/person.entity';
 import { PersonService } from '../../person/person.service';
 import { Contact } from '../../contact/entities/contact.entity';
 import { ContactService } from '../../contact/contact.service';
-import { Device } from 'src/models/company/device/entities/device.entity';
-import { DeviceService } from '../../company/device/device.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -16,6 +14,8 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
+import { DeviceService } from 'src/models/company/device/device.service';
+import { Device } from 'src/models/company/device/entities/device.entity';
 
 @Module({
   imports: [

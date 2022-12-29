@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable } from "typeorm";
-import { Supplier } from "src/models/supplier/entities/supplier.entity";
-import { DescriptionProduct } from '../../description-product/entities/description-product.entity';
-import { CategoryProduct } from '../../category-product/entities/category-product.entity';
-import { Detail } from '../../details/entities/detail.entity';
-import { Existence } from '../../inventory/existence/entities/existence.entity';
+import { Supplier } from "src/models/inventory/supplier/entities/supplier.entity";
+import { DescriptionProduct } from '../../../description-product/entities/description-product.entity';
+import { Existence } from '../../existence/entities/existence.entity';
 import { Exclude } from "class-transformer";
+import { CategoryProduct } from "src/models/inventory/category-product/entities/category-product.entity";
+import { Detail } from '../../details/entities/detail.entity';
 
 @Entity()
 export class Product {
@@ -16,9 +16,9 @@ export class Product {
 
   @Column()
   descriptionId: number;
-
+ 
   @Column()
-  subsidiaryExistenceId: number;
+  existenceId: number;
 
   @Column({ length: 150 })
   name: string;
@@ -35,18 +35,18 @@ export class Product {
   @Column('numeric', { precision: 8, scale: 2 })
   cost: number;
 
-  @Column("text", { array: true })
-  price: number[];
+  @Column('numeric', { precision: 8, scale: 2 })
+  price: number;
 
   @Column('jsonb', {
+    nullable: true,
     default: {
-      "price_1": { "percent": 0, "qtyMin": 0 },
-      "price_2": { "percent": 0, "qtyMin": 0 },
-      "price_3": { "percent": 0, "qtyMin": 0 }
+      descount_1: { percent: 0.0, qtyMin: 1 },
+      descount_2: { percent: 0.0, qtyMin: 2 },
+      descount_3: { percent: 0.0, qtyMin: 3 }
     }
   })
-  discount: { "price_1": { "percent": number, "qtyMin": number }, };
-
+  discount?: {};
 
   @CreateDateColumn()
   createdAt: Date;
@@ -57,8 +57,6 @@ export class Product {
   @DeleteDateColumn()
   @Exclude()
   deletedAt: Date;
-
-
 
   @ManyToOne(() => DescriptionProduct, (descriptionProduct) => descriptionProduct.description, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   description: DescriptionProduct;

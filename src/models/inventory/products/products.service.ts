@@ -15,10 +15,10 @@ export class ProductsService {
 
   create(createProductDto: CreateProductDto) {
 
-    const product = this.productRepository.create(createProductDto);
-    const newProduct = this.productRepository.save(product);
+    // const product = this.productRepository.create(createProductDto);
+    // const newProduct = this.productRepository.save(product);
 
-    return newProduct;
+    // return newProduct;
   }
 
   findAll() {
@@ -54,11 +54,11 @@ export class ProductsService {
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
-    const product = this.productRepository.create(updateProductDto);
+    // const product = this.productRepository.create(updateProductDto);
 
-    const updateProduct = this.productRepository.update(id, product);
+    // const updateProduct = this.productRepository.update(id, product);
 
-    return updateProduct;
+    // return updateProduct;
   }
 
   remove(id: number, soft: boolean = true) {
@@ -71,5 +71,9 @@ export class ProductsService {
     const removeProduct = this.productRepository.remove(product);
 
     return removeProduct;
+  }
+
+  restore(id: number) {
+    return this.productRepository.restore(id);
   }
 }
