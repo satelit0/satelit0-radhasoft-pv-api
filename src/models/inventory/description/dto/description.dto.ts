@@ -1,8 +1,7 @@
 import { IsDateString, IsEnum, IsInt, IsNotEmpty, IsString, Length, MaxLength, Min } from 'class-validator';
-import { Units } from '../../../helpers/enums';
-export class DescriptionProductDto {
+import { Units } from '../../../../helpers/enums';
+export class DescriptionDto {
   @IsInt()
-  @Min(1)
   id: number;
 
   @IsString()
@@ -12,20 +11,20 @@ export class DescriptionProductDto {
 
   @IsString()
   @MaxLength(200)
-  display: string;
+  display?: string;
   
   @Min(0)
-  height: number;
+  height?: number;
   
   @Min(0)
-  width: number;
+  width?: number;
 
   @IsEnum({
     type: 'enum',
     enum: Units,
     default: Units.IN
   })
-  unit: Units;
+  unit?: Units;
 
   @IsDateString()
   createdAt: Date;

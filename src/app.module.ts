@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UsersService } from './models/authentication/users/users.service';
 import { ProductsModule } from './models/inventory/products/products.module';
 import { ProductsService } from './models/inventory/products/products.service';
-import { DescriptionProductModule } from './models/description-product/description-product.module';
+import { DescriptionModule } from './models/inventory/description/description.module'; 
 import { SupplierModule } from './models/inventory/supplier/supplier.module';
 import { ContactModule } from './models/contact/contact.module';
 import { PersonModule } from './models/person/person.module';
@@ -25,7 +25,7 @@ import { ExistenceModule } from './models/inventory/existence/existence.module';
 import { CompanyBaseModule } from './models/company/company-base/company-base.module';
 import { DeviceModule } from './models/company/device/device.module';
 import { SubsidiaryModule } from './models/company/subsidiary/subsidiary.module';
-import { CategoryProductModule } from './models/inventory/category-product/category-product.module';
+import { CategoryModule } from './models/inventory/category/category.module';
 import { DetailsModule } from './models/inventory/details/details.module';
   
 @Module({ 
@@ -45,11 +45,11 @@ import { DetailsModule } from './models/inventory/details/details.module';
     }), 
     UsersModule, 
     ProductsModule, 
-    DescriptionProductModule, 
+    DescriptionModule, 
     SupplierModule, 
     ContactModule, 
     PersonModule, 
-    CategoryProductModule,
+    CategoryModule,
     OrderModule, 
     DetailsModule, 
     DebtsToPayModule, 

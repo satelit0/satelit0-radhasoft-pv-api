@@ -1,24 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, JoinColumn } from "typeorm";
 import { Supplier } from "src/models/inventory/supplier/entities/supplier.entity";
-import { DescriptionProduct } from '../../../description-product/entities/description-product.entity';
+import { Description } from '../../description/entities/description.entity';
 import { Existence } from '../../existence/entities/existence.entity';
 import { Exclude } from "class-transformer";
-import { CategoryProduct } from "src/models/inventory/category-product/entities/category-product.entity";
+import { Category } from "src/models/inventory/category/entities/category.entity";
 import { Detail } from '../../details/entities/detail.entity';
+import { number } from "@hapi/joi";
 
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column() 
   categoryId: number;
 
-  @Column()
-  descriptionId: number;
+  // @Column()
+  // descriptionId: number;
  
-  @Column()
-  existenceId: number;
+  // @Column() 
+  // existenceId: number;
 
   @Column({ length: 150 })
   name: string;
@@ -26,8 +27,8 @@ export class Product {
   @Column({ length: 100, default: 'Generico', nullable: true })
   brand: string;
 
-  @Column({ length: 100 })
-  lote: string;
+  @Column({ length: 100, nullable: true })
+  lote?: string;
 
   @Column("text", { nullable: true })
   photo?: string[];
@@ -58,11 +59,11 @@ export class Product {
   @Exclude()
   deletedAt: Date;
 
-  @ManyToOne(() => DescriptionProduct, (descriptionProduct) => descriptionProduct.description, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
-  description: DescriptionProduct;
+  @OneToOne(() => Description, (description) => description.product)
+  description: Description;
 
-  @ManyToOne(() => CategoryProduct, (category) => category.product)
-  category: CategoryProduct;
+  @ManyToOne(() => Category, (category) => category.product)
+  category: Category;
 
   @OneToMany(() => Detail, (detail) => detail.product, { onDelete: 'DEFAULT', onUpdate: 'CASCADE' })
   detail: Detail[];
@@ -71,6 +72,7 @@ export class Product {
   @JoinTable()
   suppliers: Supplier[];
 
-  @OneToMany(() => Existence, (existence) => existence.product, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
-  existence: Existence[];
+  @OneToOne((type) => Existence, (existence) => existence.product)
+  // @JoinColumn()
+  existence: Existence;
 }

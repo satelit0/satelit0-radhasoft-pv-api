@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDescriptionProductDto } from './dto/create-description-product.dto';
-import { UpdateDescriptionProductDto } from './dto/update-description-product.dto';
+import { CreateDescriptionDto } from './dto/create-description.dto';
+import { UpdateDescriptionDto } from './dto/update-description.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DescriptionProduct } from './entities/description-product.entity';
+import { Description } from './entities/description.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class DescriptionProductService {
+export class DescriptionService {
 
   constructor(
-    @InjectRepository(DescriptionProduct)
-    private descProductRepository: Repository<DescriptionProduct>,
+    @InjectRepository(Description)
+    private descProductRepository: Repository<Description>,
   ) {
     
   }
 
-  create(createDescriptionProductDto: CreateDescriptionProductDto) {
+  create(createDescriptionProductDto: CreateDescriptionDto) {
 
     const descProd = this.descProductRepository.create(createDescriptionProductDto);
     const newDescProd = this.descProductRepository.save(descProd);
@@ -42,7 +42,7 @@ export class DescriptionProductService {
     return  descProduct;
   }
 
-  update(id: number, updateDescriptionProductDto: UpdateDescriptionProductDto) {
+  update(id: number, updateDescriptionProductDto: UpdateDescriptionDto) {
 
     const descProductEdit = this.descProductRepository.create(updateDescriptionProductDto);
     const descProductEdited  = this.descProductRepository.update(id, descProductEdit);

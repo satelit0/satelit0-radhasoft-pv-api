@@ -28,7 +28,6 @@ export class AuthController {
     const { user } = request;
     user.password = undefined;
     return user;
-
   }
 
   @UseGuards(LocalAuthGuard)

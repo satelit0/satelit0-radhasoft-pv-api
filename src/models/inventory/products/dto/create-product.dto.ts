@@ -2,8 +2,21 @@ import { OmitType, PickType } from "@nestjs/mapped-types";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsOptional, IsInt } from 'class-validator';
 import { ProductDto } from './product-dto';
+import { CreateDescriptionDto } from '../../description/dto/create-description.dto';
 
-export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', 'updatedAt',]) {
+export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', 'updatedAt', 'existenceId',]) {
+
+
+
+  @ApiProperty({ name: 'qty', type: Number, })
+  qty: number;
+
+  @ApiProperty({ name: 'dateExpire', type: Date, })
+  
+  dateExpire: Date;
+
+  @ApiProperty({ name: 'dateEntry', type: Date, })
+  dateEntry: Date;
 
   @ApiProperty({
     name: 'discount', type: Object, default: {
@@ -35,20 +48,22 @@ export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', '
   @ApiProperty({ name: 'name', type: String, })
   name: string;
 
-  @ApiProperty({ name: 'existenceId', type: Number, })
-  existenceId: number;
+  @ApiProperty({ name: 'subsidiaryId', type: Number, required: false})
+  @IsOptional()
+  subsidiaryId: number;
 
-  @ApiProperty({ name: 'descriptionId', type: Number, })
-  descriptionId: number;
+  @ApiProperty({ name: 'description', type: CreateDescriptionDto, required: false})
+  @IsOptional()
+  description?: CreateDescriptionDto;
 
   @ApiProperty({ name: 'categoryId', type: Number, })
   @IsOptional()
   categoryId?: number;
 
-  @ApiProperty({ name: 'supplierIds', type: Array, description: 'suplidores', default: [0] })
+  @ApiProperty({ name: 'supplierIds', type: Array, description: 'suplidores', default: [0], })
   @IsOptional()
   @IsInt({ each: true })
-  supplierIds: number[];
+  supplierIds?: number[];
 
 
 }

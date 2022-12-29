@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateSubsidiaryExistenceDto } from './create-existence.dto';
+import { CreateExistenceDto } from './create-existence.dto';
 
-export class UpdateSubsidiaryExistenceDto extends PartialType(CreateSubsidiaryExistenceDto) {}
+export class UpdateExistenceDto extends PartialType(CreateExistenceDto) {}

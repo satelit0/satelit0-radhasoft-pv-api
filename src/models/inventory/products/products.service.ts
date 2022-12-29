@@ -15,10 +15,12 @@ export class ProductsService {
 
   create(createProductDto: CreateProductDto) {
 
-    // const product = this.productRepository.create(createProductDto);
-    // const newProduct = this.productRepository.save(product);
+    const { qty, dateEntry, dateExpire, ...restDto} = createProductDto;
 
-    // return newProduct;
+    const product = this.productRepository.create({...restDto});
+    const newProduct = this.productRepository.save(product);
+
+    return newProduct;
   }
 
   findAll() {

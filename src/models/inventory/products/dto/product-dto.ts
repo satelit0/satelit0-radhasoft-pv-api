@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject, IsOptional } from 'class-validator';
+import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject, IsOptional, IS_BASE32 } from 'class-validator';
 
 export class ProductDto {
   @IsInt()
@@ -9,9 +9,9 @@ export class ProductDto {
   @IsOptional()
   categoryId?: number;
 
-  @IsInt()
-  @IsNotEmpty()
-  descriptionId: number;
+  // @IsInt()
+  // @IsNotEmpty()
+  // descriptionId: number;
   
   @IsInt()
   @IsNotEmpty()
@@ -37,15 +37,17 @@ export class ProductDto {
 
   @MaxLength(300, { each: true })
   @IsString()
-  @IsArray({each: true})
+  @IsArray()
   @IsOptional()
   photo?: string[];
   
-  @IsCurrency()
+  @IsNumber()
+  @Min(0.1)
   cost: number;
 
-  // @IsArray()
-  @IsCurrency()
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0.1)
   price: number;
 
   @IsObject({ each: true })
@@ -60,8 +62,9 @@ export class ProductDto {
   @IsNotEmpty()
   dateExpire: Date;
 
-  @IsInt()
+  @IsNumber(  )
   @IsNotEmpty()
+  @Min(0.1)
   qty: number;
 
   @IsDateString()

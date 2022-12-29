@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
 
 
@@ -10,6 +10,9 @@ export class Existence {
 
   @Column()
   subsidiaryId: number;
+
+  @Column()
+  productId: number;
 
   @Column('double precision', { default: 0 , comment:'cantidad de existencia'})
   qty: number; 
@@ -33,6 +36,7 @@ export class Existence {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne( () => Product, (product) => product.existence, {onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @OneToOne( () => Product, (product) => product.existence, {onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @JoinColumn()
   product: Product  
 }

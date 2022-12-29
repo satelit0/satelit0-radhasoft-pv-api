@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ExistenceService } from './existence.service';
-import { CreateSubsidiaryExistenceDto } from './dto/create-existence.dto';
-import { UpdateSubsidiaryExistenceDto } from './dto/update-existence.dto';
+import { CreateExistenceDto } from './dto/create-existence.dto';
+import { UpdateExistenceDto } from './dto/update-existence.dto';
 
 @Controller('subsidiary-existence')
 export class ExistenceController {
   constructor(private readonly subsidiaryExistenceService: ExistenceService) {}
 
   @Post()
-  create(@Body() createSubsidiaryExistenceDto: CreateSubsidiaryExistenceDto) {
+  create(@Body() createSubsidiaryExistenceDto: CreateExistenceDto) {
     return this.subsidiaryExistenceService.create(createSubsidiaryExistenceDto);
   }
 
@@ -23,7 +23,7 @@ export class ExistenceController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubsidiaryExistenceDto: UpdateSubsidiaryExistenceDto) {
+  update(@Param('id') id: string, @Body() updateSubsidiaryExistenceDto: UpdateExistenceDto) {
     return this.subsidiaryExistenceService.update(+id, updateSubsidiaryExistenceDto);
   }
 

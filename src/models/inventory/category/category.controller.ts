@@ -1,19 +1,19 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
-import { CategoryProductService } from './category-product.service';
-import { CreateCategoryProductDto } from './dto/create-category-product.dto';
-import { UpdateCategoryProductDto } from './dto/update-category-product.dto';
+import { CategoryService } from './category-product.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Http2ServerResponse } from 'http2';
 import { ApiTags } from '@nestjs/swagger';
 import { FindOneParams } from 'src/helpers/utils';
 
-@Controller('category-product')
-@ApiTags('Category-Product')
+@Controller('category')
+@ApiTags('Category')
 
-export class CategoryProductController {
-  constructor(private readonly categoryProductService: CategoryProductService) {}
+export class CategoryController {
+  constructor(private readonly categoryProductService: CategoryService) {}
 
   @Post()
-  create(@Body() createCategoryProductDto: CreateCategoryProductDto) {
+  create(@Body() createCategoryProductDto: CreateCategoryDto) {
 
     return this.categoryProductService.create(createCategoryProductDto);
   }
@@ -34,7 +34,7 @@ export class CategoryProductController {
   }
 
   @Patch(':id')
-  async update(@Param() {id}: FindOneParams, @Body() updateCategoryProductDto: UpdateCategoryProductDto) {
+  async update(@Param() {id}: FindOneParams, @Body() updateCategoryProductDto: UpdateCategoryDto) {
     const cat = await this.categoryProductService.findOneById(id);
     if (!cat) throw new HttpException(`La categoria de producto con id: ${id} no existe`, HttpStatus.NOT_FOUND);
     return this.categoryProductService.update(id, updateCategoryProductDto);

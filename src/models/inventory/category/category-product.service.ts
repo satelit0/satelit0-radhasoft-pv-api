@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCategoryProductDto } from './dto/create-category-product.dto';
-import { UpdateCategoryProductDto } from './dto/update-category-product.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryProduct } from './entities/category-product.entity';
+import { Category } from './entities/category.entity';
 import { Like, Repository } from 'typeorm';
 
 @Injectable()
-export class CategoryProductService {
+export class CategoryService {
 
   constructor(
-    @InjectRepository(CategoryProduct)
-    private catProdRepository: Repository<CategoryProduct>
+    @InjectRepository(Category)
+    private catProdRepository: Repository<Category>
     ) {
   }
 
 
-  create(createCategoryProductDto: CreateCategoryProductDto) {
+  create(createCategoryProductDto: CreateCategoryDto) {
 
     const catProd = this.catProdRepository.create(createCategoryProductDto); 
     const newCatProd = this.catProdRepository.save(catProd);
@@ -50,7 +50,7 @@ export class CategoryProductService {
     return catPrducts;
   }
 
-  update(id: number, updateCategoryProductDto: UpdateCategoryProductDto) {
+  update(id: number, updateCategoryProductDto: UpdateCategoryDto) {
     const catEdit = this.catProdRepository.create(updateCategoryProductDto);
     const catEdited = this.catProdRepository.update(id, catEdit);
     return catEdited;

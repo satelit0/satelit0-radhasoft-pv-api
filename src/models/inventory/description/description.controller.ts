@@ -1,17 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpException, HttpStatus } from '@nestjs/common';
-import { DescriptionProductService } from './description-product.service';
-import { CreateDescriptionProductDto } from './dto/create-description-product.dto';
-import { UpdateDescriptionProductDto } from './dto/update-description-product.dto';
-import { FindOneParams } from '../../helpers/utils';
+import { DescriptionService } from './description.service';
+import { CreateDescriptionDto } from './dto/create-description.dto';
+import { UpdateDescriptionDto } from './dto/update-description.dto';
+import { FindOneParams } from '../../../helpers/utils';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('description-product')
 @ApiTags('Description-Product')
-export class DescriptionProductController {
-  constructor(private readonly descriptionProductService: DescriptionProductService) { }
+export class DescriptionController {
+  constructor(private readonly descriptionProductService: DescriptionService) { }
 
   @Post()
-  async create(@Body() createDescriptionProductDto: CreateDescriptionProductDto) {
+  async create(@Body() createDescriptionProductDto: CreateDescriptionDto) {
     return await this.descriptionProductService.create(createDescriptionProductDto);
   }
 
@@ -26,7 +26,7 @@ export class DescriptionProductController {
   }
 
   @Patch(':id')
-  async update(@Param() { id }: FindOneParams, @Body() updateDescriptionProductDto: UpdateDescriptionProductDto) {
+  async update(@Param() { id }: FindOneParams, @Body() updateDescriptionProductDto: UpdateDescriptionDto) {
     return await this.descriptionProductService.update(id, updateDescriptionProductDto);
   }
 
