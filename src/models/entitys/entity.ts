@@ -1,4 +1,9 @@
+import { PickType, PartialType, OmitType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsDateString, IsOptional, ValidateIf } from 'class-validator';
+import { CreateExistenceDto } from '../inventory/existence/dto/create-existence.dto';
+import { CreateDescriptionDto } from '../inventory/description/dto/create-description.dto';
+import { Units } from 'src/helpers/enums';
 
 export class Phone {
   @ApiProperty({ name: 'celular', type: Array, required: true })
@@ -58,4 +63,52 @@ export class WorkingHours {
     fri: boolean;
     sat: boolean;
   }
+}
+
+export class CreateExtistencePartialDto extends PartialType(CreateExistenceDto){
+  @ApiProperty({name: 'qty', type: Number})
+  @IsNumber()
+  @IsNotEmpty()
+  qty: number;
+
+  @ApiProperty({name: 'subsidiaryId', type: Number})
+  @IsNumber()
+  subsidiaryId: number;
+  
+  @ApiProperty({name: 'dateExpire', type: Date})
+  @IsNotEmpty()
+  @IsDateString()
+  dateExpire: Date;
+
+  @ApiProperty({name: 'dateEntry', type: Date})
+  @IsNotEmpty()
+  @IsDateString()
+  dateEntry: Date;
+
+}
+
+export class CreateDescriptionPartialDto extends PartialType(CreateDescriptionDto){
+  // @ApiProperty({ name: 'productId', type: Number })
+  // productId: number;
+
+  @ApiProperty({ name: 'description', type: String })
+  description: string;
+
+  @ApiProperty({ name: 'display', type: String, required: false })
+  @IsOptional()
+  display?: string;
+
+  @ApiProperty({ name: 'height', type: Number, required: false })
+  @IsOptional()
+  height?: number;
+
+  @ApiProperty({ name: 'width', type: Number, required: false })
+  @IsOptional()
+  width?: number;
+
+  @ApiProperty({ name: 'unit', type: String, required: false }) 
+  @ValidateIf(({ height, width }) => height !== undefined || width !== undefined)
+  @IsOptional()
+  @IsNotEmpty()
+  unit?: Units;
 }

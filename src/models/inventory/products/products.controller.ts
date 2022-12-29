@@ -9,6 +9,8 @@ import { Request } from 'express';
 import { IRequestWithUser, ITokenPayload } from 'src/models/interfaces/models.interface';
 import { JwtAuthGuard } from '../../authentication/guards/jwt-auth.guard';
 import { use } from 'passport';
+import { DescriptionService } from '../description/description.service';
+import { CreateDescriptionDto } from '../description/dto/create-description.dto';
 
 const MSG = "Produto no existe",
   MSG_NAME_EXISTS = "Produto ya existe";
@@ -19,29 +21,26 @@ const MSG = "Produto no existe",
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
+    private readonly descriptionService: DescriptionService
   ) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createProductDto: CreateProductDto, @Req() req: IRequestWithUser) {
 
-    const { name, supplierIds, subsidiaryId, description } = createProductDto;
-    const { user } = req;
-    !subsidiaryId ? (createProductDto.subsidiaryId = user.subsidiaryId) : null;
-    
-    console.log('+++++++++++++++>', createProductDto);
+    const { name, existence } = createProductDto;
 
+    const { user } = req;
+    const { subsidiaryId } = existence;
+
+    !subsidiaryId || subsidiaryId == 0 ? (existence.subsidiaryId = user.subsidiaryId) : null;
+    
     const productCurr = await this.productsService.findByName(name);
     if (productCurr) throw new HttpException(`${MSG_NAME_EXISTS}: ${name}`, HttpStatus.BAD_REQUEST);
 
-    // const newProduc = await this.productsService.create(createProductDto);
+    const newProduct = await this.productsService.create(createProductDto);
 
-    // if (newProduc && supplierId) {
-    // await this.productsSupplierService.create({productId: newProduc.id, supplierId});
-    // }
-    // const newProductProdutSupplier = {...newProduc, supplierId};
-    // return createProductDto;
-    // return newProductProdutSupplier;
+    return newProduct;
   }
 
   @Get()

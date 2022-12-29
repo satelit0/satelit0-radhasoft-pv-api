@@ -4,9 +4,11 @@ import { IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import { Units } from 'src/helpers/enums';
 import { DescriptionDto } from './description.dto';
 
-export class CreateDescriptionDto extends PickType(DescriptionDto, ['description', 'display', 'height', 'width', 'unit']) {
+export class CreateDescriptionDto extends PickType(DescriptionDto, ['description', 'display', 'height', 'width', 'unit', 'productId']) {
+  
 
-
+  @ApiProperty({ name: 'productId', type: Number })
+  productId: number;
 
   @ApiProperty({ name: 'description', type: String })
   description: string;

@@ -15,9 +15,9 @@ export class DescriptionService {
     
   }
 
-  create(createDescriptionProductDto: CreateDescriptionDto) {
+  create(createDescriptionDto: CreateDescriptionDto) {
 
-    const descProd = this.descProductRepository.create(createDescriptionProductDto);
+    const descProd = this.descProductRepository.create(createDescriptionDto);
     const newDescProd = this.descProductRepository.save(descProd);
     // return descProd;
     return newDescProd;

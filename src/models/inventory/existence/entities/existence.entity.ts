@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
 
 
@@ -23,10 +23,10 @@ export class Existence {
   @Column()
   dateExpire: Date;
  
-  @Column({ default: true })
+  @Column({ default: true, nullable: false })
   isActive: boolean; 
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @CreateDateColumn()
@@ -36,7 +36,7 @@ export class Existence {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne( () => Product, (product) => product.existence, {onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @OneToOne( () => Product, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
   @JoinColumn()
   product: Product  
 }

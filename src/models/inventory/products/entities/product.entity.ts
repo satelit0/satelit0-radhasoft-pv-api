@@ -72,7 +72,7 @@ export class Product {
   @JoinTable()
   suppliers: Supplier[];
 
-  @OneToOne((type) => Existence, (existence) => existence.product)
+  // @OneToOne((type) => Existence, (existence) => existence.product)
   // @JoinColumn()
-  existence: Existence;
+  // existence: Existence;
 }

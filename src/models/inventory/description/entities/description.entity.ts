@@ -45,8 +45,8 @@ export class Description {
   deletedAt: Date;
 
 
-  @OneToOne((type) => Product, (product) => product.description)
+  @OneToOne(() => Product, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
   @JoinColumn()
-  product: Product[];
+  product: Product;
 }
 

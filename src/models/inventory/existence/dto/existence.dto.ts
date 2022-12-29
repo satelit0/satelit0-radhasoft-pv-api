@@ -22,7 +22,7 @@ export class ExistenceDto {
  
   @IsBoolean()
   @IsOptional()
-  isActive: boolean; 
+  isActive?: boolean; 
 
   @IsDateString()
   @IsOptional()

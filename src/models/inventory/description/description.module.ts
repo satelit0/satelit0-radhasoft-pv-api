@@ -7,6 +7,7 @@ import { Description } from './entities/description.entity';
 @Module({
   imports:[ TypeOrmModule.forFeature([Description]), ],
   controllers: [DescriptionController],
-  providers: [DescriptionService]
+  providers: [DescriptionService],
+  exports: [DescriptionService]
 })
 export class DescriptionModule {}

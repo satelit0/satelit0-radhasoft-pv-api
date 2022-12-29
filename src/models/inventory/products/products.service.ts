@@ -4,21 +4,37 @@ import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
+import { DescriptionService } from '../description/description.service';
+import { ExistenceService } from '../existence/existence.service';
 
 @Injectable()
 export class ProductsService {
 
   constructor(
     @InjectRepository(Product)
-    private productRepository: Repository<Product>
-  ) {}
+    private productRepository: Repository<Product>,
+    private descriptionService: DescriptionService,
+    private existenceService: ExistenceService,
 
-  create(createProductDto: CreateProductDto) {
+  ) { }
 
-    const { qty, dateEntry, dateExpire, ...restDto} = createProductDto;
+  async create(createProductDto: CreateProductDto) {
 
-    const product = this.productRepository.create({...restDto});
-    const newProduct = this.productRepository.save(product);
+    const { description, existence, ...restDto } = createProductDto;
+
+    const product = this.productRepository.create({ ...restDto });
+    const newProduct = await this.productRepository.save(product);
+    const { id } = newProduct;
+
+    if ( existence ){
+      const newExistence = await this.existenceService.create({...existence, productId: id,});
+      // newProduct.existence = newExistence;
+    }
+
+    if (description && newProduct) {
+      const newDescription = await this.descriptionService.create({ productId: id, ...description });
+      newProduct.description = newDescription;
+    }
 
     return newProduct;
   }
@@ -39,18 +55,18 @@ export class ProductsService {
   }
 
   findByName(name: string) {
-    const product = this.productRepository.findOne({where: {name}});
+    const product = this.productRepository.findOne({ where: { name } });
     return product;
   }
-  
+
   findOne(id: number, withDeleted: boolean = false) {
     const product = this.productRepository.findOne({
-      where: {id}, 
+      where: { id },
       withDeleted,
-      relations:{
+      relations: {
         category: true,
         description: true,
-      } 
+      }
     });
     return product;
   }
@@ -69,7 +85,7 @@ export class ProductsService {
       return this.productRepository.softDelete(id);
     }
 
-    const product = this.productRepository.create({id});
+    const product = this.productRepository.create({ id });
     const removeProduct = this.productRepository.remove(product);
 
     return removeProduct;

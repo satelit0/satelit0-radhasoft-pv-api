@@ -4,6 +4,10 @@ export class DescriptionDto {
   @IsInt()
   id: number;
 
+  @IsInt()
+  @IsNotEmpty()
+  productId: number;
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(400)
