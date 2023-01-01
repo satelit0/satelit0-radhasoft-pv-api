@@ -6,6 +6,9 @@ import { Subsidiary } from './entities/subsidiary.entity';
 import { ProductsModule } from '../../inventory/products/products.module';
 import { ExistenceModule } from '../../inventory/existence/existence.module';
 import { ContactModule } from '../../contact/contact.module';
+import { DatabaseProviders } from '../../../database/database.providers';
+import { AppModule } from '../../../app.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -15,10 +18,12 @@ import { ContactModule } from '../../contact/contact.module';
     forwardRef(() => ProductsModule),
     ExistenceModule,
     ContactModule,
+    ConfigModule,
   ],
   controllers: [SubsidiaryController],
   providers: [
-    SubsidiaryService,
+    SubsidiaryService, 
+    ...DatabaseProviders
   ],
   exports: [
     SubsidiaryService,

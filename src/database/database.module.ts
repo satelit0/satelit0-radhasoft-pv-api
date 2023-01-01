@@ -18,6 +18,8 @@ import { Device } from 'src/models/company/device/entities/device.entity';
 import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.entity';
 import { Category } from 'src/models/inventory/category/entities/category.entity';
 import { Detail } from '../models/inventory/details/entities/detail.entity';
+import { DatabaseProviders } from './database.providers';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -33,13 +35,13 @@ import { Detail } from '../models/inventory/details/entities/detail.entity';
         database: configService.get('POSTGRES_DATABASE'),
         entities: [
           // `${__dirname}/../models/**/*.entity.ts`,
-          User, 
-          Person, 
-          Contact, 
-          Supplier, 
+          User,
+          Person,
+          Contact,
+          Supplier,
           Product,
-          Category, 
-          Description, 
+          Category,
+          Description,
           Order,
           Detail,
           DebtsToPay,
@@ -51,31 +53,19 @@ import { Detail } from '../models/inventory/details/entities/detail.entity';
           Subsidiary,
           Device,
           Client,
-        ], 
+        ],
         synchronize: true,
         logging: ['query', 'error']
-      })
+      }),
+
+      dataSourceFactory: async (options) => {
+        const dataSource = await new DataSource(options).initialize();
+        return dataSource;
+      },
+
     }),
   ],
-  // providers: [...DatabaseProviders],
-  // exports: [...DatabaseProviders],
+  providers: [],
+  exports: [],
 })
-export class DatabaseModule {}
-// User, 
-// Person, 
-// Contact, 
-// Supplier, 
-// Product,
-// CategoryProduct, 
-// DescriptionProduct, 
-// Order,
-// Detail,
-// ProductsSupplier,
-// DebtsToPay,
-// Receivable,
-// DebtsToPay,
-// PaymentDetail,
-// SubsidiaryExistence,
-// CompanyBase,
-// Subsidiary,
-// Device,
+export class DatabaseModule { }

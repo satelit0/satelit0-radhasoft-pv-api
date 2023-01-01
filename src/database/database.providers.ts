@@ -8,33 +8,66 @@ import { User } from 'src/models/authentication/users/entities/user.entity';
 import { DataSource } from 'typeorm';
 import { Category } from 'src/models/inventory/category/entities/category.entity';
 import { Detail } from '../models/inventory/details/entities/detail.entity';
+import { ConfigService, ConfigModule } from '@nestjs/config';
+import { Inject } from '@nestjs/common';
+import { DebtsToPay } from 'src/models/accounts/debts-to-pay/entities/debts-to-pay.entity';
+import { PaymentDetail } from 'src/models/accounts/payment-details/entities/payment-detail.entity';
+import { Receivable } from 'src/models/accounts/receivable/entities/receivable.entity';
+import { Client } from 'src/models/client/entities/client.entity';
+import { CompanyBase } from 'src/models/company/company-base/entities/company-base.entity';
+import { Device } from 'src/models/company/device/entities/device.entity';
+import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.entity';
+import { Existence } from 'src/models/inventory/existence/entities/existence.entity';
 
 export const DatabaseProviders = [
   {
-    provide: 'DATA_SOURCE',
-    useFactory: async () => {
+    import: [ConfigModule],
+    inject: [ConfigService],
+    provide: 'DataSource',
+    useFactory: async (configService: ConfigService) => {
+      console.log('++++>>>>', configService.get('POSTGRES_HOST'),);
+
       const dataSource = new DataSource({
         type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
-        database: "pv",
-        entities: [
-          User, 
-          Person, 
-          Contact, 
-          Supplier, 
-          Product,
-          Category, 
-          Description,
-          Order, 
-          Detail,   
-        ],
+        host: configService.get('POSTGRES_HOST'),
+        port: configService.get('POSTGRES_PORT'),
+        username: configService.get('POSTGRES_USERNAME'),
+        password: configService.get('POSTGRES_PASSWORD'),
+        database: configService.get('POSTGRES_DATABASE'),
         synchronize: true,
-      });
+        logging: ['query', 'error'],
+        entities: [
+          User,
+          Person,
+          Contact,
+          Supplier,
+          Product,
+          Category,
+          Description,
+          Order,
+          Detail,
+          DebtsToPay,
+          Receivable,
+          DebtsToPay,
+          PaymentDetail,
+          Existence,
+          CompanyBase,
+          Subsidiary,
+          Device,
+          Client,
+        ],
+      })
 
-      return dataSource.initialize();
+      try {
+        if (!dataSource.isInitialized) {
+          await dataSource.initialize();
+        }
+      } catch (error) {
+        console.error(error?.message);
+      }
+      return dataSource;
+
+      // return dataSource.initialize();
     },
-  },
+  }
 ];

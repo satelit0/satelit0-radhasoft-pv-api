@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UsersService } from './models/authentication/users/users.service';
 import { ProductsModule } from './models/inventory/products/products.module';
 import { ProductsService } from './models/inventory/products/products.service';
-import { DescriptionModule } from './models/inventory/description/description.module'; 
+import { DescriptionModule } from './models/inventory/description/description.module';
 import { SupplierModule } from './models/inventory/supplier/supplier.module';
 import { ContactModule } from './models/contact/contact.module';
 import { PersonModule } from './models/person/person.module';
@@ -27,8 +27,9 @@ import { DeviceModule } from './models/company/device/device.module';
 import { SubsidiaryModule } from './models/company/subsidiary/subsidiary.module';
 import { CategoryModule } from './models/inventory/category/category.module';
 import { DetailsModule } from './models/inventory/details/details.module';
-  
-@Module({ 
+import { DatabaseProviders } from './database/database.providers';
+
+@Module({
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
@@ -42,20 +43,20 @@ import { DetailsModule } from './models/inventory/details/details.module';
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION_TIME: Joi.string().required(),
       })
-    }), 
-    UsersModule, 
-    ProductsModule, 
-    DescriptionModule, 
-    SupplierModule, 
-    ContactModule, 
-    PersonModule, 
+    }),
+    UsersModule,
+    ProductsModule,
+    DescriptionModule,
+    SupplierModule,
+    ContactModule,
+    PersonModule,
     CategoryModule,
-    OrderModule, 
-    DetailsModule, 
-    DebtsToPayModule, 
-    PaymentDetailsModule, 
-    ExistenceModule, 
-    SubsidiaryModule, 
+    OrderModule,
+    DetailsModule,
+    DebtsToPayModule,
+    PaymentDetailsModule,
+    ExistenceModule,
+    SubsidiaryModule,
     CompanyBaseModule,
     DeviceModule,
     DatabaseModule,
@@ -66,20 +67,13 @@ import { DetailsModule } from './models/inventory/details/details.module';
   controllers: [AppController],
   providers: [
     AppService,
-    // UsersService,
-    // ProductsService,
-    // PersonService,
-    // AuthService,
-    // DeviceService,
-    // AuthService
   ],
   exports: [
-    // JwtModule
   ]
-}) 
+})
 export class AppModule {
- 
+
   constructor(private dataSource: DataSource) {
-    
+
   }
 }

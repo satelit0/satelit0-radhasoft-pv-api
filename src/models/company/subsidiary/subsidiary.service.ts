@@ -1,13 +1,16 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSubsidiaryDto } from './dto/create-subsidiary.dto';
 import { UpdateSubsidiaryDto } from './dto/update-subsidiary.dto';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ISubsidiary } from 'src/models/interfaces/models.interface';
 import { ProductsService } from '../../inventory/products/products.service';
 import { Subsidiary } from './entities/subsidiary.entity';
 import { ExistenceService } from '../../inventory/existence/existence.service';
 import { ContactService } from '../../contact/contact.service';
+import { Contact } from '../../contact/entities/contact.entity';
+import { DatabaseProviders } from '../../../database/database.providers';
+import { Existence } from '../../inventory/existence/entities/existence.entity';
 
 @Injectable()
 export class SubsidiaryService {
@@ -18,33 +21,73 @@ export class SubsidiaryService {
     private productsService: ProductsService,
     private existenceService: ExistenceService,
     private contactService: ContactService,
+    @Inject('DataSource')
+    private dataSource: DataSource,
   ) {
   }
 
   async create(createSubsidiaryDto: CreateSubsidiaryDto) {
-    const { headquarters, contact, ...restCreateSubsidiaryDto } = createSubsidiaryDto;
-    const product = await this.productsService.getAll();
-    const productIds = product.map(prod => prod.id);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
+    try {
 
-    if (headquarters) {
-      await this.subsidiaryRepository.update({ headquarters: true }, { headquarters: false })
+      const { headquarters, contact, ...restCreateSubsidiaryDto } = createSubsidiaryDto;
+      const product = await this.productsService.getAll();
+      const productIds = product.map(prod => prod.id);
+
+      if (headquarters) {
+        await this.subsidiaryRepository.update({ headquarters: true }, { headquarters: false })
+      }
+
+      // const contactId = (await this.contactService.create(contact)).id;
+      const contact_x = new Contact();
+      Object.assign(contact_x, contact);
+      // const contactTemp: Contact = {
+      //   ...contact,
+      //   id: null,
+      //   deletedAt: null,
+      //   createdAt: null,
+      //   updatedAt: null,
+      //   contactId: null,
+      //   person: null,
+      //   companyBase: null,
+      //   subsidiary: null,
+      // };
+
+      const contactId = (await queryRunner.manager.save( contact_x )).id;
+
+      const subsidiary = this.subsidiaryRepository.create({ contactId, ...restCreateSubsidiaryDto });
+
+      // const newSubsidiary = await this.subsidiaryRepository.save(subsidiary);
+      const newSubsidiary = await queryRunner.manager.save(subsidiary);
+
+      const { id } = newSubsidiary;
+      for (const productId of productIds) {
+        const newExistence = new Existence();
+        Object.assign(newExistence, {
+          productId,
+          dateEntry: new Date(),
+          dateExpire: new Date(),
+          qty: 0,
+          subsidiaryId: id
+        }) 
+        await queryRunner.manager.save(newExistence);
+      }
+
+      await queryRunner.commitTransaction();
+
+      return newSubsidiary;
+
+    } catch (error) {
+      console.log('=======>', error);
+      await queryRunner.rollbackTransaction();
+      throw new HttpException(`imposible completar la acción solicitada: ${error.message}`, error.code);
+    } finally {
+      await queryRunner.release();
     }
 
-    const contactId = (await this.contactService.create(contact)).id;
-    const subsidiary = this.subsidiaryRepository.create({ contactId, ...restCreateSubsidiaryDto });
-    const newSubsidiary = await this.subsidiaryRepository.save(subsidiary);
-    const { id } = newSubsidiary;
-    for (const productId of productIds) {
-      await this.existenceService.create({
-        productId,
-        dateEntry: new Date(),
-        dateExpire: new Date(),
-        qty: 0,
-        subsidiaryId: id
-      });
-    }
-    return newSubsidiary;
   }
 
   findAll() {
