@@ -53,6 +53,28 @@ export interface IUser extends IContextDate {
   workingHours?: WorkingHours;
   lastLogin?: Date;
 }
+export interface IProduct extends IContextDate {
+  id?: number;
+  categoryId?: number;
+  name?: string;
+  brand?: string;
+  lote?: string;
+  // photo?: string[];
+  cost?: number;
+  tax?: number;
+  taxExempt?: boolean;
+  price?: number;
+  discount?: {};
+}
+export interface IExistence extends IContextDate {
+  id?: number;
+  subsidiaryId?: number;
+  productId?: number;
+  qty?: number; 
+  dateEntry?: Date;
+  dateExpire?: Date;
+  isActive?: boolean; 
+}
 
 interface IContextDate {
   createdAt?: Date;

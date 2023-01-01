@@ -28,7 +28,6 @@ import { hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { DeviceService } from 'src/models/company/device/device.service';
-import { SubsidiaryService } from 'src/models/company/subsidiary/subsidiary.service';
 
 
 @Controller('users')
@@ -37,12 +36,12 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly personService: PersonService,
-    private readonly subsidiaryService: SubsidiaryService,
+    
     // private readonly contacService: ContactService,
     private readonly deviceService: DeviceService,
 
-    @InjectRepository(Contact)
-    private contactRepository: Repository<Contact>,
+    // @InjectRepository(Contact)
+    // private contactRepository: Repository<Contact>,
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -67,10 +66,10 @@ export class UsersController {
       const person = await this.personService.findOne(personId);
       if (!person) throw new HttpException(`Persona con el id ${personId} no existe`, 404);
 
-      if (subsidiaryId == 0 || !subsidiaryId) {
-        const { id } = await this.subsidiaryService.findOneBy({ headquarters: true });
-        createUserDto.subsidiaryId = id;
-      }
+      // if (subsidiaryId == 0 || !subsidiaryId) {
+      //   const { id } = await this.subsidiaryService.findOneBy({ headquarters: true });
+      //   createUserDto.subsidiaryId = id;
+      // }
       const newUser = await this.usersService.create(createUserDto);
       return newUser;
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject, IsOptional, IS_BASE32 } from 'class-validator';
+import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject, IsOptional, IS_BASE32, IsBoolean } from 'class-validator';
 import { CreateExistenceDto } from '../../existence/dto/create-existence.dto';
 
 export class ProductDto {
@@ -15,7 +15,8 @@ export class ProductDto {
   // descriptionId: number;
   
   @IsNotEmpty()
-  existence: CreateExistenceDto;
+  @IsOptional()
+  existence?: CreateExistenceDto[];
 
 
   @IsOptional()
@@ -53,18 +54,13 @@ export class ProductDto {
   @IsOptional()
   discount?: {};
   
-  // @IsDateString()
-  // @IsNotEmpty()
-  // dateEntry: Date;
-
-  // @IsDateString()
-  // @IsNotEmpty()
-  // dateExpire: Date;
-
-  // @IsNumber(  )
-  // @IsNotEmpty()
-  // @Min(0.1)
-  // qty: number;
+  @IsNumber()
+  @IsOptional()
+  tax?: number;
+  
+  @IsBoolean()
+  @IsOptional()
+  taxExempt?: boolean;
 
   @IsDateString()
   @IsOptional()

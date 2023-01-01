@@ -1,9 +1,10 @@
 import { PickType, PartialType, OmitType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsDateString, IsOptional, ValidateIf } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsDateString, IsOptional, ValidateIf, Min, Allow, IsInt } from 'class-validator';
 import { CreateExistenceDto } from '../inventory/existence/dto/create-existence.dto';
 import { CreateDescriptionDto } from '../inventory/description/dto/create-description.dto';
 import { Units } from 'src/helpers/enums';
+import { IsNull } from 'typeorm';
 
 export class Phone {
   @ApiProperty({ name: 'celular', type: Array, required: true })
@@ -65,14 +66,15 @@ export class WorkingHours {
   }
 }
 
-export class CreateExtistencePartialDto extends PartialType(CreateExistenceDto){
+export class CreateExtistencePartialDto extends OmitType(CreateExistenceDto, ['productId']){
   @ApiProperty({name: 'qty', type: Number})
   @IsNumber()
   @IsNotEmpty()
   qty: number;
 
   @ApiProperty({name: 'subsidiaryId', type: Number})
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   subsidiaryId: number;
   
   @ApiProperty({name: 'dateExpire', type: Date})

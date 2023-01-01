@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ExistenceService } from './existence.service';
 import { CreateExistenceDto } from './dto/create-existence.dto';
 import { UpdateExistenceDto } from './dto/update-existence.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('subsidiary-existence')
+@Controller('existence')
+@ApiTags('Existencias')
 export class ExistenceController {
   constructor(private readonly subsidiaryExistenceService: ExistenceService) {}
 
@@ -21,6 +23,11 @@ export class ExistenceController {
   findOne(@Param('id') id: string) {
     return this.subsidiaryExistenceService.findOne(+id);
   }
+
+  // @Get('')
+  // findOneBy(@Param('id') id: string) {
+  //   return this.subsidiaryExistenceService.findOne(+id);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSubsidiaryExistenceDto: UpdateExistenceDto) {

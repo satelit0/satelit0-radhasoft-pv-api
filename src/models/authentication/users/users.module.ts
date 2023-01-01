@@ -1,7 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Contact } from '../../contact/entities/contact.entity';
 import { User } from './entities/user.entity';
 import { PersonService } from '../../person/person.service';
@@ -12,22 +11,56 @@ import { ConfigService } from '@nestjs/config';
 import { Auth } from '../auth/entities/auth.entity';
 import { DeviceService } from 'src/models/company/device/device.service';
 import { Device } from 'src/models/company/device/entities/device.entity';
-import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.entity';
-import { SubsidiaryService } from 'src/models/company/subsidiary/subsidiary.service';
 import { ContactModule } from '../../contact/contact.module';
 import { PersonModule } from '../../person/person.module';
+import { Subsidiary } from '../../company/subsidiary/entities/subsidiary.entity';
 import { SubsidiaryModule } from '../../company/subsidiary/subsidiary.module';
+import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProductsModule } from '../../inventory/products/products.module';
+import { Product } from '../../inventory/products/entities/product.entity';
+import { ProductsService } from '../../inventory/products/products.service';
+import { Description } from '../../inventory/description/entities/description.entity';
+import { DescriptionModule } from '../../inventory/description/description.module';
+import { ExistenceModule } from '../../inventory/existence/existence.module';
+import { SupplierModule } from '../../inventory/supplier/supplier.module';
 import { AuthModule } from '../auth/auth.module';
+import { Supplier } from '../../inventory/supplier/entities/supplier.entity';
+import { DeviceModule } from '../../company/device/device.module';
 
 @Module({
   imports: [ 
-    TypeOrmModule.forFeature([User, Contact, Person, Subsidiary, Auth, Device, ]),
-    ContactModule,
+    TypeOrmModule.forFeature([
+      User, 
+      Auth, 
+      Contact, 
+      Device, 
+      Person, 
+      Product,
+      Subsidiary, 
+    ]),
+    ContactModule, 
+    DeviceModule,
     PersonModule,
-    SubsidiaryModule,
+    // ProductsModule,
+    DescriptionModule,
+    ExistenceModule,
+    SupplierModule,
+    // forwardRef(() => 
+    SubsidiaryModule
+    // ),
   ],
   controllers: [UsersController],
-  providers: [UsersService, PersonService, SubsidiaryService, AuthService, DeviceService, JwtService, ConfigService],
+  providers: [
+    UsersService, 
+    // PersonService, 
+    // AuthService, 
+    // DeviceService, 
+    // ProductsService,
+    // SubsidiaryService,
+    ConfigService, 
+    JwtService, 
+  ],
   exports: [
     UsersService,
     // TypeOrmModule

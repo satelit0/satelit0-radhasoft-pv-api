@@ -16,6 +16,12 @@ import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { DeviceService } from 'src/models/company/device/device.service';
 import { Device } from 'src/models/company/device/entities/device.entity';
+import { SubsidiaryModule } from '../../company/subsidiary/subsidiary.module';
+import { Subsidiary } from '../../company/subsidiary/entities/subsidiary.entity';
+import { PersonModule } from '../../person/person.module';
+import { ContactModule } from '../../contact/contact.module';
+import { DeviceModule } from '../../company/device/device.module';
+import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
 
 @Module({
   imports: [
@@ -23,11 +29,17 @@ import { Device } from 'src/models/company/device/entities/device.entity';
       User,
       Person,
       Contact,
-      Device
+      Device,
+      Subsidiary
     ]),
+    UsersModule,
+    PersonModule,
+    ContactModule,
+    DeviceModule,
+    SubsidiaryModule,
+
     PassportModule,
     ConfigModule,
-    UsersModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -42,10 +54,11 @@ import { Device } from 'src/models/company/device/entities/device.entity';
   controllers: [AuthController],
   providers: [
     AuthService,
-    UsersService,
-    PersonService,
-    ContactService,
-    DeviceService,
+    // UsersService,
+    // PersonService,
+    // ContactService,
+    // DeviceService,
+    // SubsidiaryService,
     LocalStrategy,
     JwtStrategy,
     // JwtService,

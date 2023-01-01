@@ -4,6 +4,7 @@ import { UpdateExistenceDto } from './dto/update-existence.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Existence } from './entities/existence.entity';
 import { Repository } from 'typeorm';
+import { IExistence } from 'src/models/interfaces/models.interface';
 
 @Injectable()
 export class ExistenceService {
@@ -24,6 +25,19 @@ export class ExistenceService {
 
   findOne(id: number) {
     return this.existenceRepository.findOne({ where: { id } });
+  }
+
+  findOneBy(params: IExistence) {
+    return this.existenceRepository.findOne({ 
+      where: { ...params },
+      relations: {
+        product: {
+          category: true,
+          description: true,
+          suppliers: true,
+        }
+      }
+    });
   }
 
   update(id: number, updateExistenceDto: UpdateExistenceDto) {

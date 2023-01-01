@@ -36,7 +36,7 @@ export class Existence {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne( () => Product, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
-  @JoinColumn()
+  @ManyToOne( () => Product, (product) => product.existences, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  // @JoinColumn()
   product: Product  
 }

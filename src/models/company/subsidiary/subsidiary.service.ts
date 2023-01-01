@@ -1,28 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSubsidiaryDto } from './dto/create-subsidiary.dto';
 import { UpdateSubsidiaryDto } from './dto/update-subsidiary.dto';
-import { Subsidiary } from './entities/subsidiary.entity';
 import { Repository } from 'typeorm';
 import { ISubsidiary } from 'src/models/interfaces/models.interface';
+import { ProductsService } from '../../inventory/products/products.service';
+import { Subsidiary } from './entities/subsidiary.entity';
 
 @Injectable()
 export class SubsidiaryService {
 
   constructor(
-    @InjectRepository(Subsidiary) private repositorySubsidiary: Repository<Subsidiary>
+    @InjectRepository(Subsidiary) private subsidiaryRepository: Repository<Subsidiary>,
+    @Inject(forwardRef( () => ProductsService ) )
+    private productsService: ProductsService,
   ) {
   }
 
-
   create(createSubsidiaryDto: CreateSubsidiaryDto) {
-    const subsidiary = this.repositorySubsidiary.create(createSubsidiaryDto);
-    const newSubsidiary = this.repositorySubsidiary.save(subsidiary);
+    const subsidiary = this.subsidiaryRepository.create(createSubsidiaryDto);
+    const newSubsidiary = this.subsidiaryRepository.save(subsidiary);
     return newSubsidiary;
   }
 
   findAll() {
-    return this.repositorySubsidiary.find({
+    return this.subsidiaryRepository.find({
       relations: {
         companyBase: true,
         contact: true,
@@ -31,8 +33,12 @@ export class SubsidiaryService {
     });
   }
 
+  getAll(){
+    return this.subsidiaryRepository.find();
+  }
+
   findOne(id: number) {
-    return this.repositorySubsidiary.findOne({
+    return this.subsidiaryRepository.findOne({
       where: { id },
       relations: {
         companyBase: { 
@@ -44,7 +50,7 @@ export class SubsidiaryService {
   }
   
   findOneBy(params: ISubsidiary) {
-    return this.repositorySubsidiary.findOne({
+    return this.subsidiaryRepository.findOne({
       where: { ...params },
       relations: {
         companyBase: { 
@@ -56,7 +62,7 @@ export class SubsidiaryService {
   }
 
   findOneByName(name: string, withDeleted: boolean = false) {
-    return this.repositorySubsidiary.findOne({
+    return this.subsidiaryRepository.findOne({
       where: { name },
       withDeleted,
       relations: {
@@ -69,13 +75,13 @@ export class SubsidiaryService {
   }
  
   update(id: number, updateSubsidiaryDto: UpdateSubsidiaryDto) {
-    return this.repositorySubsidiary.update(id, updateSubsidiaryDto);
+    return this.subsidiaryRepository.update(id, updateSubsidiaryDto);
   }
 
   remove(id: number, soft: boolean = true) {
     if(soft) {
-      return this.repositorySubsidiary.softDelete(id)
+      return this.subsidiaryRepository.softDelete(id)
     };
-    return this.repositorySubsidiary.delete(id);
+    return this.subsidiaryRepository.delete(id);
   }
 }

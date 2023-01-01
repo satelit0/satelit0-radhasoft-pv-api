@@ -17,23 +17,9 @@ export class SubsidiaryController {
     ) {}
 
   @Post()
-  @ApiBody({
-    type: CreateSubsidiaryDto,
-    // schema: {example:{ name: 'string' }},
-    description: 'Crea una nueva Sucursal', 
-    required: true,
-  })
-  @ApiResponse({
-    status: 201,
-    type: SubsidiaryDto,
-    description: 'suplidor creado exitosamente'
-  })
-  @ApiResponse({
-    status: 400,
-    // type: SubsidiaryDto,
-    // description: 'suplidor creado exitosamente'
-  })
-
+  @ApiBody({type: CreateSubsidiaryDto, description: 'Crea una nueva Sucursal', required: true,})
+  @ApiResponse({ status: 201, type: SubsidiaryDto, description: 'suplidor creado exitosamente' })
+  @ApiResponse({ status: 400, })
   async create(@Body() createSubsidiaryDto: CreateSubsidiaryDto) {
     try {
       const { companyBaseId, name} = createSubsidiaryDto;

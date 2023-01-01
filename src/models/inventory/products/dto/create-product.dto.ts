@@ -1,18 +1,21 @@
 import { OmitType, PickType } from "@nestjs/mapped-types";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsOptional, IsInt, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsOptional, IsInt, IsNotEmpty, IsArray, ValidateNested } from 'class-validator';
 import { ProductDto } from './product-dto';
 import { CreateDescriptionDto } from '../../description/dto/create-description.dto';
 import { CreateExistenceDto } from "../../existence/dto/create-existence.dto";
 import { CreateExtistencePartialDto, CreateDescriptionPartialDto } from '../../../entitys/entity';
+import { Type } from "class-transformer";
+import { Existence } from '../../existence/entities/existence.entity';
 
 export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', 'updatedAt', 'existence']) {
 
-  
-  @ApiProperty({ name: 'existence', type: CreateExtistencePartialDto, })
-  @IsNotEmpty()
-  existence: CreateExtistencePartialDto;
-
+  @ApiProperty({ name: 'existence', type: Array(CreateExtistencePartialDto), })
+  @IsArray()
+  @ValidateNested({each: true,})
+  @Type(() => CreateExtistencePartialDto)
+  @IsOptional()
+  existence?: CreateExtistencePartialDto[];
 
   @ApiProperty({
     name: 'discount', type: Object, default: {
@@ -29,6 +32,12 @@ export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', '
 
   @ApiProperty({ name: 'cost', type: Number, })
   cost: number;
+
+  @ApiProperty({ name: 'taxExempt', type: Boolean, }) 
+  taxExempt?: boolean;
+
+  @ApiProperty({ name: 'tax', type: Number, })
+  tax?: number;
 
   @ApiProperty({ name: 'photo', type: Array,})
   photo?: string[];

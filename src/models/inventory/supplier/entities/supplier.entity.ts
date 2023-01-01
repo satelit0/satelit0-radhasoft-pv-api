@@ -40,6 +40,6 @@ export class Supplier {
   @ManyToOne(() => Person, (person) => person.supplier)
   person: Person;
 
-  @ManyToMany(() => Product)
+  @ManyToMany(() => Product, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   products: Product[];
 }

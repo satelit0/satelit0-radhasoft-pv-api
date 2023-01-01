@@ -12,12 +12,12 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column() 
+  @Column()
   categoryId: number;
 
   // @Column()
   // descriptionId: number;
- 
+
   // @Column() 
   // existenceId: number;
 
@@ -35,6 +35,12 @@ export class Product {
 
   @Column('numeric', { precision: 8, scale: 2 })
   cost: number;
+
+  @Column('numeric', { precision: 8, scale: 2, nullable: true, default: 0 })
+  tax: number;
+
+  @Column({ default: false, nullable: true })
+  taxExempt: boolean;
 
   @Column('numeric', { precision: 8, scale: 2 })
   price: number;
@@ -62,13 +68,16 @@ export class Product {
   @OneToOne(() => Description, (description) => description.product)
   description: Description;
 
+  @OneToMany(() => Existence, (existence) => existence.product)
+  existences: Existence[];
+
   @ManyToOne(() => Category, (category) => category.product)
   category: Category;
 
   @OneToMany(() => Detail, (detail) => detail.product, { onDelete: 'DEFAULT', onUpdate: 'CASCADE' })
   detail: Detail[];
 
-  @ManyToMany(() => Supplier, { onDelete: 'SET NULL' })
+  @ManyToMany(() => Supplier, )
   @JoinTable()
   suppliers: Supplier[];
 

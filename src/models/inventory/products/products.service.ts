@@ -8,6 +8,10 @@ import { DescriptionService } from '../description/description.service';
 import { ExistenceService } from '../existence/existence.service';
 import { Supplier } from '../supplier/entities/supplier.entity';
 import { SupplierService } from '../supplier/supplier.service';
+import { Existence } from '../existence/entities/existence.entity';
+import { CreateExtistencePartialDto } from '../../entitys/entity';
+import { IProduct } from 'src/models/interfaces/models.interface';
+import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
 
 @Injectable()
 export class ProductsService {
@@ -18,15 +22,17 @@ export class ProductsService {
     private descriptionService: DescriptionService,
     private existenceService: ExistenceService,
     private supplierService: SupplierService,
+    private subsidiaryService: SubsidiaryService,
 
   ) { }
 
   async create(createProductDto: CreateProductDto) {
 
-    const { description, existence, supplierIds,...restDto } = createProductDto;
+    const { description, existence, supplierIds, ...restDto } = createProductDto;
     const suppliers: Supplier[] = [];
+    const existences: Existence[] = [];
 
-    if (supplierIds && supplierIds.length > 0  ) {
+    if (supplierIds && supplierIds.length > 0) {
       for (const supplierId of supplierIds) {
         const supplier = await this.supplierService.findOne(supplierId);
         suppliers.push(supplier);
@@ -39,9 +45,34 @@ export class ProductsService {
     const newProduct = await this.productRepository.save(product);
     const { id } = newProduct;
 
-    if ( existence ){
-      const newExistence = await this.existenceService.create({...existence, productId: id,});
-      // newProduct.existence = newExistence;
+    if (existence && existence.length > 0) {
+      const subsidiarySelected = existence.map( sub => sub.subsidiaryId);
+      const subsidiary = await this.subsidiaryService.getAll();
+      const subsidiaryIds = subsidiary.map(sub => sub.id);
+
+      for (const subId of subsidiaryIds) {
+        let newExistence: Existence;
+        if (subsidiarySelected.includes(subId)){
+          const exist = existence.find(e => e.subsidiaryId === subId);
+          newExistence = await this.existenceService.create({ ...exist, productId: id, });
+          existences.push(newExistence);
+        } else {
+          const existenceVoid: CreateExtistencePartialDto = {
+            qty: 0,
+            subsidiaryId: subId,
+            dateEntry: new Date(),
+            dateExpire: new Date(),
+          }
+          newExistence = await this.existenceService.create({ ...existenceVoid, productId: id, });
+          existences.push(newExistence);
+          
+        }
+      }
+      // for (const item of existence) {
+      //   const newExistence = await this.existenceService.create({ ...item, productId: id, });
+      // }
+
+      newProduct.existences = [...existences];
     }
 
     if (description && newProduct) {
@@ -57,6 +88,7 @@ export class ProductsService {
     const products = this.productRepository.findAndCount({
       relations: {
         category: true,
+        existences: true,
         description: true,
         suppliers: true,
       },
@@ -69,17 +101,40 @@ export class ProductsService {
   }
 
   findByName(name: string) {
-    const product = this.productRepository.findOne({ where: { name } });
+    const product = this.productRepository.findOne({
+      where: { name },
+      relations: {
+        category: true,
+        existences: true,
+        description: true,
+        suppliers: true,
+      },
+    });
     return product;
   }
 
-  findOne(id: number, withDeleted: boolean = false) {
+  findOneBy(params: IProduct, withDeleted: boolean = false) {
     const product = this.productRepository.findOne({
-      where: { id },
+      where: { ...params },
+      withDeleted,
+      relations: {
+        category: true,
+        existences: true,
+        description: true,
+        suppliers: true,
+      },
+    });
+    return product;
+  }
+
+  findOne(id: number, subsidiaryId?: number, withDeleted: boolean = false) {
+    const product = this.productRepository.findOne({
+      where: { id, existences: { subsidiaryId } },
       withDeleted,
       relations: {
         category: true,
         description: true,
+        existences: {},
       }
     });
     return product;
