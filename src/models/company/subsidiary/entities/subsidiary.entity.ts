@@ -4,6 +4,7 @@ import { CompanyBase } from '../../company-base/entities/company-base.entity';
 import { ContextCompany } from '../../company-utils';
 import { Contact } from '../../../contact/entities/contact.entity';
 import { Device } from '../../device/entities/device.entity';
+import { Existence } from '../../../inventory/existence/entities/existence.entity';
 
 @Entity()
 export class Subsidiary extends ContextCompany {
@@ -23,6 +24,9 @@ export class Subsidiary extends ContextCompany {
 
   @OneToMany(() => Device, (device) => device.subsidiary)
   device: Device[];
+
+  @OneToOne(() => Existence, (existence) => existence.subsidiary)
+  existence: Existence[];
 
 
 }

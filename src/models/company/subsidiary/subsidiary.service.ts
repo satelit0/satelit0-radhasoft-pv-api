@@ -6,20 +6,44 @@ import { Repository } from 'typeorm';
 import { ISubsidiary } from 'src/models/interfaces/models.interface';
 import { ProductsService } from '../../inventory/products/products.service';
 import { Subsidiary } from './entities/subsidiary.entity';
+import { ExistenceService } from '../../inventory/existence/existence.service';
+import { ContactService } from '../../contact/contact.service';
 
 @Injectable()
 export class SubsidiaryService {
 
   constructor(
     @InjectRepository(Subsidiary) private subsidiaryRepository: Repository<Subsidiary>,
-    @Inject(forwardRef( () => ProductsService ) )
+    @Inject(forwardRef(() => ProductsService))
     private productsService: ProductsService,
+    private existenceService: ExistenceService,
+    private contactService: ContactService,
   ) {
   }
 
-  create(createSubsidiaryDto: CreateSubsidiaryDto) {
-    const subsidiary = this.subsidiaryRepository.create(createSubsidiaryDto);
-    const newSubsidiary = this.subsidiaryRepository.save(subsidiary);
+  async create(createSubsidiaryDto: CreateSubsidiaryDto) {
+    const { headquarters, contact, ...restCreateSubsidiaryDto } = createSubsidiaryDto;
+    const product = await this.productsService.getAll();
+    const productIds = product.map(prod => prod.id);
+
+
+    if (headquarters) {
+      await this.subsidiaryRepository.update({ headquarters: true }, { headquarters: false })
+    }
+
+    const contactId = (await this.contactService.create(contact)).id;
+    const subsidiary = this.subsidiaryRepository.create({ contactId, ...restCreateSubsidiaryDto });
+    const newSubsidiary = await this.subsidiaryRepository.save(subsidiary);
+    const { id } = newSubsidiary;
+    for (const productId of productIds) {
+      await this.existenceService.create({
+        productId,
+        dateEntry: new Date(),
+        dateExpire: new Date(),
+        qty: 0,
+        subsidiaryId: id
+      });
+    }
     return newSubsidiary;
   }
 
@@ -33,7 +57,7 @@ export class SubsidiaryService {
     });
   }
 
-  getAll(){
+  getAll() {
     return this.subsidiaryRepository.find();
   }
 
@@ -41,19 +65,19 @@ export class SubsidiaryService {
     return this.subsidiaryRepository.findOne({
       where: { id },
       relations: {
-        companyBase: { 
+        companyBase: {
           contact: true,
         },
         contact: true,
       }
     });
   }
-  
+
   findOneBy(params: ISubsidiary) {
     return this.subsidiaryRepository.findOne({
       where: { ...params },
       relations: {
-        companyBase: { 
+        companyBase: {
           contact: true,
         },
         contact: true,
@@ -66,20 +90,20 @@ export class SubsidiaryService {
       where: { name },
       withDeleted,
       relations: {
-        companyBase: { 
+        companyBase: {
           contact: true,
         },
         contact: true,
       }
     });
   }
- 
+
   update(id: number, updateSubsidiaryDto: UpdateSubsidiaryDto) {
     return this.subsidiaryRepository.update(id, updateSubsidiaryDto);
   }
 
   remove(id: number, soft: boolean = true) {
-    if(soft) {
+    if (soft) {
       return this.subsidiaryRepository.softDelete(id)
     };
     return this.subsidiaryRepository.delete(id);

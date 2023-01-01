@@ -99,6 +99,16 @@ export class ProductsService {
 
     return products;
   }
+  
+  getAll() {
+    const products = this.productRepository.find({
+      order: {
+        id: 'ASC'
+      }
+    });
+
+    return products;
+  }
 
   findByName(name: string) {
     const product = this.productRepository.findOne({

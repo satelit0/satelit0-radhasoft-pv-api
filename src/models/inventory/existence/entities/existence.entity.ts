@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Product } from '../../products/entities/product.entity';
+import { Subsidiary } from '../../../company/subsidiary/entities/subsidiary.entity';
 
 
 @Entity()
@@ -37,6 +38,8 @@ export class Existence {
   deletedAt: Date;
 
   @ManyToOne( () => Product, (product) => product.existences, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  // @JoinColumn()
   product: Product  
+  
+  @ManyToOne( () => Subsidiary, (subsidiary) => subsidiary.existence, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  subsidiary: Subsidiary;  
 }

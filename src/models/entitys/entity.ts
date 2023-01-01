@@ -4,44 +4,65 @@ import { IsNotEmpty, IsNumber, IsDateString, IsOptional, ValidateIf, Min, Allow,
 import { CreateExistenceDto } from '../inventory/existence/dto/create-existence.dto';
 import { CreateDescriptionDto } from '../inventory/description/dto/create-description.dto';
 import { Units } from 'src/helpers/enums';
-import { IsNull } from 'typeorm';
 
 export class Phone {
   @ApiProperty({ name: 'celular', type: Array, required: true })
+  @IsOptional()
   celular: string[];
+
   @ApiProperty({ name: 'office', type: Array })
+  @IsOptional()
   office?: string[];
+
   @ApiProperty({ name: 'fax', type: String })
+  @IsOptional()
   fax?: string;
 }
 
 export class SocialNetworks {
   @ApiProperty({ name: 'whatsapp', type: 'string' })
+  @IsOptional()
   whatsapp?: string;
+
   @ApiProperty({ name: 'telegram', type: 'string' })
+  @IsOptional()
   telegram?: string;
+
   @ApiProperty({ name: 'facebook', type: 'string' })
+  @IsOptional()
   facebook?: string;
+
   @ApiProperty({ name: 'instagram', type: 'string' })
+  @IsOptional()
   instagram?: string;
+
   @ApiProperty({ name: 'twetter', type: 'string' })
+  @IsOptional()
   twetter?: string;
 }
 
 export class Address {
   @ApiProperty({ name: 'street', type: 'string' })
+  @IsOptional()
   street?: string;
+
   @ApiProperty({ name: 'building', type: 'string' })
+  @IsOptional()
   building?: string;
+
   @ApiProperty({ name: 'apto', type: 'string' })
+  @IsOptional()
   apto?: string;
+
   @ApiProperty({ name: 'numberApto', type: 'string' })
+  @IsOptional()
   numberApto?: string;
 }
 
 export class GeoLocation {
   @ApiProperty({ name: 'latitud', type: 'string' })
   latitud?: string;
+  
   @ApiProperty({ name: 'longitud', type: 'string' })
   longitud?: string;
 }

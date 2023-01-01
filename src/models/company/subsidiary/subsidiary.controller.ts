@@ -14,22 +14,22 @@ export class SubsidiaryController {
   constructor(
     private readonly subsidiaryService: SubsidiaryService,
     // private readonly companyService: CompanyBaseService,
-    ) {}
+  ) { }
 
   @Post()
-  @ApiBody({type: CreateSubsidiaryDto, description: 'Crea una nueva Sucursal', required: true,})
+  @ApiBody({ type: CreateSubsidiaryDto, description: 'Crea una nueva Sucursal', required: true, })
   @ApiResponse({ status: 201, type: SubsidiaryDto, description: 'suplidor creado exitosamente' })
   @ApiResponse({ status: 400, })
   async create(@Body() createSubsidiaryDto: CreateSubsidiaryDto) {
     try {
-      const { companyBaseId, name} = createSubsidiaryDto;
-      const subsidiary = await this.subsidiaryService.findOneByName(name); 
+      const { companyBaseId, name } = createSubsidiaryDto;
+      const subsidiary = await this.subsidiaryService.findOneByName(name);
 
-      if( subsidiary ) throw new HttpException(`Nombre de sucursal ya existe`, 400);
-      
+      if (subsidiary) throw new HttpException(`Nombre de sucursal ya existe`, 400);
+
       return await this.subsidiaryService.create(createSubsidiaryDto);
     } catch (error) {
-      throw new HttpException( error.status == 500 ?`Se produjo un error inesperado, contacte el administrador. Error: ${error.message}`: error.message, error.status);
+      throw new HttpException(error.status == 500 ? `Se produjo un error inesperado, contacte el administrador. Error: ${error.message}` : error.message, error.status);
     }
   }
 
@@ -42,25 +42,25 @@ export class SubsidiaryController {
   }
 
   @Get(':id')
-  @ApiParam({name: 'id', type: Number, description: 'id de la sucursal para la busqueda'})
-  @ApiOkResponse({type: SubsidiaryDto})
+  @ApiParam({ name: 'id', type: Number, description: 'id de la sucursal para la busqueda' })
+  @ApiOkResponse({ type: SubsidiaryDto })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: 'Not Found'
   })
-  async findOne(@Param() {id}: FindOneParams) {
+  async findOne(@Param() { id }: FindOneParams) {
     const subsidiary = await this.subsidiaryService.findOne(id);
-    if( !subsidiary ) throw new HttpException(`Sucursal no existe`, HttpStatus.NOT_FOUND);
+    if (!subsidiary) throw new HttpException(`Sucursal no existe`, HttpStatus.NOT_FOUND);
     return subsidiary;
   }
 
   @Patch(':id')
-  @ApiParam({name: 'id', description: 'id de la sucursal a editar', required: true})
-  @ApiBody({type: UpdateSubsidiaryDto, required: true})
+  @ApiParam({ name: 'id', description: 'id de la sucursal a editar', required: true })
+  @ApiBody({ type: UpdateSubsidiaryDto, required: true })
   @ApiOkResponse({
     type: SubsidiaryDto,
   })
-  async update(@Param() {id}: FindOneParams, @Body() updateSubsidiaryDto: UpdateSubsidiaryDto) {
+  async update(@Param() { id }: FindOneParams, @Body() updateSubsidiaryDto: UpdateSubsidiaryDto) {
     return await this.subsidiaryService.update(id, updateSubsidiaryDto);
   }
 
@@ -81,7 +81,7 @@ export class SubsidiaryController {
     status: 204,
     description: 'Acción realizaada exitosamente'
   })
-  async remove(@Param() {id}: FindOneParams, @Query('soft') soft?: boolean) {
+  async remove(@Param() { id }: FindOneParams, @Query('soft') soft?: boolean) {
     await this.subsidiaryService.remove(id, soft);
   }
 }
