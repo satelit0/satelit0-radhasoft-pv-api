@@ -97,8 +97,7 @@ export class UsersService {
       relations: {
         person: true,
         devices: true,
-        client: true,
-
+        // client: true,
       }
     });
     return user;

@@ -7,9 +7,9 @@ export class ClientDto {
   @IsInt()
   id: number;
 
-  @ApiProperty({name: 'userId', type: Number})
-  @IsInt()
-  userId: number;
+  // @ApiProperty({name: 'userId', type: Number})
+  // @IsInt()
+  // userId: number;
 
   @ApiProperty({name: 'personId', type: Number})
   @IsInt()

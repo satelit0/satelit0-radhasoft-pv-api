@@ -3,14 +3,12 @@ import { Allow, IsDateString, IsEmail, IsInt, IsObject, IsOptional } from 'class
 import { Address, GeoLocation, SocialNetworks, Phone } from '../../entitys/entity';
 export class ContactDto {
 
-  @ApiProperty({name: 'id', type: 'integer'})
   @IsInt()
-  id: number;
+  @IsOptional()
+  id?: number;
 
-  @ApiProperty({name: 'contactId', type: 'integer'})
   contactUuid: string;
 
-  @ApiProperty({name: 'phones', type: Phone})
   @IsObject()
   @IsOptional()
   phones: Phone;

@@ -41,26 +41,12 @@ export class SubsidiaryService {
         await this.subsidiaryRepository.update({ headquarters: true }, { headquarters: false })
       }
 
-      // const contactId = (await this.contactService.create(contact)).id;
-      const contact_x = new Contact();
-      Object.assign(contact_x, contact);
-      // const contactTemp: Contact = {
-      //   ...contact,
-      //   id: null,
-      //   deletedAt: null,
-      //   createdAt: null,
-      //   updatedAt: null,
-      //   contactId: null,
-      //   person: null,
-      //   companyBase: null,
-      //   subsidiary: null,
-      // };
-
-      const contactId = (await queryRunner.manager.save( contact_x )).id;
+      const newContact = new Contact();
+      Object.assign(newContact, contact);
+      const contactId = (await queryRunner.manager.save(newContact)).id;
 
       const subsidiary = this.subsidiaryRepository.create({ contactId, ...restCreateSubsidiaryDto });
 
-      // const newSubsidiary = await this.subsidiaryRepository.save(subsidiary);
       const newSubsidiary = await queryRunner.manager.save(subsidiary);
 
       const { id } = newSubsidiary;
@@ -72,7 +58,7 @@ export class SubsidiaryService {
           dateExpire: new Date(),
           qty: 0,
           subsidiaryId: id
-        }) 
+        })
         await queryRunner.manager.save(newExistence);
       }
 
@@ -81,7 +67,6 @@ export class SubsidiaryService {
       return newSubsidiary;
 
     } catch (error) {
-      console.log('=======>', error);
       await queryRunner.rollbackTransaction();
       throw new HttpException(`imposible completar la acción solicitada: ${error.message}`, error.code);
     } finally {
@@ -141,8 +126,19 @@ export class SubsidiaryService {
     });
   }
 
-  update(id: number, updateSubsidiaryDto: UpdateSubsidiaryDto) {
-    return this.subsidiaryRepository.update(id, updateSubsidiaryDto);
+  async update(id: number, updateSubsidiaryDto: UpdateSubsidiaryDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      //Todo: implementar el uso de transacciones
+      return this.subsidiaryRepository.update(id, updateSubsidiaryDto);
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new HttpException(`imposible completar la acción solicitada: ${error.message}`, error.code);
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   remove(id: number, soft: boolean = true) {

@@ -99,8 +99,8 @@ export class User {
   @ManyToOne(() => Person, (person: Person) => person.users)
   person: Person
 
-  @OneToMany(() => Client, client => client.user, { onDelete: 'SET NULL' })
-  client: Client;
+  // @OneToMany(() => Client, client => client.user, { onDelete: 'SET NULL' })
+  // client: Client;
 
   @ManyToMany(() => Device)
   @JoinTable()

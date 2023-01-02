@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, IsISO8601, Allow, IsInt, Min, IsDateString } from "class-validator";
+import { IsString, IsNotEmpty, IsISO8601, Allow, IsInt, Min, IsDateString, IsOptional } from 'class-validator';
 import { Roles } from "src/helpers/enums";
 import { toTrim } from "src/helpers/utils";
 import { CreateContactDto } from '../../contact/dto/create-contact.dto';
@@ -14,15 +14,14 @@ export class PersonDto {
 
   @ApiProperty({ name: 'id', type: Number})
   @IsInt()
-  @ApiProperty({
-    type: 'number',
-  })
-  id: number;
+  @IsOptional()
+  id?: number;
 
   @ApiProperty({ name: 'identity', type: String})
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }) => toTrim(value))
+  @IsOptional()
   identity: string;
 
   @ApiProperty({ name: 'contact', type: CreateContactDto})

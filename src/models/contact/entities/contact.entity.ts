@@ -1,9 +1,9 @@
-import { 
+import {
   Column, CreateDateColumn,
   DeleteDateColumn, Entity,
-  Generated, ManyToOne, 
-  OneToOne, PrimaryGeneratedColumn, 
-  UpdateDateColumn 
+  Generated, ManyToOne,
+  OneToOne, PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from "typeorm";
 import { IsEmail } from "class-validator"
 import { Person } from '../../person/entities/person.entity';
@@ -21,25 +21,25 @@ export class Contact {
   @Generated("uuid")
   contactId: string;
 
-  @Column('jsonb', { nullable: true})
+  @Column('jsonb', { nullable: true })
   phones: Phone;
 
-  @Column('jsonb', {nullable: true})
+  @Column('jsonb', { nullable: true })
   socialNetworks: SocialNetworks;
 
   @Column({ length: 80, unique: true, nullable: true, default: null })
   email: string;
 
-  @Column('jsonb', { nullable: true})
+  @Column('jsonb', { nullable: true })
   geoLocation: GeoLocation;
 
-  @Column({ nullable: true, default: 0})
+  @Column({ nullable: true, default: 0 })
   municipalityId: number;
 
-  @Column({ nullable: true, default: 0})
+  @Column({ nullable: true, default: 0 })
   provinceId: number;
 
-  @Column('jsonb', { nullable: true})
+  @Column('jsonb', { nullable: true })
   address: Address;
 
   @CreateDateColumn()
@@ -52,13 +52,13 @@ export class Contact {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne( () => Person, (person) => person.contact)
+  @OneToOne(() => Person, (person) => person.contact, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   person: Person;
 
-  @OneToOne( () => CompanyBase, (companyBase) => companyBase.contact)
+  @OneToOne(() => CompanyBase, (companyBase) => companyBase.contact, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   companyBase: CompanyBase;
- 
-  @OneToOne( () => Subsidiary, (subsidiary) => subsidiary.contact)
+
+  @OneToOne(() => Subsidiary, (subsidiary) => subsidiary.contact, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   subsidiary: Subsidiary;
 
 }

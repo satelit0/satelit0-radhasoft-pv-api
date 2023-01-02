@@ -1,4 +1,4 @@
-import  { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, UpdateDateColumn, CreateDateColumn, DeleteDateColumn, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, UpdateDateColumn, CreateDateColumn, DeleteDateColumn, JoinColumn } from "typeorm";
 import { User } from '../../authentication/users/entities/user.entity';
 import { Contact } from "../../contact/entities/contact.entity";
 import { Supplier } from '../../inventory/supplier/entities/supplier.entity';
@@ -11,19 +11,19 @@ export class Person {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({length: 30})
+  @Column({ length: 30, nullable: true })
   identity: string;
 
   @Column()
   contactId: number;
 
-  @Column({length: 50, nullable: true})
+  @Column({ length: 50 })
   firstName: string;
-  
-  @Column({length: 50, nullable: true})
+
+  @Column({ length: 50 })
   lastName: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   birthday: Date;
 
   @CreateDateColumn()
@@ -38,14 +38,14 @@ export class Person {
   @OneToMany(() => User, (user) => user.person)
   users: User[];
 
-  @OneToOne( () => Contact, (contact) => contact.person)
+  @OneToOne(() => Contact, (contact) => contact.person)
   @JoinColumn()
   contact: Contact;
 
   @OneToMany(() => Supplier, (supplier) => supplier.person)
   supplier: Supplier;
 
-  @OneToMany( () => Client, (client) => client.person)
+  @OneToMany(() => Client, (client) => client.person)
   client: Client;
 
 }

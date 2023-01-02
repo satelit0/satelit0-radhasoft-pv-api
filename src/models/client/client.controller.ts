@@ -1,27 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpException, HttpStatus, HttpCode, UseGuards, Req } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientDto } from './dto/client.dto';
 import { FindOneParams, httpErrotHandler } from '../../helpers/utils';
+import { JwtAuthGuard } from '../authentication/guards/jwt-auth.guard';
+import { Request } from 'express';
+import { IRequestWithUser } from '../interfaces/models.interface';
 
 @Controller('client')
 @ApiTags('Client')
 export class ClientController {
-  constructor(private readonly clientService: ClientService) {}
+  constructor(private readonly clientService: ClientService) { }
 
-  @ApiResponse({
-    status: 201,
-    type: ClientDto, 
-    description: 'Crea un nuevo cliente'
-  })
+  @ApiResponse({ status: 201, type: ClientDto, description: 'Crea un nuevo cliente' })
+  @ApiBody({ type: CreateClientDto })
+  @UseGuards(JwtAuthGuard)
+
   @Post()
-  create(@Body() createClientDto: CreateClientDto) {
+  create(@Body() createClientDto: CreateClientDto, @Req() request: IRequestWithUser) {
+
     try {
+      const { user } = request;
+      const { subsidiaryId } = createClientDto;
+      if (!subsidiaryId || subsidiaryId == 0) createClientDto.subsidiaryId = user.subsidiaryId;
+
       return this.clientService.create(createClientDto);
     } catch (error) {
-      httpErrotHandler(error);
+      // httpErrotHandler(error);
     }
   }
 
@@ -44,7 +51,7 @@ export class ClientController {
   }
 
   @Patch(':id')
-  update(@Param() {id}: FindOneParams, @Body() updateClientDto: UpdateClientDto) {
+  update(@Param() { id }: FindOneParams, @Body() updateClientDto: UpdateClientDto) {
     try {
       return this.clientService.update(+id, updateClientDto);
     } catch (error) {
@@ -53,8 +60,8 @@ export class ClientController {
   }
 
   @Delete(':id')
-  @ApiQuery({name: 'soft', type: Boolean, description: 'si true, eliminado suave, false definitivo, default: true'})
-  remove(@Param() {id}: FindOneParams, @Query() soft: boolean = true) {
+  @ApiQuery({ name: 'soft', type: Boolean, description: 'si true, eliminado suave, false definitivo, default: true' })
+  remove(@Param() { id }: FindOneParams, @Query() soft: boolean = true) {
     try {
       return this.clientService.remove(id, soft);
     } catch (error) {
@@ -62,23 +69,23 @@ export class ClientController {
     }
   }
 
-  @ApiParam({name: 'id', type: Number, description: 'id del cliente a restaurar'})
+  @ApiParam({ name: 'id', type: Number, description: 'id del cliente a restaurar' })
   @ApiResponse({
     status: 204,
   })
   @HttpCode(204)
   @Patch('restore/:id')
-  async restore(@Param() {id}: FindOneParams) {
+  async restore(@Param() { id }: FindOneParams) {
     try {
       const client = await this.clientService.findOne(id);
       if (!client) throw new HttpException(`Cliente no existe`, 404);
       return await this.clientService.restore(id);
     } catch (error) {
       console.log(error);
-      
+
       httpErrotHandler(error);
     }
   }
 
-  
+
 }
