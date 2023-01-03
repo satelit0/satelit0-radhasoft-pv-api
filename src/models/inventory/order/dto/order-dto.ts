@@ -21,7 +21,7 @@ export class OrderDto {
   ncf: string;
 
   @IsEnum(TypeNCF)
-  typeNCF: TypeNCF;
+  typeNcf: TypeNCF;
 
   @IsDateString()
   deliverDate: Date;
