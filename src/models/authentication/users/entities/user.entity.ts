@@ -16,6 +16,7 @@ import { WorkingHours } from "src/models/entitys/entity";
 import { ManyToMany } from 'typeorm';
 import { Exclude, Expose } from "class-transformer";
 import { Device } from "src/models/company/device/entities/device.entity";
+import { Order } from '../../../inventory/order/entities/order.entity';
 
 @Entity()
 export class User {
@@ -101,6 +102,9 @@ export class User {
 
   // @OneToMany(() => Client, client => client.user, { onDelete: 'SET NULL' })
   // client: Client;
+
+  @OneToMany(() => Order, order => order.user, )
+  order: Order;
 
   @ManyToMany(() => Device)
   @JoinTable()

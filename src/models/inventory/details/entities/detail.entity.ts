@@ -20,6 +20,12 @@ export class Detail {
   qty: number;
 
   @Column()
+  tax: number;
+
+  @Column()
+  discount: number;
+
+  @Column()
   price: number;
 
   @CreateDateColumn()
@@ -28,11 +34,11 @@ export class Detail {
   @UpdateDateColumn()
   updateAt: Date;
 
-  @OneToOne(() => Order)
+  @OneToOne(() => Order, order => order.detail, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn()
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.detail, { onDelete: 'SET NULL' })
+  @ManyToOne(() => Product, (product) => product.detail, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   product: Product[];
 
 }

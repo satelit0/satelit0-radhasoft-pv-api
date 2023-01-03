@@ -4,11 +4,14 @@ import {
   Column, OneToOne, CreateDateColumn, 
   UpdateDateColumn, Generated, 
   DeleteDateColumn, 
-  ManyToOne
+  ManyToOne,
+  OneToMany
 } from "typeorm";
 import { TypeNCF, OrderType } from '../../../../helpers/enums';
 import { Detail } from "../../details/entities/detail.entity";
 import { Ncf } from '../../ncf/entities/ncf.entity';
+import { User } from '../../../authentication/users/entities/user.entity';
+import { Client } from '../../../client/entities/client.entity';
 
 @Entity()
 export class Order {
@@ -52,6 +55,12 @@ export class Order {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne( () => Detail, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
+  @OneToOne( () => Detail, detail => detail.order)
   detail: Detail;
+
+  @ManyToOne( () => User, user => user.order, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  user: User;
+
+  @ManyToOne(() => Client, client => client.order)
+  client: Client;
 }
