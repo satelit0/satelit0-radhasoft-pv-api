@@ -3,10 +3,12 @@ import {
   PrimaryGeneratedColumn, 
   Column, OneToOne, CreateDateColumn, 
   UpdateDateColumn, Generated, 
-  DeleteDateColumn 
+  DeleteDateColumn, 
+  ManyToOne
 } from "typeorm";
-import { Person } from '../../../person/entities/person.entity';
 import { TypeNCF, OrderType } from '../../../../helpers/enums';
+import { Detail } from "../../details/entities/detail.entity";
+import { Ncf } from '../../ncf/entities/ncf.entity';
 
 @Entity()
 export class Order {
@@ -30,12 +32,13 @@ export class Order {
   })
   orderType: OrderType;
 
-  @Column({
-    type: "enum",
-    enum: TypeNCF,
-    default: TypeNCF["Consumidor Final"]
-  })
-  ncf: TypeNCF;
+  @Column(
+    { type: "enum",enum: TypeNCF,default: TypeNCF["Consumidor Final"]}
+  )
+  typeNcf: TypeNCF;
+  
+  @Column() 
+  ncf: string;
 
   @Column()
   deliverDate: Date;
@@ -49,7 +52,6 @@ export class Order {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  
-  // @OneToOne( () => Detail, (detail) => detail.order)
-  // detail: Detail;
+  @OneToOne( () => Detail, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
+  detail: Detail;
 }

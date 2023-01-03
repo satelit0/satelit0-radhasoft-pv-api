@@ -1,15 +1,17 @@
 import { OmitType, PickType } from "@nestjs/mapped-types";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsOptional, IsInt, IsNotEmpty, IsArray, ValidateNested } from 'class-validator';
+import { IsNumber, IsOptional, IsInt, IsNotEmpty, IsArray, ValidateNested, ValidateBy } from 'class-validator';
 import { ProductDto } from './product-dto';
 import { CreateDescriptionDto } from '../../description/dto/create-description.dto';
 import { CreateExistenceDto } from "../../existence/dto/create-existence.dto";
 import { CreateExtistencePartialDto, CreateDescriptionPartialDto } from '../../../entitys/entity';
 import { Type } from "class-transformer";
-import { Existence } from '../../existence/entities/existence.entity';
 
 export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', 'updatedAt', 'existence']) {
 
+  @ApiProperty({ name: 'code', type: String })
+  code: string;
+ 
   @ApiProperty({ name: 'existence', type: Array(CreateExtistencePartialDto), })
   @IsArray()
   @ValidateNested({each: true,})
@@ -55,15 +57,14 @@ export class CreateProductDto extends OmitType(ProductDto, ['id', 'createdAt', '
   @ApiProperty({ name: 'description', type: CreateDescriptionPartialDto, required: false})
   @IsOptional()
   description?: CreateDescriptionPartialDto;
-
-  @ApiProperty({ name: 'categoryId', type: Number, })
-  @IsOptional()
-  categoryId?: number;
-
+ 
   @ApiProperty({ name: 'supplierIds', type: Array, description: 'suplidores', default: [0], })
   @IsOptional()
   @IsInt({ each: true })
   supplierIds?: number[];
 
+  @ApiProperty({ name: 'categoryId', type: Number, })
+  @IsOptional()
+  categoryId?: number;
 
 }

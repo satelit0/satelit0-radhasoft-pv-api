@@ -19,29 +19,31 @@ export class PersonDto {
 
   @ApiProperty({ name: 'identity', type: String})
   @IsString()
-  @IsNotEmpty()
   @Transform(({ value }) => toTrim(value))
   @IsOptional()
-  identity: string;
+  identity?: string;
 
   @ApiProperty({ name: 'contact', type: CreateContactDto})
-  contact: CreateContactDto;
+  @IsOptional()
+  contact?: CreateContactDto;
 
   @ApiProperty({ name: 'firstName', type: String})
   @IsString()
-  @IsNotEmpty({ message: "Si se provee firstName debe proveer un a valor" })
+  // @IsNotEmpty()
   @Transform(({ value }) => toTrim(value))
-  firstName: string;
+  firstName?: string;
 
   @ApiProperty({ name: 'lastName', type: String})
   @IsString()
-  @IsNotEmpty({ message: "Si se provee lastName debe proveer un a valor" })
+  // @IsNotEmpty()
   @Transform(({ value }) => toTrim(value))
-  lastName: string;
+  @IsOptional()
+  lastName?: string;
 
   @ApiProperty({ name: 'birthday', type: Date})
   @IsISO8601()
-  birthday: Date;
+  @IsOptional()
+  birthday?: Date;
 
   @ApiProperty({ name: 'createdAt', type: Date})
   @IsDateString()

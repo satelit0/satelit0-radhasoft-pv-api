@@ -28,8 +28,9 @@ import { SubsidiaryModule } from './models/company/subsidiary/subsidiary.module'
 import { CategoryModule } from './models/inventory/category/category.module';
 import { DetailsModule } from './models/inventory/details/details.module';
 import { DatabaseProviders } from './database/database.providers';
+import { NcfModule } from './models/inventory/ncf/ncf.module';
 
-@Module({
+@Module({ 
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
@@ -63,6 +64,7 @@ import { DatabaseProviders } from './database/database.providers';
     ClientModule,
     AuthModule,
     JwtModule,
+    NcfModule,
   ],
   controllers: [AppController],
   providers: [

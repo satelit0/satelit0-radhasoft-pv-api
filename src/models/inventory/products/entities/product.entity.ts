@@ -18,8 +18,8 @@ export class Product {
   // @Column()
   // descriptionId: number;
 
-  // @Column() 
-  // existenceId: number;
+  @Column({length: 25, comment: 'código unico de identificacion y busqueda', unique: true,}) 
+  code: string;
 
   @Column({ length: 150 })
   name: string;

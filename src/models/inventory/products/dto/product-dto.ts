@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject, IsOptional, IS_BASE32, IsBoolean } from 'class-validator';
+import { IsCurrency, IsDateString, IsInt, IsNotEmpty, IsString, Min, IsNumber, MaxLength, IsArray, IS_JSON, IsJSON, IsObject, IsOptional, IS_BASE32, IsBoolean, IsNumberString } from 'class-validator';
 import { CreateExistenceDto } from '../../existence/dto/create-existence.dto';
 
 export class ProductDto {
@@ -10,9 +10,9 @@ export class ProductDto {
   @IsOptional()
   categoryId?: number;
 
-  // @IsInt()
-  // @IsNotEmpty()
-  // descriptionId: number;
+  @IsNumberString()
+  @IsNotEmpty()
+  code: string;
   
   @IsNotEmpty()
   @IsOptional()

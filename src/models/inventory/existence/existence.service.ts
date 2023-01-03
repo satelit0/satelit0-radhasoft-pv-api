@@ -19,8 +19,13 @@ export class ExistenceService {
     return newExistence;
   }
 
-  findAll() {
-    return this.existenceRepository.findAndCount();
+  findAll(subsidiaryId: number) {
+    return this.existenceRepository.findAndCount({
+      where: { subsidiaryId },
+      relations: {
+        product: true,
+      }
+    });
   }
 
   findOne(id: number) {
@@ -28,7 +33,7 @@ export class ExistenceService {
   }
 
   findOneBy(params: IExistence) {
-    return this.existenceRepository.findOne({ 
+    return this.existenceRepository.findOne({
       where: { ...params },
       relations: {
         product: {
@@ -50,7 +55,7 @@ export class ExistenceService {
     if (soft) return this.existenceRepository.softDelete(id);
     return this.existenceRepository.delete(id);
   }
-  
+
   restore(id: number) {
     this.existenceRepository.restore(id);
   }

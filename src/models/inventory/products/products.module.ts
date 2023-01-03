@@ -7,6 +7,8 @@ import { DescriptionModule } from '../description/description.module';
 import { ExistenceModule } from '../existence/existence.module';
 import { SupplierModule } from '../supplier/supplier.module';
 import { SubsidiaryModule } from '../../company/subsidiary/subsidiary.module';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseProviders } from 'src/database/database.providers';
 
 @Module({
   imports: [
@@ -17,9 +19,13 @@ import { SubsidiaryModule } from '../../company/subsidiary/subsidiary.module';
     ExistenceModule,
     SupplierModule,
     SubsidiaryModule,
+    ConfigModule,
   ],
   controllers: [ProductsController],
-  providers: [ProductsService,],
+  providers: [
+    ProductsService, 
+    ...DatabaseProviders,
+  ],
   exports: [ProductsService]
 })
 export class ProductsModule { }

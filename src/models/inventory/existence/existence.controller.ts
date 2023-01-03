@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ExistenceService } from './existence.service';
 import { CreateExistenceDto } from './dto/create-existence.dto';
 import { UpdateExistenceDto } from './dto/update-existence.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../authentication/guards/jwt-auth.guard';
+import { IRequestWithUser } from 'src/models/interfaces/models.interface';
 
 @Controller('existence')
 @ApiTags('Existencias')
@@ -14,9 +16,11 @@ export class ExistenceController {
     return this.subsidiaryExistenceService.create(createSubsidiaryExistenceDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.subsidiaryExistenceService.findAll();
+  findAll(@Req() request: IRequestWithUser) {
+    const {subsidiaryId} = request.user;
+    return this.subsidiaryExistenceService.findAll(subsidiaryId);
   }
 
   @Get(':id')

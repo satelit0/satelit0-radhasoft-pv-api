@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { Supplier } from './entities/supplier.entity';
+import { Contact } from '../../contact/entities/contact.entity';
+import { Person } from '../../person/entities/person.entity';
 
 @Injectable()
 export class SupplierService {
 
   constructor(
     @InjectRepository(Supplier)
-    private supplierRepository: Repository<Supplier>
+    private supplierRepository: Repository<Supplier>,
+    @Inject('DataSource') private dataSource: DataSource
   ) {
 
   }
 
-  create(createSupplierDto: CreateSupplierDto) {
+  async create(createSupplierDto: CreateSupplierDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
 
-    const supplier = this.supplierRepository.create(createSupplierDto);
-    const newSupplier = this.supplierRepository.save(supplier);
+      const { person, ...restCreateSupplierDto } = createSupplierDto;
+      const { contact, ...restCreatePersonDto } = person;
 
-    return newSupplier;
+      const newContact = new Contact();
+      Object.assign(newContact, contact);
+      const contactId = (await queryRunner.manager.save(newContact)).id;
+
+      const newPerson = new Person();
+      Object.assign(newPerson, { contactId, ...restCreatePersonDto });
+      const personId = (await queryRunner.manager.save(newPerson)).id;
+
+      const supplier = new Supplier();
+      Object.assign(supplier, { personId, ...restCreateSupplierDto });
+
+      const newSupplier = queryRunner.manager.save(supplier);
+
+      await queryRunner.commitTransaction();
+      return newSupplier;
+
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   findAll() {
@@ -67,7 +94,7 @@ export class SupplierService {
 
   remove(id: number, soft: boolean = true) {
 
-    if (soft)  return this.supplierRepository.softDelete(id);
+    if (soft) return this.supplierRepository.softDelete(id);
 
     const supplierDelete = this.supplierRepository.delete(id);
 

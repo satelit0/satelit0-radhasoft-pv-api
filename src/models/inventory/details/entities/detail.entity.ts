@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToMany, ManyToOne, JoinColumn, CreateDateColumn , UpdateDateColumn} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToMany, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { Order } from '../../order/entities/order.entity';
 import { Product } from '../../products/entities/product.entity';
 
@@ -14,19 +14,25 @@ export class Detail {
   productId: number;
 
   @Column()
+  name: string;
+
+  @Column()
+  qty: number;
+
+  @Column()
   price: number;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn()  
+  @UpdateDateColumn()
   updateAt: Date;
 
-  @OneToOne( () => Order)
+  @OneToOne(() => Order)
   @JoinColumn()
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.detail)
+  @ManyToOne(() => Product, (product) => product.detail, { onDelete: 'SET NULL' })
   product: Product[];
 
 }

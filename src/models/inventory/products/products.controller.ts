@@ -30,21 +30,18 @@ export class ProductsController {
 
     const { name, existence } = createProductDto;
 
-    const { user } = req;
-    if (!existence || existence.length === 0) {
-      const newExistence: CreateExtistencePartialDto = {
-        dateEntry: new Date(),
-        dateExpire: new Date(),
-        isActive: true,
-        // productId: 0,
-        qty: 0,
-        subsidiaryId: user.subsidiaryId
-      }
-      createProductDto.existence = [newExistence]
-    }
-
-    const productCurr = await this.productsService.findByName(name);
-    if (productCurr) throw new HttpException(`${MSG_NAME_EXISTS}: ${name}`, HttpStatus.BAD_REQUEST);
+    const { subsidiaryId } = req.user;
+    // if (!existence || existence.length === 0) {
+    //   const newExistence: CreateExtistencePartialDto = {
+    //     dateEntry: new Date(),
+    //     dateExpire: new Date(),
+    //     isActive: true,
+    //     // productId: 0,
+    //     qty: 0,
+    //     subsidiaryId: user.subsidiaryId
+    //   }
+    //   createProductDto.existence = [newExistence]
+    // }
 
     const newProduct = await this.productsService.create(createProductDto);
 
@@ -52,27 +49,31 @@ export class ProductsController {
 
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll() {
-    return await this.productsService.findAll();
+  async findAll(@Req() request: IRequestWithUser) {
+    const { subsidiaryId } = request.user;
+    return await this.productsService.findAll(subsidiaryId);
   }
 
-  @ApiParam({ name: 'id', type: Number })
-  @ApiQuery({ name: 'subsidiarId', type: String })
-  @Get(':id')
-  async findOne(@Param() { id }: FindOneParams, @Query('subsidiarId') subsidiarId: number) {
-    subsidiarId
-    const product = await this.productsService.findOne(id, subsidiarId);
-    if (!product) throw new HttpException(MSG, 404);
 
+  @ApiParam({ name: 'id', type: Number })
+  // @ApiQuery({ name: 'subsidiarId', type: String })
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async findOneById(@Param() { id }: FindOneParams, @Req() request: IRequestWithUser) {
+    const { subsidiaryId } = request.user;
+    const product = await this.productsService.findOne(id, subsidiaryId);
+    if (!product) throw new HttpException(MSG, 404);
     return product;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('name/:name')
-  async findOneByName(@Param('name') name: string) {
-    const product = await this.productsService.findOneBy({ name, });
+  async findOneByName(@Param('name') name: string, @Req() request: IRequestWithUser) {
+    const { subsidiaryId } = request.user;
+    const product = await this.productsService.findOneBy({ name }, subsidiaryId);
     if (!product) throw new HttpException(MSG, 404);
-
     return product;
   }
 

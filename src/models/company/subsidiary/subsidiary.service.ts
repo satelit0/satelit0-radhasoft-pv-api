@@ -77,6 +77,7 @@ export class SubsidiaryService {
 
   findAll() {
     return this.subsidiaryRepository.find({
+      // where:{existence: {subsidiaryId}},
       relations: {
         companyBase: true,
         contact: true,

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -12,6 +12,7 @@ import { Existence } from '../existence/entities/existence.entity';
 import { CreateExtistencePartialDto } from '../../entitys/entity';
 import { IProduct } from 'src/models/interfaces/models.interface';
 import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
+import { Description } from '../description/entities/description.entity';
 
 @Injectable()
 export class ProductsService {
@@ -23,69 +24,90 @@ export class ProductsService {
     private existenceService: ExistenceService,
     private supplierService: SupplierService,
     private subsidiaryService: SubsidiaryService,
+    @Inject('DataSource') private dataSource: DataSource,
 
   ) { }
 
   async create(createProductDto: CreateProductDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    const { description, existence, supplierIds, ...restDto } = createProductDto;
-    const suppliers: Supplier[] = [];
-    const existences: Existence[] = [];
+    try {
+      const { description, existence, supplierIds, ...restCreateProductDto } = createProductDto;
+      const { code, name } = restCreateProductDto;
+      const suppliers: Supplier[] = [];
+      const existences: Existence[] = [];
 
-    if (supplierIds && supplierIds.length > 0) {
-      for (const supplierId of supplierIds) {
-        const supplier = await this.supplierService.findOne(supplierId);
-        suppliers.push(supplier);
-      }
-    }
-    if (suppliers.length === 0) createProductDto.supplierIds = null;
+      const productByName = await this.productRepository.findOneBy({ name });
+      if (productByName) throw new HttpException(`nombre de producto ya existe: ${name}`, 400);
+      const productByCode = await this.productRepository.findOneBy({ code });
+      if (productByCode) throw new HttpException(`código de producto ya existe: ${code}`, 400);
 
-    const product = this.productRepository.create({ suppliers, ...restDto });
-
-    const newProduct = await this.productRepository.save(product);
-    const { id } = newProduct;
-
-    if (existence && existence.length > 0) {
-      const subsidiarySelected = existence.map( sub => sub.subsidiaryId);
-      const subsidiary = await this.subsidiaryService.getAll();
-      const subsidiaryIds = subsidiary.map(sub => sub.id);
-
-      for (const subId of subsidiaryIds) {
-        let newExistence: Existence;
-        if (subsidiarySelected.includes(subId)){
-          const exist = existence.find(e => e.subsidiaryId === subId);
-          newExistence = await this.existenceService.create({ ...exist, productId: id, });
-          existences.push(newExistence);
-        } else {
-          const existenceVoid: CreateExtistencePartialDto = {
-            qty: 0,
-            subsidiaryId: subId,
-            dateEntry: new Date(),
-            dateExpire: new Date(),
-          }
-          newExistence = await this.existenceService.create({ ...existenceVoid, productId: id, });
-          existences.push(newExistence);
-          
+      if (supplierIds && supplierIds.length > 0) {
+        for (const supplierId of supplierIds) {
+          const supplier = await this.supplierService.findOne(supplierId);
+          suppliers.push(supplier);
         }
       }
-      // for (const item of existence) {
-      //   const newExistence = await this.existenceService.create({ ...item, productId: id, });
-      // }
 
-      newProduct.existences = [...existences];
+      if (suppliers.length === 0) createProductDto.supplierIds = null;
+
+      const product = new Product()
+      Object.assign(product, { suppliers, ...restCreateProductDto });
+      const newProduct = await queryRunner.manager.save(product);
+      const { id } = newProduct;
+
+      if (existence && existence.length > 0) {
+        const subsidiarySelected = existence.map(sub => sub.subsidiaryId);
+        const subsidiary = await this.subsidiaryService.getAll();
+        const subsidiaryIds = subsidiary.map(sub => sub.id);
+
+        for (const subId of subsidiaryIds) {
+          if (subsidiarySelected.includes(subId)) {
+            const existente = new Existence();
+            const exist = existence.find(e => e.subsidiaryId === subId);
+            Object.assign(existente, { ...exist, productId: id });
+            existences.push(existente);
+          } else {
+            const existenceVoid: CreateExtistencePartialDto = {
+              qty: 0,
+              subsidiaryId: subId,
+              dateEntry: new Date(),
+              dateExpire: new Date(),
+            }
+            const existente = new Existence();
+            Object.assign(existente, { ...existenceVoid, productId: id });
+            existences.push(existente);
+          }
+        }
+
+        const newExistences = await queryRunner.manager.save(existences);
+        newProduct.existences = [...newExistences];
+      }
+
+      if (description && newProduct) {
+        const description = new Description();
+        Object.assign(description, { productId: id, ...description });
+        const newDescription = await queryRunner.manager.save(description);
+        newProduct.description = newDescription;
+      }
+
+      await queryRunner.commitTransaction();
+      return newProduct;
+    } catch (error) {
+      // console.log('++++++++++', error);
+      await queryRunner.rollbackTransaction();
+      throw new HttpException(`${error.message}`, error.status);
+    } finally {
+      await queryRunner.release();
     }
-
-    if (description && newProduct) {
-      const newDescription = await this.descriptionService.create({ productId: id, ...description });
-      newProduct.description = newDescription;
-    }
-
-    return newProduct;
   }
 
-  findAll() {
+  findAll(subsidiaryId: number) {
 
     const products = this.productRepository.findAndCount({
+      where: { existences: { subsidiaryId } },
       relations: {
         category: true,
         existences: true,
@@ -99,7 +121,7 @@ export class ProductsService {
 
     return products;
   }
-  
+
   getAll() {
     const products = this.productRepository.find({
       order: {
@@ -110,9 +132,9 @@ export class ProductsService {
     return products;
   }
 
-  findByName(name: string) {
+  findByName(name: string,) {
     const product = this.productRepository.findOne({
-      where: { name },
+      where: { name, },
       relations: {
         category: true,
         existences: true,
@@ -123,9 +145,9 @@ export class ProductsService {
     return product;
   }
 
-  findOneBy(params: IProduct, withDeleted: boolean = false) {
+  findOneBy(params: IProduct, subsidiaryId: number, withDeleted: boolean = false) {
     const product = this.productRepository.findOne({
-      where: { ...params },
+      where: { ...params, existences: { subsidiaryId } },
       withDeleted,
       relations: {
         category: true,
@@ -159,14 +181,8 @@ export class ProductsService {
   }
 
   remove(id: number, soft: boolean = true) {
-
-    if (soft) {
-      return this.productRepository.softDelete(id);
-    }
-
-    const product = this.productRepository.create({ id });
-    const removeProduct = this.productRepository.remove(product);
-
+    if (soft)  return this.productRepository.softDelete(id);
+    const removeProduct = this.productRepository.delete(id);
     return removeProduct;
   }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpException, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { SubsidiaryService } from './subsidiary.service';
 import { CreateSubsidiaryDto } from './dto/create-subsidiary.dto';
 import { UpdateSubsidiaryDto } from './dto/update-subsidiary.dto';
@@ -7,6 +7,8 @@ import { FindOneParams } from '../../../helpers/utils';
 import { SubsidiaryDto } from './dto/subsidiary-dto';
 import { Subsidiary } from './entities/subsidiary.entity';
 import { CompanyBaseService } from '../company-base/company-base.service';
+import { JwtAuthGuard } from '../../authentication/guards/jwt-auth.guard';
+import { IRequestWithUser } from 'src/models/interfaces/models.interface';
 
 @Controller('subsidiary')
 @ApiTags('Subsidiary')
@@ -33,11 +35,11 @@ export class SubsidiaryController {
     }
   }
 
+  @ApiOkResponse({ type: Array<SubsidiaryDto>, })
+  @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiOkResponse({
-    type: [SubsidiaryDto],
-  })
-  findAll() {
+  findAll(@Req() request: IRequestWithUser) {
+    const { subsidiaryId } = request.user;
     return this.subsidiaryService.findAll();
   }
 

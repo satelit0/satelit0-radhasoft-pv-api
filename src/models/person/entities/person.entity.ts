@@ -17,14 +17,14 @@ export class Person {
   @Column()
   contactId: number;
 
-  @Column({ length: 50 })
-  firstName: string;
+  @Column({ length: 50, nullable: true })
+  firstName?: string;
 
-  @Column({ length: 50 })
-  lastName: string;
+  @Column({ length: 50, nullable: true })
+  lastName?: string;
 
   @Column({ nullable: true })
-  birthday: Date;
+  birthday?: Date;
 
   @CreateDateColumn()
   createdAt: Date;

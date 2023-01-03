@@ -55,6 +55,7 @@ export interface IUser extends IContextDate {
 }
 export interface IProduct extends IContextDate {
   id?: number;
+  code?: string;
   categoryId?: number;
   name?: string;
   brand?: string;
