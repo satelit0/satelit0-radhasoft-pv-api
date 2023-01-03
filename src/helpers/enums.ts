@@ -36,7 +36,7 @@ export enum OrderType {
   CASH = "Efectivo"
 } 
 
-export enum OrderStatus {
+export enum StatusOrder {
   STATUS_PENDING = 1, //'pendiente',
   STATUS_HANDLING = 2, //'procesando'
   STATUS_READY_TO_SHIP = 3, //LISTO PARA ENVIO

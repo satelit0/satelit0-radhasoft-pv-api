@@ -7,7 +7,7 @@ import {
   ManyToOne,
   OneToMany
 } from "typeorm";
-import { TypeNCF, OrderType } from '../../../../helpers/enums';
+import { TypeNCF, OrderType, StatusOrder } from '../../../../helpers/enums';
 import { Detail } from "../../details/entities/detail.entity";
 import { Ncf } from '../../ncf/entities/ncf.entity';
 import { User } from '../../../authentication/users/entities/user.entity';
@@ -30,6 +30,9 @@ export class Order {
 
   @Column({ type: 'enum', enum: OrderType, default: OrderType.CASH })
   orderType: OrderType;
+
+  @Column({ type: 'enum', enum: StatusOrder, default: StatusOrder.STATUS_PENDING})
+  status: StatusOrder;
 
   @Column({ type: "enum", enum: TypeNCF, default: TypeNCF["Consumidor Final"], nullable: true })
   typeNcf: TypeNCF;
