@@ -31,16 +31,16 @@ export class Order {
   @Column({ type: 'enum', enum: OrderType, default: OrderType.CASH })
   orderType: OrderType;
 
-  @Column({ type: 'enum', enum: StatusOrder, default: StatusOrder.STATUS_PENDING})
+  @Column({ type: 'enum', enum: StatusOrder, default: StatusOrder.STATUS_PENDING })
   status: StatusOrder;
 
-  @Column({ type: "enum", enum: TypeNCF, default: TypeNCF["Consumidor Final"], nullable: true })
+  @Column({ type: "enum", enum: TypeNCF, default: TypeNCF.FINAL_CONSUMER, nullable: true })
   typeNcf: TypeNCF;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   ncf: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   deliverDate: Date;
 
   @DeleteDateColumn()

@@ -32,7 +32,7 @@ export class Detail {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updateAt: Date;
+  updatedAt: Date;
 
   @OneToOne(() => Order, order => order.detail, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn()

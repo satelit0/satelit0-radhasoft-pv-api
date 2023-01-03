@@ -18,22 +18,22 @@ export enum Roles {
 }
 
 export enum TypeNCF {
-  "Crédito Fiscal" = 1, // tipo B01, E31
-  "Consumidor Final" = 2, // tipo B02, E32
-  "Notas de Débito" = 3, // tipo B03, E33
-  "Notas de Crédito" = 4, // tipo B04, E34
-  "Comprobante de Compras " = 11, // tipo B11, E41
-  "Registro Único de Ingresos" = 12, // tipo B12
-  "Registro de Gastos Menores" = 13, // tipo B13, 43
-  "Regímenes Especiales de Tributación" = 14, // tipo B14, E44
-  "Comprobantes Gubernamentales" = 15, // tipo B15, E45
-  "Comprobante para Exportaciones" = 16, // tipo B16, E46
-  "Comprobante para Pagos al Exterior" = 17, // tipo B17, E47
+  FISCAL_CREDIT = 1, // tipo B01, E31 || "Crédito Fiscal"
+  FINAL_CONSUMER = 2, // tipo B02, E32 || "Consumidor Final"
+  DEBIT_NOTES = 3, // tipo B03, E33 || "Notas de Débito"
+  CREDIT_NOTES = 4, // tipo B04, E34 || "Notas de Crédito"
+  PROOF_OF_PURCHASE = 11, // tipo B11, E41 || "Comprobante de Compras "
+  UNIQUE_REGISTRATION_OF_INCOMES = 12, // tipo B12 || "Registro Único de Ingreso
+  REGISTER_OF_MINOR_EXPENSES = 13, // tipo B13, 43 || "Registro de Gastos Menores"
+  SPECIAL_TAX_REGIMES = 14, // tipo B14, E44 || "Regímenes Especiales de Tributación"
+  GOVERNMENT_VOUCHERS = 15, // tipo B15, E45 || "Comprobantes Gubernamentales"
+  PROOF_FOR_EXPORTS = 16, // tipo B16, E46 || "Comprobante para Exportaciones"
+  PROOF_FOR_FOREIGN_PAYMENTS = 17, // tipo B17, E47 || "Comprobante para Pagos al Exterior"
 }
 
 export enum OrderType {
-  CREDIT = "Crédito",
-  CASH = "Efectivo"
+  CREDIT = 0, //"Crédito",
+  CASH = 1,// "Efectivo"
 } 
 
 export enum StatusOrder {

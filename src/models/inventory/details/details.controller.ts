@@ -10,10 +10,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class DetailsController {
   constructor(private readonly detailsService: DetailsService) {}
 
-  @Post()
-  create(@Body() createDetailDto: CreateDetailDto) {
-    return this.detailsService.create(createDetailDto);
-  }
+
+  // @Post()
+  // create(@Body() createDetailDto: CreateDetailDto) {
+  //   return this.detailsService.create(createDetailDto);
+  // }
 
   @Get()
   findAll() {

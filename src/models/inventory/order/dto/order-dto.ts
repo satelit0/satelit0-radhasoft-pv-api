@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsInt, IsString } from 'class-validator';
-import { OrderType, TypeNCF } from '../../../../helpers/enums';
+import { OrderType, TypeNCF, StatusOrder } from '../../../../helpers/enums';
 export class OrderDto {
   
   @IsInt()
@@ -16,6 +16,9 @@ export class OrderDto {
 
   @IsEnum(OrderType)
   orderType: OrderType;
+
+  @IsEnum(StatusOrder)
+  status: StatusOrder;
 
   @IsString()
   ncf: string;
