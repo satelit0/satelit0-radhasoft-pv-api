@@ -15,7 +15,7 @@ import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
 import { Description } from '../description/entities/description.entity';
 
 @Injectable()
-export class ProductsService {
+export class ProductService {
 
   constructor(
     @InjectRepository(Product)
@@ -159,7 +159,7 @@ export class ProductsService {
     return product;
   }
 
-  findOne(id: number, subsidiaryId?: number, withDeleted: boolean = false) {
+  findOne(id: number, subsidiaryId: number, withDeleted: boolean = false) {
     const product = this.productRepository.findOne({
       where: { id, existences: { subsidiaryId } },
       withDeleted,
@@ -186,6 +186,7 @@ export class ProductsService {
     return removeProduct;
   }
 
+  //Todo: eliminar para cada sucursal mediante el la existencia del producto
   restore(id: number) {
     return this.productRepository.restore(id);
   }

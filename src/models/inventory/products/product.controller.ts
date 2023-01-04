@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Req, UseGuards, Query, Request } from '@nestjs/common';
-import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FindOneParams } from '../../../helpers/utils';
@@ -11,6 +10,8 @@ import { use } from 'passport';
 import { DescriptionService } from '../description/description.service';
 import { CreateDescriptionDto } from '../description/dto/create-description.dto';
 import { CreateExtistencePartialDto } from '../../entitys/entity';
+import { ProductService } from './product.service';
+import { ExistenceService } from '../existence/existence.service';
 
 const MSG = "Produto no existe",
   MSG_NAME_EXISTS = "Produto ya existe";
@@ -18,10 +19,11 @@ const MSG = "Produto no existe",
 
 @Controller('products')
 @ApiTags('Products')
-export class ProductsController {
+export class ProductController {
   constructor(
-    private readonly productsService: ProductsService,
-    private readonly descriptionService: DescriptionService
+    private readonly productsService: ProductService,
+    private readonly descriptionService: DescriptionService,
+    private readonly existenceService: ExistenceService
   ) { }
 
   @UseGuards(JwtAuthGuard)
@@ -78,22 +80,26 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  async update(@Param() { id }: FindOneParams, @Body() updateProductDto: UpdateProductDto) {
-    const product = await this.productsService.findOne(id);
+  async update(@Param() { id }: FindOneParams, @Body() updateProductDto: UpdateProductDto, @Req() request: IRequestWithUser) {
+    const { subsidiaryId } = request.user;
+    const product = await this.productsService.findOne(id, subsidiaryId);
     if (!product) throw new HttpException(`${MSG}`, 400);
     return await this.productsService.update(id, updateProductDto);
   }
 
   @Delete('removesoft/:id')
-  async removeSoft(@Param() { id }: FindOneParams) {
-    const product = await this.productsService.findOne(id);
+  async removeSoft(@Param() { id }: FindOneParams, @Req() request: IRequestWithUser) {
+    const { subsidiaryId } = request.user;
+    const product = await this.productsService.findOne(id, subsidiaryId);
     if (!product) throw new HttpException(MSG, 400);
     return await this.productsService.remove(id);
   }
 
   @Delete(':id')
-  async remove(@Param() { id }: FindOneParams) {
-    const product = await this.productsService.findOne(id);
+  async remove(@Param() { id }: FindOneParams, @Req() request: IRequestWithUser) {
+    const { subsidiaryId } = request.user;
+
+    const product = await this.productsService.findOne(id, subsidiaryId);
     if (!product) throw new HttpException(MSG, 400);
     return await this.productsService.remove(id);
   }

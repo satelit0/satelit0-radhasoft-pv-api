@@ -3,7 +3,7 @@ import { SubsidiaryService } from './subsidiary.service';
 import { SubsidiaryController } from './subsidiary.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Subsidiary } from './entities/subsidiary.entity';
-import { ProductsModule } from '../../inventory/products/products.module';
+import { ProductModule } from '../../inventory/products/product.module';
 import { ExistenceModule } from '../../inventory/existence/existence.module';
 import { ContactModule } from '../../contact/contact.module';
 import { DatabaseProviders } from '../../../database/database.providers';
@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forFeature([
       Subsidiary,
     ]),
-    forwardRef(() => ProductsModule),
+    forwardRef(() => ProductModule),
     ExistenceModule,
     ContactModule,
     ConfigModule,

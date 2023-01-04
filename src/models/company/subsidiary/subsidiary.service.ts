@@ -4,7 +4,7 @@ import { CreateSubsidiaryDto } from './dto/create-subsidiary.dto';
 import { UpdateSubsidiaryDto } from './dto/update-subsidiary.dto';
 import { DataSource, Repository } from 'typeorm';
 import { ISubsidiary } from 'src/models/interfaces/models.interface';
-import { ProductsService } from '../../inventory/products/products.service';
+import { ProductService } from '../../inventory/products/product.service';
 import { Subsidiary } from './entities/subsidiary.entity';
 import { ExistenceService } from '../../inventory/existence/existence.service';
 import { ContactService } from '../../contact/contact.service';
@@ -17,8 +17,8 @@ export class SubsidiaryService {
 
   constructor(
     @InjectRepository(Subsidiary) private subsidiaryRepository: Repository<Subsidiary>,
-    @Inject(forwardRef(() => ProductsService))
-    private productsService: ProductsService,
+    @Inject(forwardRef(() => ProductService))
+    private productsService: ProductService,
     private existenceService: ExistenceService,
     private contactService: ContactService,
     @Inject('DataSource')

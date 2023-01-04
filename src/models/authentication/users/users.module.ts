@@ -17,9 +17,9 @@ import { Subsidiary } from '../../company/subsidiary/entities/subsidiary.entity'
 import { SubsidiaryModule } from '../../company/subsidiary/subsidiary.module';
 import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductsModule } from '../../inventory/products/products.module';
+import { ProductModule } from '../../inventory/products/product.module';
 import { Product } from '../../inventory/products/entities/product.entity';
-import { ProductsService } from '../../inventory/products/products.service';
+import { ProductService } from '../../inventory/products/product.service';
 import { Description } from '../../inventory/description/entities/description.entity';
 import { DescriptionModule } from '../../inventory/description/description.module';
 import { ExistenceModule } from '../../inventory/existence/existence.module';

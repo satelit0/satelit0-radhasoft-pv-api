@@ -4,12 +4,14 @@ export class OrderDto {
   
   @IsInt()
   id: number;
+
+  subsidiaryId: number;
+  
+  userId: number;
   
   @IsInt()
   invoiceNumber: number;
   
-  @IsInt()
-  userId: number;
  
   @IsInt()
   clientId: number;
@@ -20,7 +22,6 @@ export class OrderDto {
   @IsEnum(StatusOrder)
   status: StatusOrder;
 
-  @IsString()
   ncf: string;
 
   @IsEnum(TypeNCF)

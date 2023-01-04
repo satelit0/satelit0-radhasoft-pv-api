@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { ProductsController } from './products.controller';
+import { ProductService } from './product.service';
+import { ProductController } from './product.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { DescriptionModule } from '../description/description.module';
@@ -9,6 +9,7 @@ import { SupplierModule } from '../supplier/supplier.module';
 import { SubsidiaryModule } from '../../company/subsidiary/subsidiary.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseProviders } from 'src/database/database.providers';
+import { Existence } from '../existence/entities/existence.entity';
 
 @Module({
   imports: [
@@ -20,12 +21,13 @@ import { DatabaseProviders } from 'src/database/database.providers';
     SupplierModule,
     SubsidiaryModule,
     ConfigModule,
+    ExistenceModule,
   ],
-  controllers: [ProductsController],
+  controllers: [ProductController],
   providers: [
-    ProductsService, 
+    ProductService, 
     ...DatabaseProviders,
   ],
-  exports: [ProductsService]
+  exports: [ProductService]
 })
-export class ProductsModule { }
+export class ProductModule { }

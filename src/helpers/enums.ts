@@ -18,17 +18,28 @@ export enum Roles {
 }
 
 export enum TypeNCF {
-  FISCAL_CREDIT = 1, // tipo B01, E31 || "Crédito Fiscal"
-  FINAL_CONSUMER = 2, // tipo B02, E32 || "Consumidor Final"
-  DEBIT_NOTES = 3, // tipo B03, E33 || "Notas de Débito"
-  CREDIT_NOTES = 4, // tipo B04, E34 || "Notas de Crédito"
-  PROOF_OF_PURCHASE = 11, // tipo B11, E41 || "Comprobante de Compras "
-  UNIQUE_REGISTRATION_OF_INCOMES = 12, // tipo B12 || "Registro Único de Ingreso
-  REGISTER_OF_MINOR_EXPENSES = 13, // tipo B13, 43 || "Registro de Gastos Menores"
-  SPECIAL_TAX_REGIMES = 14, // tipo B14, E44 || "Regímenes Especiales de Tributación"
-  GOVERNMENT_VOUCHERS = 15, // tipo B15, E45 || "Comprobantes Gubernamentales"
-  PROOF_FOR_EXPORTS = 16, // tipo B16, E46 || "Comprobante para Exportaciones"
-  PROOF_FOR_FOREIGN_PAYMENTS = 17, // tipo B17, E47 || "Comprobante para Pagos al Exterior"
+  FISCAL_CREDIT = '01', // tipo B01, E31 || "Crédito Fiscal"
+  FINAL_CONSUMER = '02', // tipo B02, E32 || "Consumidor Final"
+  DEBIT_NOTES = '03', // tipo B03, E33 || "Notas de Débito"
+  CREDIT_NOTES = '04', // tipo B04, E34 || "Notas de Crédito"
+  PROOF_OF_PURCHASE = '11', // tipo B11, E41 || "Comprobante de Compras "
+  UNIQUE_REGISTRATION_OF_INCOMES = '12', // tipo B12 || "Registro Único de Ingreso
+  REGISTER_OF_MINOR_EXPENSES = '13', // tipo B13, 43 || "Registro de Gastos Menores"
+  SPECIAL_TAX_REGIMES = '14', // tipo B14, E44 || "Regímenes Especiales de Tributación"
+  GOVERNMENT_VOUCHERS = '15', // tipo B15, E45 || "Comprobantes Gubernamentales"
+  PROOF_FOR_EXPORTS = '16', // tipo B16, E46 || "Comprobante para Exportaciones"
+  PROOF_FOR_FOREIGN_PAYMENTS = '17', // tipo B17, E47 || "Comprobante para Pagos al Exterior"
+}
+
+export enum SerieNcf {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  E = 'E',
+  F = 'F',
+  G = 'G',
+  H = 'H',
 }
 
 export enum OrderType {

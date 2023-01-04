@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { NcfService } from './ncf.service';
 import { CreateNcfDto } from './dto/create-ncf.dto';
 import { UpdateNcfDto } from './dto/update-ncf.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('ncf')
+@ApiTags('Comprobantes Ficales')
 export class NcfController {
   constructor(private readonly ncfService: NcfService) {}
 

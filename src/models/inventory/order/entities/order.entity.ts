@@ -12,11 +12,15 @@ import { Detail } from "../../details/entities/detail.entity";
 import { Ncf } from '../../ncf/entities/ncf.entity';
 import { User } from '../../../authentication/users/entities/user.entity';
 import { Client } from '../../../client/entities/client.entity';
+import { Subsidiary } from '../../../company/subsidiary/entities/subsidiary.entity';
 
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ comment: 'sucursal'})
+  subsidiaryId: number;
 
   @Column({ comment: "numero auto generado para el numero de factura" })
   @Generated('increment')
@@ -51,6 +55,9 @@ export class Order {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne( () => Subsidiary, subsidiary => subsidiary.order, {onDelete: 'RESTRICT'})
+  subsidiary: Subsidiary;
 
   @OneToOne(() => Detail, detail => detail.order)
   detail: Detail;

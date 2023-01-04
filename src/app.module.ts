@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersService } from './models/authentication/users/users.service';
-import { ProductsModule } from './models/inventory/products/products.module';
-import { ProductsService } from './models/inventory/products/products.service';
+import { ProductModule } from './models/inventory/products/product.module';
+import { ProductService } from './models/inventory/products/product.service';
 import { DescriptionModule } from './models/inventory/description/description.module';
 import { SupplierModule } from './models/inventory/supplier/supplier.module';
 import { ContactModule } from './models/contact/contact.module';
@@ -46,7 +46,7 @@ import { NcfModule } from './models/inventory/ncf/ncf.module';
       })
     }),
     UsersModule,
-    ProductsModule,
+    ProductModule,
     DescriptionModule,
     SupplierModule,
     ContactModule,

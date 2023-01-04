@@ -20,6 +20,7 @@ import { Category } from 'src/models/inventory/category/entities/category.entity
 import { Detail } from '../models/inventory/details/entities/detail.entity';
 import { DatabaseProviders } from './database.providers';
 import { DataSource } from 'typeorm';
+import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { DataSource } from 'typeorm';
           Subsidiary,
           Device,
           Client,
+          Ncf,
         ],
         synchronize: true,
         logging: ['query', 'error']

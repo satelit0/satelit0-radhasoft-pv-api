@@ -22,12 +22,26 @@ export class DetailsService {
     }
   }
 
-  findAll() {
-    return `This action returns all details`;
+  findAll(subsidiaryId: number) {
+    return this.detailRepository.findAndCount({
+      where: { order: { subsidiaryId } },
+      relations: {
+        order: true,
+      }
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} detail`;
+  findOne(id: number, subsidiaryId: number) {
+    const detail = this.detailRepository.findOne({
+      where: {
+        id, order: { subsidiaryId }
+      },
+      relations: {
+        order: true,
+      }
+    },);
+
+    return detail;
   }
 
   update(id: number, updateDetailDto: UpdateDetailDto) {

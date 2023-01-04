@@ -18,6 +18,7 @@ import { CompanyBase } from 'src/models/company/company-base/entities/company-ba
 import { Device } from 'src/models/company/device/entities/device.entity';
 import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.entity';
 import { Existence } from 'src/models/inventory/existence/entities/existence.entity';
+import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
 
 export const DatabaseProviders = [
   {
@@ -55,6 +56,7 @@ export const DatabaseProviders = [
           Subsidiary,
           Device,
           Client,
+          Ncf
         ],
       })
 

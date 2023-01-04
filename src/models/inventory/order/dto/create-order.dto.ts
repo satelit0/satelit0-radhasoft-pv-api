@@ -2,19 +2,35 @@ import { OmitType } from "@nestjs/mapped-types";
 import { OrderDto } from './order-dto';
 import { OrderType, StatusOrder, TypeNCF } from '../../../../helpers/enums';
 import { ApiProperty } from "@nestjs/swagger";
+import { Exclude, Type } from "class-transformer";
+import { CreateDetailDto } from '../../details/dto/create-detail.dto';
+import { IsArray, ValidateNested } from 'class-validator';
 
-export class CreateOrderDto extends OmitType(OrderDto, ['id', 'invoiceNumber', 'createdAt', 'updatedAt', 'deliverDate', 'userId', 'ncf']) {
+export class CreateOrderDto extends OmitType(OrderDto, ['id', 'invoiceNumber', 'createdAt', 'updatedAt', 'deliverDate', 'status']) {
 
-  @ApiProperty({name: 'clientId', type: Number})
+  @ApiProperty({ readOnly: true })
+  userId: number;
+
+  @ApiProperty({ readOnly: true })
+  subsidiaryId: number;
+
+  @ApiProperty({ name: 'clientId', type: Number })
   clientId: number;
-  
-  @ApiProperty({name: 'orderType',})
+
+  @ApiProperty({ name: 'orderType', })
   orderType: OrderType;
-  
-  @ApiProperty({name: 'status',})
-  status: StatusOrder;
-  
-  @ApiProperty({name: 'typeNcf',})
+
+  @ApiProperty({readOnly: true})
+  ncf: string;
+
+  @ApiProperty({ name: 'typeNcf', })
   typeNcf: TypeNCF;
-  
+
+
+  @ApiProperty({ name: 'items', type: [CreateDetailDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateDetailDto)
+  items: CreateDetailDto[];
+
 }
