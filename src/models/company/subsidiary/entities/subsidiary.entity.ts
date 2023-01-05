@@ -7,6 +7,7 @@ import { Device } from '../../device/entities/device.entity';
 import { Existence } from '../../../inventory/existence/entities/existence.entity';
 import { Client } from '../../../client/entities/client.entity';
 import { Order } from '../../../inventory/order/entities/order.entity';
+import { Ncf } from '../../../inventory/ncf/entities/ncf.entity';
 
 @Entity()
 export class Subsidiary extends ContextCompany {
@@ -30,14 +31,13 @@ export class Subsidiary extends ContextCompany {
   @OneToOne(() => Existence, (existence) => existence.subsidiary)
   existence: Existence[];
 
-  @OneToMany(() => Client, (client) => client.subsidiary )
+  @OneToMany(() => Client, (client) => client.subsidiary)
   client: Client;
-  
-  @OneToMany(() => Order, (order) => order.subsidiary )
+
+  @OneToMany(() => Order, (order) => order.subsidiary)
   order: Order[];
 
-
-
-
+  @OneToMany(() => Ncf, ncf => ncf.subsidiary)
+  ncf: Ncf;
 }
 
