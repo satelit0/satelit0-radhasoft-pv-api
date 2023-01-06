@@ -18,7 +18,7 @@ export class NcfDto {
   sequence: number;
 
   @IsInt()
-  startSequence: number;
+  currentValueSequence: number;
 
   @IsDateString()
   expirationDate: Date;

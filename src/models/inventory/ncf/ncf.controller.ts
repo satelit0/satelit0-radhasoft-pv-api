@@ -14,17 +14,17 @@ export class NcfController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createNcfDto: CreateNcfDto, @Req() request: IRequestWithUser) {
+  async create(@Body() createNcfDto: CreateNcfDto, @Req() request: IRequestWithUser) {
     const { subsidiaryId } = createNcfDto;
     if (!subsidiaryId || subsidiaryId == 0) createNcfDto.subsidiaryId = request.user.subsidiaryId;
-    return this.ncfService.create(createNcfDto);
+    return await this.ncfService.create(createNcfDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Req() request: IRequestWithUser) {
+  async findAll(@Req() request: IRequestWithUser) {
     const { subsidiaryId } = request.user;
-    return this.ncfService.findAll(subsidiaryId);
+    return await this.ncfService.findAll(subsidiaryId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -35,25 +35,25 @@ export class NcfController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('ncfByType/:type')
-  async findOneByType(@Param('type') type: TypeNCF, @Req() request: IRequestWithUser) {
+  @Get('ncfbytypencf/:typeNcf')
+  async findOneByType(@Param('typeNcf') typeNcf: TypeNCF, @Req() request: IRequestWithUser) {
     const { subsidiaryId } = request.user;
-    const numberNcf = await this.ncfService.findOneByTypeNcf(type, subsidiaryId);
+    const numberNcf = await this.ncfService.getNumberNcfByTypeNcf(typeNcf, subsidiaryId);
     return numberNcf;
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNcfDto: UpdateNcfDto, @Req() request: IRequestWithUser) {
+  async update(@Param('id') id: string, @Body() updateNcfDto: UpdateNcfDto, @Req() request: IRequestWithUser) {
     const { subsidiaryId } = request.user;
-    return this.ncfService.update(id, updateNcfDto);
+    return await this.ncfService.update(id, updateNcfDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() request: IRequestWithUser) {
+  async remove(@Param('id') id: string, @Req() request: IRequestWithUser) {
     const { subsidiaryId } = request.user;
-    return this.ncfService.remove(id);
+    return await this.ncfService.remove(id);
   }
 }
   

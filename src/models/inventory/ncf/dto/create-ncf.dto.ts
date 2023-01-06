@@ -20,7 +20,7 @@ export class CreateNcfDto extends OmitType(NcfDto, ['id', 'createdAt', 'updatedA
   sequence: number;
   
   @ApiProperty({ name: 'startSequence', type: Number })
-  startSequence: number;
+  currentValueSequence: number;
   
   @ApiProperty({name: 'expirationDate', type: Date})
   expirationDate: Date;

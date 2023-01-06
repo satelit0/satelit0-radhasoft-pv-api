@@ -20,8 +20,8 @@ export class Ncf {
   @Column()
   sequence: number;
 
-  @Column({ nullable: true })
-  startSequence: number;
+  @Column()
+  currentValueSequence: number;
 
   @Column({ nullable: true })
   expirationDate: Date;

@@ -5,6 +5,7 @@ import { UpdateNcfDto } from './dto/update-ncf.dto';
 import { Ncf } from './entities/ncf.entity';
 import { Repository, DataSource } from 'typeorm';
 import { TypeNCF } from '../../../helpers/enums';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class NcfService {
@@ -14,7 +15,12 @@ export class NcfService {
     @Inject('DataSource') private dataSource: DataSource,
   ) { }
 
-  create(createNcfDto: CreateNcfDto) {
+  async create(createNcfDto: CreateNcfDto) {
+
+    const { typeNcf, subsidiaryId } = createNcfDto;
+    const ncfExists = await  this.ncfRepository.findOne({ where: { typeNcf, subsidiaryId } });
+    if (ncfExists) throw new HttpException(`Ya existe el tipo de comprabante: ${ typeNcf }`, 400);
+
     const ncf = this.ncfRepository.create({ ...createNcfDto });
     return this.ncfRepository.save(ncf);
   }
@@ -26,26 +32,32 @@ export class NcfService {
     return ncfs;
   }
 
-  async findOneByTypeNcf(typeNcf: TypeNCF, subsidiaryId: number) {
+  async getNumberNcfByTypeNcf(typeNcf: TypeNCF, subsidiaryId: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      let ncf = new Ncf();
+      let subsidiaryIdTarget = subsidiaryId;
 
-      const ncf = await queryRunner.manager.findOne(Ncf, { where: { typeNcf: typeNcf, subsidiaryId } });
+      ncf = await queryRunner.manager.findOne(Ncf, { where: { typeNcf: typeNcf, subsidiaryId: subsidiaryIdTarget } });
 
-      
-      if (!ncf) throw new HttpException(`No existen comprobantes de tipo: ${typeNcf}. Comuniquelo al administrador.`, 404);
-      
-      const currDate = new Date();
-      const expitationDate = new Date(ncf.expirationDate);
-      if (currDate <= expitationDate) {
-        console.log('fecha:',);
+      if (!ncf || ncf.sequence <= ncf.currentValueSequence || new Date() >= new Date(ncf.expirationDate)) {
+        const ncfs = await queryRunner.manager.find(Ncf, { where: { typeNcf: typeNcf } });
+
+        if (ncfs.length === 0) throw new HttpException(`No existen comprobantes resgistrados del tipo: ${typeNcf}, contacte el administrador`, 400);
+
+        const ncfWithSubsidiaryId = ncfs.find(ncf => ncf.sequence > ncf.currentValueSequence && new Date() <= new Date(ncf.expirationDate));
+
+        if (!ncfWithSubsidiaryId) throw new HttpException(`Número de comprobantes agotados. Contacte el administrador`, 400);
+
+        subsidiaryIdTarget = ncfWithSubsidiaryId.subsidiaryId;
+        ncf = await queryRunner.manager.findOne(Ncf, { where: { typeNcf: typeNcf, subsidiaryId: subsidiaryIdTarget } });
       }
 
-      await queryRunner.manager.increment(Ncf, { typeNcf, subsidiaryId, }, 'startSequence', 1);
+      await queryRunner.manager.increment(Ncf, { typeNcf, subsidiaryId: subsidiaryIdTarget }, 'currentValueSequence', 1);
 
-      const ncfNumber = `${ncf.serie}${ncf.typeNcf}${(ncf.startSequence + 1).toString().padStart(8, '0')}`;
+      const ncfNumber = `${ncf.serie}${ncf.typeNcf}${(ncf.currentValueSequence + 1).toString().padStart(8, '0')}`;
 
       await queryRunner.commitTransaction();
       return ncfNumber;
