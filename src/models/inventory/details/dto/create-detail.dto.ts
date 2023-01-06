@@ -2,7 +2,7 @@ import { OmitType } from "@nestjs/mapped-types";
 import { ApiProperty } from "@nestjs/swagger";
 import { DetailDto } from "./detail-dto";
 
-export class CreateDetailDto extends OmitType(DetailDto, ['id', 'createdAt', 'updatedAt', 'orderId']) {
+export class CreateDetailDto extends OmitType(DetailDto, ['id', 'createdAt', 'updatedAt', 'orderId', 'name', 'tax']) {
 
   @ApiProperty({ name: 'productId', type: Number })
   productId: number;

@@ -162,7 +162,7 @@ export class UsersController {
     description: 'si true eliminado suave, false eliminado permanente',
   })
   @Delete(':id')
-  async remove(@Param() { id }: FindOneParams, @Query() soft?: boolean) {
+  async remove(@Param() { id }: FindOneParams, @Query('soft') soft?: boolean) {
 
     if (soft) return await this.usersService.remove(id, soft);
 

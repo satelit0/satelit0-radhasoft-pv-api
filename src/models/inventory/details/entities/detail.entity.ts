@@ -16,16 +16,16 @@ export class Detail {
   @Column()
   name: string;
 
-  @Column()
+  @Column('double precision', {default: 0})
   qty: number;
 
-  @Column()
+  @Column('numeric', {precision: 8, scale: 2})
   tax: number;
 
-  @Column()
+  @Column('numeric', { precision: 8, scale: 2})
   discount: number;
 
-  @Column()
+  @Column('numeric',{precision: 8, scale: 2})
   price: number;
 
   @CreateDateColumn()
@@ -34,8 +34,8 @@ export class Detail {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne(() => Order, order => order.detail, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  @JoinColumn()
+  @ManyToOne(() => Order, order => order.detail, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  // @JoinColumn()
   order: Order;
 
   @ManyToOne(() => Product, (product) => product.detail, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })

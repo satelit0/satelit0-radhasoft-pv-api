@@ -6,6 +6,7 @@ import { Order } from './entities/order.entity';
 import { DataSource, Repository } from 'typeorm';
 import { ProductService } from '../products/product.service';
 import { Detail } from '../details/entities/detail.entity';
+import { runInThisContext } from 'vm';
 
 @Injectable()
 export class OrderService {
@@ -14,6 +15,7 @@ export class OrderService {
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     @Inject('DataSource') private dataSource: DataSource,
     private productService: ProductService,
+
   ) { }
 
   async create(createOrderDto: CreateOrderDto,) {
@@ -22,7 +24,7 @@ export class OrderService {
     await queryRunner.startTransaction();
 
     try {
-      const { items, subsidiaryId } = createOrderDto;
+      const { items, subsidiaryId, } = createOrderDto;
       //todo: obtener ncf
       const order = new Order();
       Object.assign(order, { ...createOrderDto });
@@ -36,38 +38,68 @@ export class OrderService {
 
         const product = await this.productService.findOne(productId, subsidiaryId);
         if (product) {
-          const { name, tax, cost, code} = product;
+          const { name, tax, cost, code } = product;
           if (price <= cost) throw new HttpException(`El articulo: ${name} no puede ser procesado, el precio ${price} no es valido. Item No.: ${code}`, 400);
-          
+
           const detail = new Detail();
           Object.assign(detail, { orderId, name, tax, ...item });
           itemsDetails.push(detail);
         }
 
       }
+      const details = await queryRunner.manager.save(itemsDetails);
 
       await queryRunner.commitTransaction()
-      return 'This action adds a new order';
+      return { ...newOrder, details };
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      throw new HttpException(error.message, error.status);
     } finally {
       await queryRunner.release();
     }
   }
 
-  findAll() {
-    return `This action returns all order`;
+  findAll(subsidiaryId: number) {
+    return this.orderRepository.findAndCount({
+      where: { subsidiaryId },
+      relations: {
+        client: true,
+        detail: true,
+      }
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  findOne(id: number, subsidiaryId: number,) {
+    const order = this.orderRepository.findOne({
+      where: { subsidiaryId, id },
+      relations: {
+        client: true,
+        detail: true,
+      }
+    });
+    return order;
+  }
+
+  getOrderById(id: number, withDeleted: boolean = false) {
+    const order = this.orderRepository.findOne({ where: { id }, withDeleted });
+    return order;
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
     return `This action updates a #${id} order`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: number, soft: boolean = true) {
+    const order = await this.getOrderById(id, true);
+
+    if (!order) throw new HttpException(`Orden No.: ${id}, existe`, 404);
+    
+    if (soft) return  this.orderRepository.softDelete(id);
+    
+    return this.orderRepository.delete(id);
+  }
+
+  restore(id: number) {
+    return this.orderRepository.restore(id);
   }
 }

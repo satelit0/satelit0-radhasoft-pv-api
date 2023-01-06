@@ -47,7 +47,7 @@ export enum OrderType {
   CASH = 1,// "Efectivo"
 } 
 
-export enum StatusOrder {
+export enum StatusOrderDelivery {
   STATUS_PENDING = 1, //'pendiente',
   STATUS_HANDLING = 2, //'procesando'
   STATUS_READY_TO_SHIP = 3, //LISTO PARA ENVIO
@@ -57,6 +57,12 @@ export enum StatusOrder {
   STATUS_NOT_DELIVERED = 7, // ORDEN NO ENTREGADA
   STATUS_CANCELED = 8, // ORDEN CANCELADA
   STATUS_UNDER_REVIEW = 9, // ORDEN BAJO REVISION
+}
+
+export enum StatusOrderPay {
+  PENDING = 'PE',
+  CANCELED = 'CA',
+  REJECTED = 'RE', 
 }
 
 export enum TermType {

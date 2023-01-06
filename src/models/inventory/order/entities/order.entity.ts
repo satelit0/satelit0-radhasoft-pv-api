@@ -7,7 +7,7 @@ import {
   ManyToOne,
   OneToMany
 } from "typeorm";
-import { TypeNCF, OrderType, StatusOrder } from '../../../../helpers/enums';
+import { TypeNCF, OrderType, StatusOrderDelivery, StatusOrderPay } from '../../../../helpers/enums';
 import { Detail } from "../../details/entities/detail.entity";
 import { Ncf } from '../../ncf/entities/ncf.entity';
 import { User } from '../../../authentication/users/entities/user.entity';
@@ -35,8 +35,11 @@ export class Order {
   @Column({ type: 'enum', enum: OrderType, default: OrderType.CASH })
   orderType: OrderType;
 
-  @Column({ type: 'enum', enum: StatusOrder, default: StatusOrder.STATUS_PENDING })
-  status: StatusOrder;
+  @Column({ type: 'enum', enum: StatusOrderDelivery, default: StatusOrderDelivery.STATUS_PENDING, nullable: true })
+  status: StatusOrderDelivery;
+  
+  @Column({ type: 'enum', enum: StatusOrderPay, default: StatusOrderPay.PENDING, nullable: true })
+  statusPay: StatusOrderPay;
 
   @Column({ type: "enum", enum: TypeNCF, default: TypeNCF.FINAL_CONSUMER, nullable: true })
   typeNcf: TypeNCF;
@@ -59,7 +62,7 @@ export class Order {
   @ManyToOne( () => Subsidiary, subsidiary => subsidiary.order, {onDelete: 'RESTRICT'})
   subsidiary: Subsidiary;
 
-  @OneToOne(() => Detail, detail => detail.order)
+  @OneToMany(() => Detail, detail => detail.order)
   detail: Detail;
 
   @ManyToOne(() => User, user => user.order, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })

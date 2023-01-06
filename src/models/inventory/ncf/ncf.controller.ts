@@ -35,10 +35,10 @@ export class NcfController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('ncfbytypencf/:typeNcf')
+  @Get('numberncfbytype/:typeNcf')
   async findOneByType(@Param('typeNcf') typeNcf: TypeNCF, @Req() request: IRequestWithUser) {
     const { subsidiaryId } = request.user;
-    const numberNcf = await this.ncfService.getNumberNcfByTypeNcf(typeNcf, subsidiaryId);
+    const numberNcf = await this.ncfService.getNumberNcfByType(typeNcf, subsidiaryId);
     return numberNcf;
   }
 

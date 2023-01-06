@@ -32,7 +32,7 @@ export class NcfService {
     return ncfs;
   }
 
-  async getNumberNcfByTypeNcf(typeNcf: TypeNCF, subsidiaryId: number) {
+  async getNumberNcfByType(typeNcf: TypeNCF, subsidiaryId: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
