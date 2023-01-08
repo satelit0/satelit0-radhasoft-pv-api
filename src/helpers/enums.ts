@@ -47,6 +47,13 @@ export enum OrderType {
   CASH = 1,// "Efectivo"
 } 
 
+export enum PaymentMethod {
+  CASH = 0, 
+  CREDIT_CARD = 1, 
+  BANK_TRANSFER = 2, 
+  PAYPAL = 3,
+}
+
 export enum StatusOrderDelivery {
   STATUS_PENDING = 1, //'pendiente',
   STATUS_HANDLING = 2, //'procesando'
@@ -61,8 +68,10 @@ export enum StatusOrderDelivery {
 
 export enum StatusOrderPay {
   PENDING = 'PE',
+  HANDLING = 'HA',
   CANCELED = 'CA',
   REJECTED = 'RE', 
+  COMPLETE = 'CO', 
 }
 
 export enum TermType {

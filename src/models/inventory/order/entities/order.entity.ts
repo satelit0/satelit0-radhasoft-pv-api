@@ -7,7 +7,7 @@ import {
   ManyToOne,
   OneToMany
 } from "typeorm";
-import { TypeNCF, OrderType, StatusOrderDelivery, StatusOrderPay } from '../../../../helpers/enums';
+import { TypeNCF, OrderType, StatusOrderDelivery, StatusOrderPay, PaymentMethod } from '../../../../helpers/enums';
 import { Detail } from "../../details/entities/detail.entity";
 import { Ncf } from '../../ncf/entities/ncf.entity';
 import { User } from '../../../authentication/users/entities/user.entity';
@@ -19,7 +19,7 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'sucursal'})
+  @Column({ comment: 'sucursal' })
   subsidiaryId: number;
 
   @Column({ comment: "numero auto generado para el numero de factura" })
@@ -36,18 +36,24 @@ export class Order {
   orderType: OrderType;
 
   @Column({ type: 'enum', enum: StatusOrderDelivery, default: StatusOrderDelivery.STATUS_PENDING, nullable: true })
-  status: StatusOrderDelivery;
-  
+  statusDelivery: StatusOrderDelivery;
+
   @Column({ type: 'enum', enum: StatusOrderPay, default: StatusOrderPay.PENDING, nullable: true })
   statusPay: StatusOrderPay;
 
-  @Column({ type: "enum", enum: TypeNCF, default: TypeNCF.FINAL_CONSUMER, nullable: true })
+  @Column({ type: 'enum', enum: TypeNCF, default: TypeNCF.FINAL_CONSUMER, nullable: true })
   typeNcf: TypeNCF;
 
-  @Column({ nullable: true })
-  ncf: string;
+  @Column({ type: 'enum', enum: PaymentMethod, default: PaymentMethod.CASH, nullable: true })
+  paymentMethod: PaymentMethod;
 
   @Column({ nullable: true })
+  ncf: string; 
+
+  @Column('numeric', { precision: 8, scale: 2, comment: 'monto pagado parcial o total', nullable: true, default: 0 })
+  amountPaid: number;
+
+  @Column({ nullable: true, comment: 'fecha en que fue entregada la orden' })
   deliverDate: Date;
 
   @DeleteDateColumn()
@@ -59,11 +65,11 @@ export class Order {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne( () => Subsidiary, subsidiary => subsidiary.order, {onDelete: 'RESTRICT'})
+  @ManyToOne(() => Subsidiary, subsidiary => subsidiary.order, { onDelete: 'RESTRICT' })
   subsidiary: Subsidiary;
 
   @OneToMany(() => Detail, detail => detail.order)
-  detail: Detail;
+  detail: Detail[];
 
   @ManyToOne(() => User, user => user.order, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   user: User;
