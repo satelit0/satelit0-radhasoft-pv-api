@@ -29,7 +29,7 @@ export class NcfController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id')  id : string, @Req() request: IRequestWithUser) {
+  findOne(@Param('id') id: string, @Req() request: IRequestWithUser) {
     const { subsidiaryId } = request.user;
     return this.ncfService.findOne(id, subsidiaryId);
   }
@@ -38,7 +38,7 @@ export class NcfController {
   @Get('numberncfbytype/:typeNcf')
   async findOneByType(@Param('typeNcf') typeNcf: TypeNCF, @Req() request: IRequestWithUser) {
     const { subsidiaryId } = request.user;
-    const numberNcf = await this.ncfService.getNumberNcfByType(typeNcf, subsidiaryId);
+    const numberNcf = await this.ncfService.getNumberNcf({ typeNcf, subsidiaryId });
     return numberNcf;
   }
 
@@ -56,4 +56,3 @@ export class NcfController {
     return await this.ncfService.remove(id);
   }
 }
-  

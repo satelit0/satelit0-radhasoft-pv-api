@@ -32,6 +32,9 @@ export class Order {
   @Column()
   clientId: number;
 
+  @Column({ nullable: true })
+  ncf: string; 
+  
   @Column({ type: 'enum', enum: OrderType, default: OrderType.CASH })
   orderType: OrderType;
 
@@ -47,8 +50,8 @@ export class Order {
   @Column({ type: 'enum', enum: PaymentMethod, default: PaymentMethod.CASH, nullable: true })
   paymentMethod: PaymentMethod;
 
-  @Column({ nullable: true })
-  ncf: string; 
+  @Column({comment: 'codigo que identifica el usuario que confirma el pago realizado:: cash, card, transfer', nullable: true})
+  authorizationCode: string;
 
   @Column('numeric', { precision: 8, scale: 2, comment: 'monto pagado parcial o total', nullable: true, default: 0 })
   amountPaid: number;

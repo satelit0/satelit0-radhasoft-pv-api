@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNcfDto } from './dto/create-ncf.dto';
 import { UpdateNcfDto } from './dto/update-ncf.dto';
 import { Ncf } from './entities/ncf.entity';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, QueryRunner } from 'typeorm';
 import { TypeNCF } from '../../../helpers/enums';
 import { compare } from 'bcrypt';
 
@@ -18,8 +18,8 @@ export class NcfService {
   async create(createNcfDto: CreateNcfDto) {
 
     const { typeNcf, subsidiaryId } = createNcfDto;
-    const ncfExists = await  this.ncfRepository.findOne({ where: { typeNcf, subsidiaryId } });
-    if (ncfExists) throw new HttpException(`Ya existe el tipo de comprabante: ${ typeNcf }`, 400);
+    const ncfExists = await this.ncfRepository.findOne({ where: { typeNcf, subsidiaryId } });
+    if (ncfExists) throw new HttpException(`Ya existe el tipo de comprabante: ${typeNcf}`, 400);
 
     const ncf = this.ncfRepository.create({ ...createNcfDto });
     return this.ncfRepository.save(ncf);
@@ -32,11 +32,31 @@ export class NcfService {
     return ncfs;
   }
 
-  async getNumberNcfByType(typeNcf: TypeNCF, subsidiaryId: number) {
+  async getNumberNcf(params: { typeNcf: TypeNCF, subsidiaryId: number }) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
     try {
+      const { typeNcf, subsidiaryId } = params;
+      const numberNcf = this.setAndReturnNumberNcfByType({ queryRunner, subsidiaryId, typeNcf });
+      await queryRunner.commitTransaction();
+      return numberNcf;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new HttpException(`${ error.message }`, error.status);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async setAndReturnNumberNcfByType(params: { typeNcf: TypeNCF, subsidiaryId: number, queryRunner: QueryRunner }) {
+    // const queryRunner = this.dataSource.createQueryRunner();
+    // await queryRunner.connect();
+    // await queryRunner.startTransaction();
+    const { typeNcf, subsidiaryId, queryRunner } = params;
+    try {
+
       let ncf = new Ncf();
       let subsidiaryIdTarget = subsidiaryId;
 
@@ -59,13 +79,13 @@ export class NcfService {
 
       const ncfNumber = `${ncf.serie}${ncf.typeNcf}${(ncf.currentValueSequence + 1).toString().padStart(8, '0')}`;
 
-      await queryRunner.commitTransaction();
+      // await queryRunner.commitTransaction();
       return ncfNumber;
     } catch (error) {
-      await queryRunner.rollbackTransaction();
+      // await queryRunner.rollbackTransaction();
       throw new HttpException(`${error.message}`, error.status);
     } finally {
-      await queryRunner.release();
+      // await queryRunner.release();
     }
   }
 

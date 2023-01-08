@@ -16,7 +16,7 @@ export class Detail {
   @Column()
   name: string;
 
-  @Column('double precision', {default: 0})
+  @Column('numeric', {precision: 8, scale: 2, default: 0})
   qty: number;
 
   @Column('numeric', {precision: 8, scale: 2})

@@ -29,6 +29,7 @@ import { CategoryModule } from './models/inventory/category/category.module';
 import { DetailsModule } from './models/inventory/details/details.module';
 import { DatabaseProviders } from './database/database.providers';
 import { NcfModule } from './models/inventory/ncf/ncf.module';
+import { ApprovalsModule } from './models/administrative/approvals/approvals.module';
 
 @Module({ 
   imports: [
@@ -65,6 +66,7 @@ import { NcfModule } from './models/inventory/ncf/ncf.module';
     AuthModule,
     JwtModule,
     NcfModule,
+    ApprovalsModule,
   ],
   controllers: [AppController],
   providers: [

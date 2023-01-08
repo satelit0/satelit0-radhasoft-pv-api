@@ -20,7 +20,7 @@ export class OrderDto {
   orderType: OrderType;
 
   @IsEnum(StatusOrderDelivery)
-  status: StatusOrderDelivery;
+  statusDelivery: StatusOrderDelivery;
 
   @IsEnum(StatusOrderPay)
   statusPay: StatusOrderPay;

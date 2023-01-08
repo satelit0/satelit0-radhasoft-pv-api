@@ -166,7 +166,7 @@ export class ProductService {
       relations: {
         category: true,
         description: true,
-        existences: {},
+        existences: true,
       }
     });
     return product;

@@ -69,6 +69,7 @@ export enum StatusOrderDelivery {
 export enum StatusOrderPay {
   PENDING = 'PE',
   HANDLING = 'HA',
+  PARTIAL = 'PA',
   CANCELED = 'CA',
   REJECTED = 'RE', 
   COMPLETE = 'CO', 

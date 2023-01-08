@@ -44,6 +44,12 @@ export class DetailsService {
     return detail;
   }
 
+  getTotalDetails(orderId: number) {
+    const total = <Promise<number>>this.detailRepository.query(`SELECT  SUM((d.price * d.qty)) total FROM detail d 
+    WHERE "orderId" = $1`, [orderId]);
+    return total;
+  }
+
   update(id: number, updateDetailDto: UpdateDetailDto) {
     return `This action updates a #${id} detail`;
   }
