@@ -3,13 +3,16 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, QueryRunner } from 'typeorm';
 import { ProductService } from '../products/product.service';
 import { Detail } from '../details/entities/detail.entity';
 import { runInThisContext } from 'vm';
-import { OrderType, PaymentMethod, StatusOrderDelivery, StatusOrderPay, TypeNCF } from '../../../helpers/enums';
+import { OrderType, PaymentMethod, StatusOrderDelivery, StatusOrderPay, TypeNCF, StatusApproval } from '../../../helpers/enums';
 import { NcfService } from '../ncf/ncf.service';
 import { DetailsService } from '../details/details.service';
+import { ApprovalsService } from '../../administrative/approvals/approvals.service';
+import { Approval } from '../../administrative/approvals/entities/approval.entity';
+import { nanoid } from 'nanoid/async';
 
 @Injectable()
 export class OrderService {
@@ -20,6 +23,7 @@ export class OrderService {
     private productService: ProductService,
     private ncfService: NcfService,
     private detailsService: DetailsService,
+    private approvalsService: ApprovalsService,
 
   ) { }
 
@@ -89,14 +93,14 @@ export class OrderService {
           detail: true,
         }
       });
-      
+
       const { orderType, authorizationCode, amountPaid } = order;
-      
+
       if (![PaymentMethod.CASH, PaymentMethod.CREDIT_CARD].includes(paymentMethod) && authorizationCode === null)
-      throw new HttpException(`Transacción de pago no validada, espere autorización`, 400);
-      
+        throw new HttpException(`Transacción de pago no validada, espere autorización`, 400);
+
       const ncf = await this.ncfService.setAndReturnNumberNcfByType({ queryRunner, typeNcf, subsidiaryId });
-      
+
       const totalDetail = await this.detailsService.getTotalDetails(orderId);
 
       const currentAmount = amountPaid + amount;
@@ -127,8 +131,29 @@ export class OrderService {
     }
   }
 
-  validateTransactionPaymentOrder(orderId: number, invoiceNumber: number){
-    
+  async performApproval(params: {
+    orderId: number,
+    approvalId: number,
+    userAuthorizeId: number,
+    statusApproval: StatusApproval,
+    amountApproval: number,
+    queryRunner: QueryRunner
+  }) {
+
+    try {
+      const { orderId, approvalId, userAuthorizeId, statusApproval, amountApproval, queryRunner } = params;
+      // const approvalRequest = await this.approvalsService.findOne()
+      const authorizationCode = await nanoid(10);
+      const approval = await queryRunner.manager.update(Approval, approvalId, {
+        authorizationCode,
+        userAuthorizeId,
+
+      });
+
+
+    } catch (error) {
+
+    }
   }
 
   findAll(subsidiaryId: number) {

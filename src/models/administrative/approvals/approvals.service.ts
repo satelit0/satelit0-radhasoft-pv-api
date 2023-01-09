@@ -44,6 +44,8 @@ export class ApprovalsService {
     }
   }
 
+
+
   findAll(statusRequest: StatusApproval) {
     try {
       return this.approvalRepository.findAndCount({
@@ -64,6 +66,7 @@ export class ApprovalsService {
         where: { id },
         relations: {
           userRequest: true,
+          userAuthorize: true,
         }
       });
       return approval;

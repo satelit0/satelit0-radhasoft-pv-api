@@ -9,6 +9,7 @@ import { ProductModule } from '../products/product.module';
 import { NcfModule } from '../ncf/ncf.module';
 import { Detail } from '../details/entities/detail.entity';
 import { DetailsModule } from '../details/details.module';
+import { ApprovalsModule } from 'src/models/administrative/approvals/approvals.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DetailsModule } from '../details/details.module';
     ProductModule,
     NcfModule,
     DetailsModule,
+    ApprovalsModule
   ],
   controllers: [OrderController],
   providers: [OrderService, ...DatabaseProviders],
