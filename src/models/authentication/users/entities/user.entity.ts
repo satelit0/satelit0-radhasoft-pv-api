@@ -17,6 +17,7 @@ import { ManyToMany } from 'typeorm';
 import { Exclude, Expose } from "class-transformer";
 import { Device } from "src/models/company/device/entities/device.entity";
 import { Order } from '../../../inventory/order/entities/order.entity';
+import { Approval } from "src/models/administrative/approvals/entities/approval.entity";
 
 @Entity()
 export class User {
@@ -109,4 +110,10 @@ export class User {
   @ManyToMany(() => Device)
   @JoinTable()
   devices: Device[];
+
+  @OneToMany( () => Approval, approval => approval.userAuthorize )
+  approbalAuth: Approval;
+  
+  @OneToMany( () => Approval, approval => approval.userRequest )
+  approbalRequest: Approval;
 }

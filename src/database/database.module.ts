@@ -21,6 +21,7 @@ import { Detail } from '../models/inventory/details/entities/detail.entity';
 import { DatabaseProviders } from './database.providers';
 import { DataSource } from 'typeorm';
 import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
+import { Approval } from '../models/administrative/approvals/entities/approval.entity';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
           Device,
           Client,
           Ncf,
+          Approval,
         ],
         synchronize: true,
         logging: ['query', 'error']

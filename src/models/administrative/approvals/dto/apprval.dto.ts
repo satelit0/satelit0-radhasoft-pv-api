@@ -4,8 +4,11 @@ export class ApprovalDto {
   @IsString()
   id: string;
 
-  @IsInt()
-  userId: number;
+  subsidiaryId: number;
+
+  userAuthorizeId: number;
+  
+  userRequestId: number;
 
   @IsString()
   authorizationCode: string;
@@ -14,7 +17,7 @@ export class ApprovalDto {
   reference: string;
 
   @IsString()
-  photo: string;
+  photo?: string;
 
   @IsDateString()
   createdAt: Date;

@@ -100,3 +100,10 @@ export enum PostgresErrorCode {
   CHECK_VIOLATION = '23514',
   EXCLUSION_VIOLATION = '23P01',
 }
+
+export enum StatusApproval {
+  PENDING = 'PE',
+  HANDLING = 'HA',
+  CANCELED = 'CA',
+  COMPLETE = 'CO', 
+}
