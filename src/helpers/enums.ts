@@ -45,20 +45,21 @@ export enum SerieNcf {
 export enum OrderType {
   CREDIT = 0, //"Crédito",
   CASH = 1,// "Efectivo"
-} 
+}
 
 export enum PaymentMethod {
-  CASH = 0, 
-  CREDIT_CARD = 1, 
-  BANK_TRANSFER = 2, 
+  CASH = 0,
+  CREDIT_CARD = 1,
+  BANK_TRANSFER = 2,
   PAYPAL = 3,
+
 }
 
 export enum StatusOrderDelivery {
   STATUS_PENDING = 1, //'pendiente',
   STATUS_HANDLING = 2, //'procesando'
   STATUS_READY_TO_SHIP = 3, //LISTO PARA ENVIO
-  STATUS_RESCHEDULED= 4, // ORDEN RE-AGENDADA PARA ENTREGA
+  STATUS_RESCHEDULED = 4, // ORDEN RE-AGENDADA PARA ENTREGA
   STATUS_SHIPED = 5, // ORDEN ENVIADA
   STATUS_DELIVERED = 6, // ORDEN ENTREGADA
   STATUS_NOT_DELIVERED = 7, // ORDEN NO ENTREGADA
@@ -71,8 +72,8 @@ export enum StatusOrderPay {
   HANDLING = 'HA',
   PARTIAL = 'PA',
   CANCELED = 'CA',
-  REJECTED = 'RE', 
-  COMPLETE = 'CO', 
+  REJECTED = 'RE',
+  COMPLETE = 'CO',
 }
 
 export enum TermType {
@@ -86,8 +87,8 @@ export enum TermType {
 }
 
 export enum WeekendCorrection {
-  BEFORE =  1, //"Antes",
-  AFTER =  2, //"Despues",
+  BEFORE = 1, //"Antes",
+  AFTER = 2, //"Despues",
   DURING = 0, //"Durante" 
 }
 
@@ -105,5 +106,5 @@ export enum StatusApproval {
   PENDING = 'PE',
   HANDLING = 'HA',
   CANCELED = 'CA',
-  COMPLETE = 'CO', 
+  COMPLETE = 'CO',
 }

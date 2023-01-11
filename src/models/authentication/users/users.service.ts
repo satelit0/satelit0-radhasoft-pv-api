@@ -45,7 +45,7 @@ export class UsersService {
       }
     }
 
-    const user = this.userRepository.create({ ...createUserDto, roleId: 1, devices: [...devices] });
+    const user = this.userRepository.create({ ...createUserDto, devices: [...devices] });
 
     const newUser = await this.userRepository.save(user);
     return { newUser };
@@ -67,6 +67,7 @@ export class UsersService {
         deletedAt: true,
       },
       relations: {
+        role: true,
         person: {
           contact: true,
         },
@@ -80,9 +81,11 @@ export class UsersService {
   findOne(id: number, withDeleted: boolean = false) {
 
     const user = this.userRepository.findOne({
-      loadRelationIds: true,
+      // loadRelationIds: true,
       where: { id },
-      // select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
+      relations: {
+        role: true,
+      },
       withDeleted
     });
 
@@ -91,13 +94,11 @@ export class UsersService {
 
   findOneBy(params: IUser) {
     const user = this.userRepository.findOne({
-      // loadRelationIds: true, 
       where: { ...params },
-      // select:['id', 'userName', 'person', 'personId', 'updateAdt', 'createdAt', 'lastLogin', 'roleId'],
       relations: {
+        role: true,
         person: true,
         devices: true,
-        // client: true,
       }
     });
     return user;

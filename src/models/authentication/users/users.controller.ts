@@ -9,7 +9,8 @@ import {
   NotFoundException,
   Put,
   Query,
-  UseGuards
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,6 +29,10 @@ import { hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { DeviceService } from 'src/models/company/device/device.service';
+import { Action, CaslAbilityFactory } from '../authorization/casl/casl-ability.factory';
+import { IRequestWithUser } from 'src/models/interfaces/models.interface';
+import { Person } from '../../person/entities/person.entity';
+import { use } from 'passport';
 
 
 @Controller('users')
@@ -36,12 +41,8 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly personService: PersonService,
-    
-    // private readonly contacService: ContactService,
     private readonly deviceService: DeviceService,
-
-    // @InjectRepository(Contact)
-    // private contactRepository: Repository<Contact>,
+    private readonly caslAbilityFactory: CaslAbilityFactory,
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -81,7 +82,14 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Usuarios recuperados exitosamente', type: User, })
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll() {
+  async findAll(@Req() request: IRequestWithUser) {
+    const { user } = request;
+    const ability = this.caslAbilityFactory.createForUser(user);
+    console.log('==============>', user.role.name);
+    
+    console.log('===============> crear', ability.can('create', 'all'));
+    console.log('===============> leer', ability.can('read', User ));
+    
     const users = await this.usersService.findAll();
     return users;
   }

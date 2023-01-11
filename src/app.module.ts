@@ -1,23 +1,18 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersService } from './models/authentication/users/users.service';
 import { ProductModule } from './models/inventory/products/product.module';
-import { ProductService } from './models/inventory/products/product.service';
 import { DescriptionModule } from './models/inventory/description/description.module';
 import { SupplierModule } from './models/inventory/supplier/supplier.module';
 import { ContactModule } from './models/contact/contact.module';
 import { PersonModule } from './models/person/person.module';
 import { OrderModule } from './models/inventory/order/order.module';
-import { DataSource } from 'typeorm';
-import { PersonService } from './models/person/person.service';
 import { DebtsToPayModule } from './models/accounts/debts-to-pay/debts-to-pay.module';
 import { PaymentDetailsModule } from './models/accounts/payment-details/payment-details.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { ClientModule } from './models/client/client.module';
-import { AuthService } from './models/authentication/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './models/authentication/auth/auth.module';
 import { UsersModule } from './models/authentication/users/users.module';
@@ -27,9 +22,10 @@ import { DeviceModule } from './models/company/device/device.module';
 import { SubsidiaryModule } from './models/company/subsidiary/subsidiary.module';
 import { CategoryModule } from './models/inventory/category/category.module';
 import { DetailsModule } from './models/inventory/details/details.module';
-import { DatabaseProviders } from './database/database.providers';
 import { NcfModule } from './models/inventory/ncf/ncf.module';
 import { ApprovalsModule } from './models/administrative/approvals/approvals.module';
+import { CaslModule } from './models/authentication/authorization/casl/casl.module';
+import { RoleModule } from './models/authentication/authorization/role/role.module';
 
 @Module({ 
   imports: [
@@ -67,6 +63,8 @@ import { ApprovalsModule } from './models/administrative/approvals/approvals.mod
     JwtModule,
     NcfModule,
     ApprovalsModule,
+    CaslModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [
@@ -77,7 +75,7 @@ import { ApprovalsModule } from './models/administrative/approvals/approvals.mod
 })
 export class AppModule {
 
-  constructor(private dataSource: DataSource) {
+  // constructor(private dataSource: DataSource) {
 
-  }
+  // }
 }

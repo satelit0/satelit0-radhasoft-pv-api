@@ -14,10 +14,10 @@ export class UpdateUserDto  extends PartialType(UserDto)
   @ApiProperty({name: 'userName', type: 'string'})
   userName?: string;
 
-  @ApiProperty({name: 'roleId', type: 'number'})
+  @ApiProperty({name: 'roleId', type: Number})
   roleId?: number;
 
-  @ApiProperty({name: 'personId', type: 'number'})
+  @ApiProperty({name: 'personId', type: Number})
   personId?: number;
 
   // @ApiProperty({name: 'id', type: 'number'})

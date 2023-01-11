@@ -15,9 +15,6 @@ export class Product {
   @Column()
   categoryId: number;
 
-  // @Column()
-  // descriptionId: number;
-
   @Column({length: 25, comment: 'código unico de identificacion y busqueda', unique: true,}) 
   code: string;
 

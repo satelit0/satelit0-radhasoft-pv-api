@@ -72,7 +72,6 @@ export class OrderService {
     }
   }
 
-
   async receivePaymentOrder(params: {
     amount: number,
     orderId: number,
@@ -133,26 +132,51 @@ export class OrderService {
 
   async performApproval(params: {
     orderId: number,
-    approvalId: number,
+    approvalId: string,
     userAuthorizeId: number,
-    statusApproval: StatusApproval,
     amountApproval: number,
-    queryRunner: QueryRunner
   }) {
-
+    const queryRunner = this.dataSource.createQueryRunner();
     try {
-      const { orderId, approvalId, userAuthorizeId, statusApproval, amountApproval, queryRunner } = params;
-      // const approvalRequest = await this.approvalsService.findOne()
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      const { orderId, approvalId, userAuthorizeId, amountApproval } = params;
+
+      const approval = await this.approvalsService.findOne(approvalId);
+      if (!approval) throw new HttpException(`Solicitud de validación de trasacctión No.: ${approvalId} no existe`, 400);
+      const { statusRequest, userAuthorizeId: userAuthId } = approval;
+      
+      if (userAuthorizeId ===  userAuthId /* && userRoll is not admin */ ) throw new HttpException(`Usuario no autorizado a ralizar esta acción`, 400);
+
+      if (![StatusApproval.PENDING, StatusApproval.HANDLING].includes(statusRequest)) throw new HttpException(`Solicitud ya fue procesada. Id de solicitud: ${approvalId}`, 400);
+
+      const order = await this.orderRepository.findOne({ where: { id: orderId } });
+      if (!order) throw new HttpException(`orden No.: ${orderId} no existe`, 400);
+
+      const { statusPay, amountPaid } = order;
+
+      if (statusPay) { }
+
       const authorizationCode = await nanoid(10);
-      const approval = await queryRunner.manager.update(Approval, approvalId, {
-        authorizationCode,
+      await queryRunner.manager.update(Approval, approvalId, {
         userAuthorizeId,
-
+        authorizationCode,
+        statusRequest: StatusApproval.COMPLETE,
       });
+      const totalDetail = await this.detailsService.getTotalDetails(orderId);
 
-
+      await queryRunner.manager.update(Order, orderId, {
+        amountPaid: amountApproval,
+        authorizationCode,
+        //Todo: validar si el cliente aun tiene deuda por intereses genereados
+        statusPay: totalDetail <= (amountApproval + Number(amountPaid)) ? StatusOrderPay.COMPLETE : StatusOrderPay.PARTIAL,
+      });
+      await queryRunner.commitTransaction();
     } catch (error) {
-
+      await queryRunner.rollbackTransaction();
+      throw new HttpException(`${error.message}`, error.status);
+    } finally {
+      await queryRunner.release();
     }
   }
 

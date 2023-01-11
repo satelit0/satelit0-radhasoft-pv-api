@@ -18,6 +18,7 @@ import { Exclude, Expose } from "class-transformer";
 import { Device } from "src/models/company/device/entities/device.entity";
 import { Order } from '../../../inventory/order/entities/order.entity';
 import { Approval } from "src/models/administrative/approvals/entities/approval.entity";
+import { Role } from '../../authorization/role/entities/role.entity';
 
 @Entity()
 export class User {
@@ -27,14 +28,16 @@ export class User {
   @Column()
   personId: number;
 
-  @Column()
+  // @Exclude()
+  // @Column({ nullable: true })
+  @Column({})
   roleId: number;
 
   @Column({ comment: 'sucursal a la que pertenese el usuario', nullable: true })
   subsidiaryId: number;
 
   // @Column({ comment: 'dispositivos conocidos a los que tinene acceso el usuario para acceso al sistema', nullable: true })
-  // devicesId: number;
+  // devicesId: number; 
 
   @Column({ unique: true })
   userName: string;
@@ -101,19 +104,19 @@ export class User {
   @ManyToOne(() => Person, (person: Person) => person.users)
   person: Person
 
-  // @OneToMany(() => Client, client => client.user, { onDelete: 'SET NULL' })
-  // client: Client;
-
-  @OneToMany(() => Order, order => order.user, )
+  @OneToMany(() => Order, order => order.user,)
   order: Order;
 
   @ManyToMany(() => Device)
   @JoinTable()
   devices: Device[];
 
-  @OneToMany( () => Approval, approval => approval.userAuthorize )
+  @OneToMany(() => Approval, approval => approval.userAuthorize)
   approbalAuth: Approval;
-  
-  @OneToMany( () => Approval, approval => approval.userRequest )
+
+  @OneToMany(() => Approval, approval => approval.userRequest)
   approbalRequest: Approval;
+
+  @ManyToOne(() => Role, role => role.user, { onDelete: 'SET NULL', onUpdate: 'CASCADE', createForeignKeyConstraints: true })
+  role: Role;
 }

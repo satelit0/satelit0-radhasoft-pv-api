@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsString, Min, Allow, IsEnum, IsOptional } from 'class-validator';
+import { IsDateString, IsInt, IsString, Min, Allow, IsEnum, IsOptional, isInt } from 'class-validator';
 import { Roles } from '../../../../helpers/enums';
 import { ApiProperty } from '@nestjs/swagger';
 export class UserDto {
@@ -14,7 +14,7 @@ export class UserDto {
 
   @ApiProperty({ name: 'roleId', type: Number, required: false })
   @IsInt()
-  @IsOptional()
+  // @IsOptional()
   roleId: number;
 
   @ApiProperty({ name: 'subsidiaryId', type: Number, required: false })

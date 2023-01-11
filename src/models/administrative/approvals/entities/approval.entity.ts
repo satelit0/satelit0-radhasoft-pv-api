@@ -1,6 +1,7 @@
 import { User } from 'src/models/authentication/users/entities/user.entity';
 import { Column, Generated, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
 import { StatusApproval } from '../../../../helpers/enums';
+import { Subsidiary } from '../../../company/subsidiary/entities/subsidiary.entity';
 
 @Entity()
 export class Approval {
@@ -47,5 +48,10 @@ export class Approval {
 
   @ManyToOne(() => User, user => user.approbalRequest, { onDelete: 'SET NULL' })
   userRequest: User;
+ 
+  @ManyToOne(() => Subsidiary, subsidiary => subsidiary.aproval, { onDelete: 'SET NULL' })
+  subsidiary: Subsidiary;
+
+  
 
 }

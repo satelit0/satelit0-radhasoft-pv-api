@@ -8,6 +8,7 @@ import { Existence } from '../../../inventory/existence/entities/existence.entit
 import { Client } from '../../../client/entities/client.entity';
 import { Order } from '../../../inventory/order/entities/order.entity';
 import { Ncf } from '../../../inventory/ncf/entities/ncf.entity';
+import { Approval } from '../../../administrative/approvals/entities/approval.entity';
 
 @Entity()
 export class Subsidiary extends ContextCompany {
@@ -39,5 +40,9 @@ export class Subsidiary extends ContextCompany {
 
   @OneToMany(() => Ncf, ncf => ncf.subsidiary)
   ncf: Ncf;
+  
+  @OneToMany(() => Approval, approval => approval.subsidiary)
+  aproval: Approval[];
+
 }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { of } from 'rxjs';
 import { Repository } from 'typeorm';
 import { CreateDetailDto } from './dto/create-detail.dto';
 import { UpdateDetailDto } from './dto/update-detail.dto';
@@ -44,9 +45,15 @@ export class DetailsService {
     return detail;
   }
 
-  getTotalDetails(orderId: number) {
-    const total = <Promise<number>>this.detailRepository.query(`SELECT  SUM((d.price * d.qty)) total FROM detail d 
+  async getTotalDetails(orderId: number) {
+    let result = await this.detailRepository.manager.query(`SELECT  SUM((d.price * d.qty)) total FROM detail d 
     WHERE "orderId" = $1`, [orderId]);
+
+    if (!result || result.length === 0) return 0;
+
+    result = result[0];
+    const total = Number(result.total);
+
     return total;
   }
 

@@ -1,16 +1,12 @@
 import { OmitType } from "@nestjs/mapped-types";
 import { OrderDto } from './order-dto';
-import { OrderType, StatusOrderDelivery, StatusOrderPay, TypeNCF } from '../../../../helpers/enums';
+import { OrderType } from '../../../../helpers/enums';
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude, Type } from "class-transformer";
+import { Type } from "class-transformer";
 import { CreateDetailDto } from '../../details/dto/create-detail.dto';
 import { IsArray, ValidateNested } from 'class-validator';
 
 export class CreateOrderDto extends OmitType(OrderDto, ['id', 'invoiceNumber', 'createdAt', 'updatedAt', 'deliverDate', 'statusDelivery', 'typeNcf', 'statusPay']) {
-
-
-  // @ApiProperty({readOnly: true})
-  // statusPay: StatusOrderPay;
 
   @ApiProperty({ readOnly: true })
   userId: number;
@@ -27,8 +23,6 @@ export class CreateOrderDto extends OmitType(OrderDto, ['id', 'invoiceNumber', '
   @ApiProperty({ readOnly: true })
   ncf: string;
 
-  // @ApiProperty({ name: 'typeNcf', })
-  // typeNcf: TypeNCF;
   @ApiProperty({ name: 'items', type: [CreateDetailDto] })
   @IsArray()
   @ValidateNested({ each: true })

@@ -20,6 +20,7 @@ import { Subsidiary } from 'src/models/company/subsidiary/entities/subsidiary.en
 import { Existence } from 'src/models/inventory/existence/entities/existence.entity';
 import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
 import { Approval } from '../models/administrative/approvals/entities/approval.entity';
+import { Role } from '../models/authentication/authorization/role/entities/role.entity';
 
 export const DatabaseProviders = [
   {
@@ -58,7 +59,8 @@ export const DatabaseProviders = [
           Device,
           Client,
           Ncf,
-          Approval
+          Approval,
+          Role,
         ],
       })
 

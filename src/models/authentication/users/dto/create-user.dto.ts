@@ -10,9 +10,8 @@ export class CreateUserDto extends OmitType(UserDto, ['id', 'updateAdt', 'create
   @Min(1)
   personId: number;
 
-  @ApiProperty({ name: 'roleId', required: false, type: Number, default: 0})
-  @Min(1)
-  @IsOptional()
+  @ApiProperty({ name: 'roleId', required: false, type: Number})
+  // @IsOptional()
   roleId: number;
 
   @ApiProperty({ name: 'deviceIds', type:Array, required: false, default: [0] })

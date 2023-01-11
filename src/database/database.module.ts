@@ -22,6 +22,7 @@ import { DatabaseProviders } from './database.providers';
 import { DataSource } from 'typeorm';
 import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
 import { Approval } from '../models/administrative/approvals/entities/approval.entity';
+import { Role } from '../models/authentication/authorization/role/entities/role.entity';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { Approval } from '../models/administrative/approvals/entities/approval.e
           Client,
           Ncf,
           Approval,
+          Role,
         ],
         synchronize: true,
         logging: ['query', 'error']
