@@ -1,71 +1,56 @@
-import { PureAbility, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects, defineAbility } from "@casl/ability";
+import {
+  RawRuleOf,
+  Ability,
+  ForcedSubject,
+  CreateAbility
+} from "@casl/ability";
 import { Injectable } from "@nestjs/common";
-// import { Action } from "rxjs/internal/scheduler/Action";
 import { User } from "../../users/entities/user.entity";
-import { Product } from '../../../inventory/products/entities/product.entity';
-import { Existence } from '../../../inventory/existence/entities/existence.entity';
-import { CompanyBase } from '../../../company/company-base/entities/company-base.entity';
-import { Subsidiary } from '../../../company/subsidiary/entities/subsidiary.entity';
+import interpolate from "src/helpers/interpolate";
 
-
-// export enum Action {
-//   Manage = 'manage',
-//   Create = 'create',
-//   Read = 'read',
-//   Update = 'update',
-//   Delete = 'delete',
+// interface IRawRule {
+//   action: Action | Action[]
+//   subject?: Subjects | Subjects[]
+//   /** an array of fields to which user has (or not) access */
+//   fields?: string[]
+//   /** an object of conditions which restricts the rule scope */
+//   conditions?: any
+//   /** indicates whether rule allows or forbids something */
+//   inverted?: boolean
+//   /** message which explains why rule is forbidden */
+//   reason?: string
 // }
-export type Action ='manage' |'create' | 'read' | 'update' | 'delete';
-// export type Subjects = 'all' | 'User' | 'Product' | 'Existence' | 'Category' | 'Description' | 'Supplier' | 'Company' | 'Subsidiary';
 
-type Subjects = InferSubjects<typeof Product | typeof User | typeof Existence | typeof CompanyBase | typeof Subsidiary | 'all'>;
 
-interface DbPermission {
-  action: Action;
-  subjects: string; 
-  condition: {};
-}
-
-export type AppAbility = PureAbility<[Action, Subjects]>;
+const Action = ['manage', 'create', 'read', 'update', 'delete'] as const;
+const Subjects = ['all', 'User', 'Product', 'Existence', 'Category', 'Description', 'Supplier', 'Company', 'Subsidiary'] as const;
 
 @Injectable()
 export class CaslAbilityFactory {
 
-
   createForUser(user: User) {
-    const { can, cannot, build } = new AbilityBuilder<
-      PureAbility<[Action, Subjects]>
-    >(PureAbility as AbilityClass<AppAbility>);
 
-    const permissions: DbPermission[] = user.role.permissions as [];
+    type Abilities = [
+      typeof Action[number],
+      typeof Subjects[number] | ForcedSubject<Exclude<typeof Subjects[number], 'all'>>
+    ];
+    type AppAbility = Ability<Abilities>;
 
-    const dbPermissions = permissions.map(p => ({
-      action: p.action,
-      subjects: p.subjects,
-      condition: p.condition,
-    }));
+    const createAbility = (rules: RawRuleOf<AppAbility>[]) => new Ability<Abilities>(rules);
 
-    console.log('=======>', dbPermissions);
-    
+    const permissionInterpolate: RawRuleOf<AppAbility>[] = interpolate(JSON.stringify(user.role.permissions), user);
+    user.role.permissions = permissionInterpolate;
 
-    if (user.role.name === 'admin') {
-      can('manage', 'all'); // read-write access to everything
-    } else {
-      can('read', 'all'); // read-only access to everything
+    if (user.role.name === 'sadmin') {
+      // can('manage', 'all'); // read-write access to everything
     }
-
-    // can(Action.Update, Article, { authorId: user.id });
-    // cannot(Action.Delete, Article, { isPublished: true });
-
-   
-
-    return build({
-      // Read https://casl.js.org/v5/en/guide/subject-type-detection#use-classes-as-subject-types for details
-      detectSubjectType: (item) =>
-        item.constructor as ExtractSubjectType<Subjects>,
-    });
-
-
+    else {
+      // permissions_.forEach(p => {
+      // can(p.action, p.subject, p.conditions);
+      // });
+    }
+    const abilit = createAbility(permissionInterpolate);
+    return abilit;
   }
 
 

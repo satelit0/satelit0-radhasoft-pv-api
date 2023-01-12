@@ -14,7 +14,7 @@ import { DeviceService } from 'src/models/company/device/device.service';
 import { CreateDeviceDto } from 'src/models/company/device/dto/create-device.dto';
 import { Device } from 'src/models/company/device/entities/device.entity';
 import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
-
+ 
 @Injectable()
 export class UsersService {
 

@@ -17,7 +17,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PersonService } from '../../person/person.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Contact } from '../../contact/entities/contact.entity';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FindOneParams } from '../../../helpers/utils';
@@ -29,10 +28,8 @@ import { hash } from 'bcrypt';
 import { SALROUNDS } from 'src/helpers/consts';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { DeviceService } from 'src/models/company/device/device.service';
-import { Action, CaslAbilityFactory } from '../authorization/casl/casl-ability.factory';
+import { CaslAbilityFactory } from '../authorization/casl/casl-ability.factory';
 import { IRequestWithUser } from 'src/models/interfaces/models.interface';
-import { Person } from '../../person/entities/person.entity';
-import { use } from 'passport';
 
 
 @Controller('users')
@@ -83,12 +80,11 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(@Req() request: IRequestWithUser) {
-    const { user } = request;
-    const ability = this.caslAbilityFactory.createForUser(user);
-    console.log('==============>', user.role.name);
-    
-    console.log('===============> crear', ability.can('create', 'all'));
-    console.log('===============> leer', ability.can('read', User ));
+   
+
+    // console.log('===============> crear usuarios', ability.can('create', 'User'));
+    // console.log('===============> crear productos', ability.can('create', 'Product'));
+    // console.log('===============> leer usuarios', ability.can('read', 'User' ));
     
     const users = await this.usersService.findAll();
     return users;
