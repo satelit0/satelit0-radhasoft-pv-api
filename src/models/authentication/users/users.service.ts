@@ -14,6 +14,9 @@ import { DeviceService } from 'src/models/company/device/device.service';
 import { CreateDeviceDto } from 'src/models/company/device/dto/create-device.dto';
 import { Device } from 'src/models/company/device/entities/device.entity';
 import { SubsidiaryService } from '../../company/subsidiary/subsidiary.service';
+import { RawRuleOf } from '@casl/ability';
+import { AppAbility } from '../authorization/casl/casl-ability.factory';
+import interpolate from 'src/helpers/interpolate';
  
 @Injectable()
 export class UsersService {
@@ -89,6 +92,18 @@ export class UsersService {
       withDeleted
     });
 
+    return user;
+  }
+
+  async getUserById(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: {
+        role: true,
+      }
+    });
+    const { role, ...restUser } = user;
+    user.role.permissions = interpolate( JSON.stringify(role.permissions), user);
     return user;
   }
 

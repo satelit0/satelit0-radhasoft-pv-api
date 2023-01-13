@@ -19,7 +19,17 @@ export class ExistenceService {
     return newExistence;
   }
 
-  findAll(subsidiaryId: number) {
+  findAll(params: { subsidiaryId: number, isSadmin?: boolean }) {
+    const { subsidiaryId, isSadmin } = params;
+    if (isSadmin) {
+      return this.existenceRepository.findAndCount({
+        // where: { subsidiaryId },
+        relations: {
+          product: true,
+        }
+      });
+    }
+
     return this.existenceRepository.findAndCount({
       where: { subsidiaryId },
       relations: {
@@ -29,7 +39,15 @@ export class ExistenceService {
   }
 
   findOne(id: number) {
-    return this.existenceRepository.findOne({ where: { id } });
+    try {
+
+      const existece = this.existenceRepository.findOne({ where: { id } });
+
+      return existece;
+
+    } catch (error) {
+
+    }
   }
 
   findOneBy(params: IExistence) {
