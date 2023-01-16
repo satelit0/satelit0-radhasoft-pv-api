@@ -26,9 +26,11 @@ import { NcfModule } from './models/inventory/ncf/ncf.module';
 import { ApprovalsModule } from './models/administrative/approvals/approvals.module';
 import { CaslModule } from './models/authentication/authorization/casl/casl.module';
 import { RoleModule } from './models/authentication/authorization/role/role.module';
+import { EmailSubscriptionsModule } from './models/email-subscriptions/email-subscriptions.module';
+import { EventsModule } from './events/events.module';
 
-@Module({ 
-  imports: [
+@Module({
+  imports: [ 
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
@@ -36,6 +38,10 @@ import { RoleModule } from './models/authentication/authorization/role/role.modu
         POSTGRES_USERNAME: Joi.string().required(),
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DATABASE: Joi.string().required(),
+
+        PGADMIN_DEFAULT_EMAIL: Joi.string().required(),
+        PGADMIN_DEFAULT_PASSWORD: Joi.string().required(),
+
         PORT: Joi.number().required(),
 
         JWT_SECRET: Joi.string().required(),
@@ -65,6 +71,8 @@ import { RoleModule } from './models/authentication/authorization/role/role.modu
     ApprovalsModule,
     CaslModule,
     RoleModule,
+    EmailSubscriptionsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [

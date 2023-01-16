@@ -21,6 +21,8 @@ import { Existence } from 'src/models/inventory/existence/entities/existence.ent
 import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
 import { Approval } from '../models/administrative/approvals/entities/approval.entity';
 import { Role } from '../models/authentication/authorization/role/entities/role.entity';
+import { EmailSubscription } from '../models/email-subscriptions/entities/email-subscription.entity';
+import { Event } from '../events/entities/event.entity';
 
 export const DatabaseProviders = [
   {
@@ -61,6 +63,8 @@ export const DatabaseProviders = [
           Ncf,
           Approval,
           Role,
+          EmailSubscription,
+          Event,
         ],
       })
 

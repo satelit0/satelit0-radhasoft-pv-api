@@ -23,6 +23,8 @@ import { DataSource } from 'typeorm';
 import { Ncf } from '../models/inventory/ncf/entities/ncf.entity';
 import { Approval } from '../models/administrative/approvals/entities/approval.entity';
 import { Role } from '../models/authentication/authorization/role/entities/role.entity';
+import { EmailSubscription } from '../models/email-subscriptions/entities/email-subscription.entity';
+import { Event } from '../events/entities/event.entity';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { Role } from '../models/authentication/authorization/role/entities/role.
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DATABASE'),
         entities: [
-          // `${__dirname}/../models/**/*.entity.ts`,
+          // `${ process.cwd() }/src/models/**/*.entity.ts`,
           User,
           Person,
           Contact,
@@ -59,9 +61,12 @@ import { Role } from '../models/authentication/authorization/role/entities/role.
           Ncf,
           Approval,
           Role,
+          EmailSubscription,
+          Event,
         ],
         synchronize: true,
         logging: ['query', 'error']
+        
       }),
 
       dataSourceFactory: async (options) => {
