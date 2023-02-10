@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { DateContext } from '../../models/dates/date-context';
 
-@Entity()
+@Entity() 
 export class Event extends DateContext {
   @PrimaryGeneratedColumn()
   id: number;

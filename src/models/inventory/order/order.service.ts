@@ -77,21 +77,33 @@ export class OrderService {
     orderId: number,
     subsidiaryId: number,
     paymentMethod: PaymentMethod,
-    typeNcf?: TypeNCF
+    typeNcf?: TypeNCF,
+    isSAdmin: boolean,
   }) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const { amount, orderId, subsidiaryId, typeNcf = TypeNCF.FINAL_CONSUMER, paymentMethod } = params;
+      const { amount, orderId, subsidiaryId, typeNcf = TypeNCF.FINAL_CONSUMER, paymentMethod, isSAdmin } = params;
 
-      const order = await this.orderRepository.findOne({
-        where: { id: orderId, subsidiaryId },
-        relations: {
-          client: true,
-          detail: true,
-        }
-      });
+      let order: Order;
+      if (!isSAdmin) {
+        order = await this.orderRepository.findOne({
+          where: { id: orderId, subsidiaryId },
+          relations: {
+            client: true,
+            detail: true,
+          }
+        });
+      } else{
+        order = await this.orderRepository.findOne({
+          where: { id: orderId },
+          relations: {
+            client: true,
+            detail: true,
+          }
+        });
+      }
 
       const { orderType, authorizationCode, amountPaid } = order;
 
@@ -145,8 +157,8 @@ export class OrderService {
       const approval = await this.approvalsService.findOne(approvalId);
       if (!approval) throw new HttpException(`Solicitud de validación de trasacctión No.: ${approvalId} no existe`, 400);
       const { statusRequest, userAuthorizeId: userAuthId } = approval;
-      
-      if (userAuthorizeId ===  userAuthId /* && userRoll is not admin */ ) throw new HttpException(`Usuario no autorizado a ralizar esta acción`, 400);
+
+      if (userAuthorizeId === userAuthId /* && userRoll is not admin */) throw new HttpException(`Usuario no autorizado a ralizar esta acción`, 400);
 
       if (![StatusApproval.PENDING, StatusApproval.HANDLING].includes(statusRequest)) throw new HttpException(`Solicitud ya fue procesada. Id de solicitud: ${approvalId}`, 400);
 

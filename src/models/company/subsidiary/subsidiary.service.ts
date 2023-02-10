@@ -32,14 +32,11 @@ export class SubsidiaryService {
     await queryRunner.startTransaction();
 
     try {
-
       const { headquarters, contact, ...restCreateSubsidiaryDto } = createSubsidiaryDto;
       const product = await this.productsService.getAll();
       const productIds = product.map(prod => prod.id);
 
-      if (headquarters) {
-        await this.subsidiaryRepository.update({ headquarters: true }, { headquarters: false })
-      }
+      if (headquarters)  await queryRunner.manager.update(Subsidiary, { headquarters: true }, { headquarters: false });
 
       const newContact = new Contact();
       Object.assign(newContact, contact);
@@ -49,17 +46,21 @@ export class SubsidiaryService {
 
       const newSubsidiary = await queryRunner.manager.save(subsidiary);
 
-      const { id } = newSubsidiary;
-      for (const productId of productIds) {
-        const newExistence = new Existence();
-        Object.assign(newExistence, {
-          productId,
-          dateEntry: new Date(),
-          dateExpire: new Date(),
-          qty: 0,
-          subsidiaryId: id
-        })
-        await queryRunner.manager.save(newExistence);
+      if (!productIds || productIds.length === 0) {
+        const { id: subsidiaryId } = newSubsidiary;
+        const existences: Existence[] = [];
+        for (const productId of productIds) {
+          const newExistence = new Existence();
+          Object.assign(newExistence, {
+            productId,
+            dateEntry: new Date(),
+            dateExpire: new Date(),
+            qty: 0,
+            subsidiaryId
+          })
+          existences.push(newExistence);
+        }
+        await queryRunner.manager.save(existences);
       }
 
       await queryRunner.commitTransaction();
@@ -68,9 +69,9 @@ export class SubsidiaryService {
 
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new HttpException(`imposible completar la acción solicitada: ${error.message}`, error.code);
+      throw new HttpException(`Imposible completar la acción solicitada: ${error.message}`, error.code);
     } finally {
-      await queryRunner.release();
+      await queryRunner.release(); 
     }
 
   }

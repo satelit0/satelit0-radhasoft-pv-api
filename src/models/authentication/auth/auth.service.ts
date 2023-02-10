@@ -81,6 +81,15 @@ export class AuthService {
     return cookieRefreshToken;
   }
 
+  getUserFromAuthenticationToken(token: string) {
+    const payload: ITokenPayload = this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET')
+    });
+    if (payload.userId) {
+      return this.usersService.getUserById(payload.userId);
+    }
+  }
+
   getCookiesForLogOut() {
     return [
       'Authentication=; HttpOnly; Path=/; Max-Age=0',
@@ -88,7 +97,7 @@ export class AuthService {
     ];
   }
 
-  removeRefreshToken(userId: number){
+  removeRefreshToken(userId: number) {
     return this.usersService.removeRefreshToken(userId);
   }
 

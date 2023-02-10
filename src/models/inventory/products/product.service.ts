@@ -126,7 +126,8 @@ export class ProductService {
     const products = this.productRepository.find({
       order: {
         id: 'ASC'
-      }
+      },
+      withDeleted: true,
     });
 
     return products;

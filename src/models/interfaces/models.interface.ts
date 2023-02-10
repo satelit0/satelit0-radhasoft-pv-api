@@ -87,8 +87,7 @@ export interface IRequestWithUser extends Request {
   user: User;
 }
 
-export 
-interface ITokenPayload {
+export interface ITokenPayload {
   userId: number;
   subsidiaryId: number;
 }
